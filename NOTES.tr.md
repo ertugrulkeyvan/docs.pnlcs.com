@@ -25,6 +25,9 @@ pnlcs.com gibi bu da bizim repoda: **içerik bizde** (kullanıcı kararı, 2026-
 - Ücretli kurulum kutusu (`partials/offer.html`): yalnız ana sayfa + `offer: true` olan sayfalar (install, your-first-sale,
   migrate-from-whmcs). Her sayfaya konmaz. Metin pnlcs.com ile aynı: ücretli, ilk görüşme ücretsiz. `data-cta="docs-offer-…"`.
 - Ana sayfa hero'sunda katkıcı avatarları (GitHub API canlı, HTML'de yedek), "Improve a page" / "Contribute to PNLCS".
+- Mobil menü: ana sayfada kenar çubuğu yalnız masaüstünde gizli (`hide: navigation` kullanma, mobil menüyü boşaltır).
+  Drawer başlığı `overrides/partials/nav.html`; altında Live demo + pnlcs.com bağlantıları.
+- Önbellek: `tools/build.py` CSS/JS adreslerine `?v=<içerik özeti>` ekler; `zensical build` tek başına yetmez, hep build.py.
 - Eskime takibi: `sources:` + `tools/upstream.py stale`. Şu an yalnız API, MCP tools ve native install'da var.
 
 ## İçerik durumu
