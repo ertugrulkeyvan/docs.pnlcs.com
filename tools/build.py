@@ -6,6 +6,8 @@
 After the build:
   * the block between <!--pn-top--> and <!--/pn-top--> (date, command variables)
     moves below the page's first <h1>, which Zensical renders inside the content;
+  * links to assets/pnlcs.css and pnlcs.js get ?v=<content hash>, so a new release is never
+    served from a stale browser cache;
   * every page gets "Updated <date>" from git: the newest of the date recorded
     when the page was imported from PNLCS (data/upstream.json) and the last
     commit in this repository that changed it after the import.
@@ -13,6 +15,7 @@ After the build:
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import subprocess
@@ -74,6 +77,21 @@ def move_top(text: str) -> str:
     return text if end < 0 else text[: end + 5] + m.group(1) + text[end + 5:]
 
 
+def asset_versions() -> dict[str, str]:
+    versions = {}
+    for name in ("pnlcs.css", "pnlcs.js"):
+        path = SITE / "assets" / name
+        if path.exists():
+            versions[name] = hashlib.sha256(path.read_bytes()).hexdigest()[:10]
+    return versions
+
+
+def bust(text: str, versions: dict[str, str]) -> str:
+    for name, digest in versions.items():
+        text = re.sub(rf'(assets/{re.escape(name)})"', rf'\1?v={digest}"', text)
+    return text
+
+
 def stamp() -> int:
     upstream = json.loads(UPSTREAM.read_text())["files"] if UPSTREAM.exists() else {}
     own = own_dates()
@@ -99,6 +117,12 @@ def main() -> int:
     if result.returncode:
         return result.returncode
     print(f"dates: {stamp()} pages")
+    versions = asset_versions()
+    for html in SITE.rglob("*.html"):
+        text = html.read_text()
+        busted = bust(text, versions)
+        if busted != text:
+            html.write_text(busted)
     return 0
 
 

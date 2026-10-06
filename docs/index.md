@@ -2,7 +2,6 @@
 template: home.html
 title: PNLCS documentation
 hide:
-  - navigation
   - toc
   - footer
 feedback: false
