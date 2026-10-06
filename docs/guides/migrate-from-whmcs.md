@@ -1,3 +1,7 @@
+---
+offer: true
+---
+
 # Migrate from WHMCS
 
 Moving from WHMCS to PNLCS? Because PNLCS deliberately mirrors WHMCS concepts,

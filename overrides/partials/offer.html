@@ -1,0 +1,14 @@
+{#- Paid setup offer, same wording as pnlcs.com/start-a-hosting-company.html. Only on pages where it answers
+    the reader's next question (front matter `offer: true`) and on the home page; never site-wide. -#}
+{% set start = config.extra.site_home ~ "start-a-hosting-company.html" %}
+<aside class="pn-offer" aria-labelledby="pn-offer-title">
+  <div class="pn-offer__text">
+    <p class="pn-offer__kicker">Paid service</p>
+    <p class="pn-offer__title" id="pn-offer-title">Would you rather have it set up for you?</p>
+    <p class="pn-offer__body">PNLCS is free to run on your own. If you want it done for you, the developers who build PNLCS can set up the servers, the control panel, billing and your storefront as a paid service. The first call is free.</p>
+  </div>
+  <div class="pn-offer__actions">
+    <a class="pn-btn pn-btn--navy" href="{{ start }}#discovery" data-cta="docs-offer-{{ (page.url or 'home') | replace('/', '-') | trim('-') or 'home' }}">Book a free discovery call</a>
+    <a class="pn-offer__more" href="{{ start }}" data-cta="docs-offer-details">What is included</a>
+  </div>
+</aside>

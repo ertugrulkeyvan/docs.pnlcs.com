@@ -1,3 +1,7 @@
+---
+offer: true
+---
+
 # Installation
 
 PNLCS is a Laravel application. It runs anywhere PHP 8.4, MySQL or MariaDB and

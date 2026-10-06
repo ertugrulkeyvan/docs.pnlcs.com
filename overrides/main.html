@@ -45,6 +45,10 @@
 
   {{ page.content }}
 
+  {% if page.meta and page.meta.offer %}
+    {% include "partials/offer.html" %}
+  {% endif %}
+
   {% if not (page.meta and page.meta.feedback == false) %}
     <aside class="pn-feedback" data-pn-feedback>
       <p class="pn-feedback__q">Did this page help you?</p>

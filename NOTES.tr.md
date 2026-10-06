@@ -21,6 +21,10 @@ pnlcs.com gibi bu da bizim repoda: **içerik bizde** (kullanıcı kararı, 2026-
 - "Updated <tarih>": içe aktarmadaki PNLCS tarihi ile bu repodaki son commit'in yenisi (`tools/build.py`).
 - "Did this page help?" → `dataLayer` `docs_feedback`. GTM henüz eklenmedi (pnlcs.com'daki kap + çerez bandı eklenecek).
 - Sayfayı Markdown kopyala düğmesi, her sayfanın `.md` sürümü, `llms.txt` / `llms-full.txt` (Zensical yerleşik).
+- Arama penceresi boşken "Popular pages" ve örnek aramalar (Zensical aramayı shadow DOM'da çiziyor, `pnlcs.js` içine ekliyor).
+- Ücretli kurulum kutusu (`partials/offer.html`): yalnız ana sayfa + `offer: true` olan sayfalar (install, your-first-sale,
+  migrate-from-whmcs). Her sayfaya konmaz. Metin pnlcs.com ile aynı: ücretli, ilk görüşme ücretsiz. `data-cta="docs-offer-…"`.
+- Ana sayfa hero'sunda katkıcı avatarları (GitHub API canlı, HTML'de yedek), "Improve a page" / "Contribute to PNLCS".
 - Eskime takibi: `sources:` + `tools/upstream.py stale`. Şu an yalnız API, MCP tools ve native install'da var.
 
 ## İçerik durumu

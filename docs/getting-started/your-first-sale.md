@@ -1,3 +1,7 @@
+---
+offer: true
+---
+
 # Your First Sale
 
 This walkthrough takes you through the **entire lifecycle** once: create a

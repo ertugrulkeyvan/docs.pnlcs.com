@@ -7,7 +7,8 @@
 {% set go %}{% include ".icons/lucide/arrow-right.svg" %}{% endset %}
 <div class="pn-home-page">
   <section class="pn-hero">
-    <div class="pn-hero__inner">
+    <div class="pn-hero__inner pn-hero__grid">
+      <div>
       <h1>PNLCS documentation</h1>
       <p class="pn-hero__lede">Install PNLCS, sell your first plan, move over from WHMCS, and build on the API, hooks and MCP server.</p>
       <button type="button" class="pn-hero__search" data-pn-open-search>
@@ -16,6 +17,24 @@
         <kbd>⌘ K</kbd>
       </button>
       <p class="pn-hero__meta">New to PNLCS? Read <a href="{{ config.extra.site_home }}features.html">what it does</a> or try the <a href="{{ config.extra.demo }}">live demo</a> first.</p>
+      </div>
+      <aside class="pn-people" aria-labelledby="pn-people-title">
+        <p class="pn-people__title" id="pn-people-title">Written by the people who build PNLCS</p>
+        <div class="pn-people__faces" data-pn-contributors>
+          <a href="https://github.com/hedon77" title="hedon77"><img src="https://github.com/hedon77.png?size=88" alt="hedon77" width="44" height="44"></a>
+          <a href="https://github.com/ertugrulkeyvan" title="ertugrulkeyvan"><img src="https://github.com/ertugrulkeyvan.png?size=88" alt="ertugrulkeyvan" width="44" height="44"></a>
+          <a href="https://github.com/Panelica" title="Panelica"><img src="https://github.com/Panelica.png?size=88" alt="Panelica" width="44" height="44"></a>
+          <a href="https://github.com/Harry326485" title="Harry326485"><img src="https://github.com/Harry326485.png?size=88" alt="Harry326485" width="44" height="44"></a>
+          <a href="https://github.com/terbora-core" title="terbora-core"><img src="https://github.com/terbora-core.png?size=88" alt="terbora-core" width="44" height="44"></a>
+          <a href="https://github.com/gkkrlmz" title="gkkrlmz"><img src="https://github.com/gkkrlmz.png?size=88" alt="gkkrlmz" width="44" height="44"></a>
+          <a href="https://github.com/anderson-rbtf" title="anderson-rbtf"><img src="https://github.com/anderson-rbtf.png?size=88" alt="anderson-rbtf" width="44" height="44"></a>
+        </div>
+        <p class="pn-people__count"><span data-pn-contributor-count>7</span> contributors on GitHub so far.</p>
+        <p class="pn-people__links">
+          <a href="{{ config.extra.docs_repo }}">Improve a page</a>
+          <a href="{{ config.extra.site_home }}community.html">Contribute to PNLCS</a>
+        </p>
+      </aside>
     </div>
   </section>
 
@@ -89,6 +108,12 @@
           </div>
         {% endfor %}
       </div>
+    </div>
+  </section>
+
+  <section class="pn-band">
+    <div class="pn-band__inner">
+      {% include "partials/offer.html" %}
     </div>
   </section>
 
