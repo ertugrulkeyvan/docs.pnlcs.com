@@ -1,0 +1,187 @@
+site_name: PNLCS Docs
+site_description: Install, run and extend PNLCS, the open-source hosting billing platform and client portal
+site_url: https://docs.pnlcs.com/
+repo_url: https://github.com/Panelica/pnlcs
+repo_name: Panelica/pnlcs
+edit_uri: https://github.com/ertugrulkeyvan/docs.pnlcs.com/edit/main/docs/
+copyright: PNLCS is MIT licensed and maintained by Panelica and volunteers.
+
+theme:
+  name: material
+  variant: modern
+  custom_dir: overrides
+  language: en
+  font: false
+  favicon: assets/favicon.svg
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: lucide/moon
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: lucide/sun
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.indexes
+    - navigation.path
+    - navigation.footer
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+    - content.action.copy
+    - content.action.edit
+    - toc.follow
+    - announce.dismiss
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+
+extra_css:
+  - assets/pnlcs.css
+
+extra_javascript:
+  - assets/pnlcs.js
+
+extra:
+  site_home: https://pnlcs.com/
+  demo: https://hosting.panelica.com/
+  docs_repo: https://github.com/ertugrulkeyvan/docs.pnlcs.com
+
+plugins:
+  - search
+  - llmstxt:
+      markdown_description: Documentation for PNLCS, a free, MIT-licensed, self-hosted hosting billing platform and client portal (an open-source WHMCS alternative).
+      full_output: llms-full.txt
+      sections:
+        Installation:
+          - install/*.md
+        Getting started:
+          - getting-started/*.md
+        Concepts:
+          - concepts/*.md
+        Guides:
+          - guides/*.md
+          - guides/proxmox/*.md
+        API:
+          - api/*.md
+        MCP server:
+          - mcp/*.md
+        Developer:
+          - developer/*.md
+        Help:
+          - troubleshooting/*.md
+          - reference/*.md
+
+nav:
+  - Home: index.md
+  - Install:
+      - install/index.md
+      - Requirements: install/requirements.md
+      - Docker: install/docker.md
+      - On your own server: install/native.md
+      - Inside a hosting panel: install/hosting-panel.md
+      - Deploy on Plesk: guides/deploy-plesk.md
+      - Keep it running:
+          - Updating: install/updating.md
+          - Backups: install/backups.md
+          - Security checklist: install/security.md
+  - Learn:
+      - Getting started:
+          - First login: getting-started/first-login.md
+          - Setup checklist: getting-started/setup-checklist.md
+          - Your first sale: getting-started/your-first-sale.md
+      - Concepts:
+          - How PNLCS is organized: concepts/overview.md
+          - Products, services, orders and invoices: concepts/products-services-orders-invoices.md
+          - Servers and modules: concepts/servers-and-modules.md
+          - The billing lifecycle: concepts/billing-lifecycle.md
+  - Guides:
+      - Set up:
+          - Configure email: guides/configure-email.md
+          - Payment gateways: guides/payment-gateways.md
+          - Tax rules: guides/tax-rules.md
+          - Custom client fields: guides/custom-fields.md
+          - Themes and branding: guides/themes-and-branding.md
+          - Languages and translations: guides/languages.md
+      - Sell:
+          - Connect a server: guides/connect-a-server.md
+          - Live servers: guides/live-servers.md
+          - Modules: guides/modules.md
+          - Sell domains: guides/sell-domains.md
+          - Sell Docker apps: guides/sell-docker-apps.md
+          - Sell VPS on Proxmox VE:
+              - guides/sell-vps-on-proxmox.md
+              - 1. Prepare Proxmox: guides/proxmox/prepare-proxmox.md
+              - 2. Connect the server: guides/proxmox/connect-the-server.md
+              - 3. Install operating systems: guides/proxmox/operating-systems.md
+              - 4. Create the product: guides/proxmox/create-the-product.md
+              - 5. The customer's panel: guides/proxmox/customer-panel.md
+              - Running VPS services: guides/proxmox/running-vps.md
+              - Troubleshooting: guides/proxmox/troubleshooting.md
+      - People and support:
+          - Staff and roles: guides/staff-and-roles.md
+          - Client logins and permissions: guides/client-logins-and-permissions.md
+          - Support mail piping: guides/support-mail-piping.md
+      - Migrate from WHMCS: guides/migrate-from-whmcs.md
+  - API:
+      - api/index.md
+      - All endpoints: api/all-endpoints.md
+      - Resources:
+          - Clients: api/clients.md
+          - Invoices and billing: api/invoices.md
+          - Orders: api/orders.md
+          - Services and products: api/services.md
+          - Domains: api/domains.md
+          - Support tickets: api/tickets.md
+          - Quotes: api/quotes.md
+          - Projects: api/projects.md
+          - Affiliates: api/affiliates.md
+          - SSL certificates: api/ssl.md
+          - API credentials: api/credentials.md
+          - System: api/system.md
+      - MCP server:
+          - Setup: mcp/index.md
+          - Tools: mcp/tools.md
+  - Developer:
+      - developer/index.md
+      - Writing a module: developer/modules.md
+      - Hooks: developer/hooks.md
+      - Themes: developer/themes.md
+      - Translations: developer/translations.md
+      - Contributing: developer/contributing.md
+  - Help:
+      - Common issues: troubleshooting/common-issues.md
+      - FAQ: troubleshooting/faq.md
+      - Scheduled commands: reference/scheduled-commands.md

@@ -1,0 +1,77 @@
+{#- Previous / next, then the same footer as pnlcs.com. -#}
+{% set home = config.extra.site_home %}
+<footer class="md-footer pn-footer">
+  {% if page.meta and page.meta.hide %}
+    {% set hidden = "hidden" if "footer" in page.meta.hide %}
+  {% endif %}
+  {% if page.previous_page or page.next_page %}
+    <nav class="md-footer__inner md-grid pn-pager" aria-label="{{ lang.t('footer') }}" {{ hidden }}>
+      {% if page.previous_page %}
+        <a href="{{ page.previous_page.url | url }}" class="pn-pager__link pn-pager__link--prev" rel="prev">
+          <span class="pn-pager__dir">{{ lang.t("footer.previous") }}</span>
+          <span class="pn-pager__title">{{ page.previous_page.title }}</span>
+        </a>
+      {% endif %}
+      {% if page.next_page %}
+        <a href="{{ page.next_page.url | url }}" class="pn-pager__link pn-pager__link--next" rel="next">
+          <span class="pn-pager__dir">{{ lang.t("footer.next") }}</span>
+          <span class="pn-pager__title">{{ page.next_page.title }}</span>
+        </a>
+      {% endif %}
+    </nav>
+  {% endif %}
+
+  <div class="pn-foot">
+    <div class="md-grid pn-foot__top">
+      <div class="pn-foot__brand">
+        <a class="pn-logo" href="{{ home }}"><span class="pn-logo__word">PNLCS<i></i></span></a>
+        <p>Open-source billing and client portal for hosting companies. MIT licensed.</p>
+        <p>Maintained by <a href="https://panelica.com/">Panelica</a> and volunteers.</p>
+      </div>
+      <nav class="pn-foot__cols" aria-label="Footer">
+        <div>
+          <h2>Docs</h2>
+          <ul>
+            <li><a href="{{ 'install/' | url }}">Install</a></li>
+            <li><a href="{{ 'getting-started/first-login/' | url }}">Getting started</a></li>
+            <li><a href="{{ 'guides/migrate-from-whmcs/' | url }}">Migrate from WHMCS</a></li>
+            <li><a href="{{ 'api/' | url }}">API reference</a></li>
+            <li><a href="{{ 'llms.txt' | url }}">llms.txt</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Product</h2>
+          <ul>
+            <li><a href="{{ home }}features.html">Features</a></li>
+            <li><a href="{{ home }}integrations.html">Integrations</a></li>
+            <li><a href="{{ home }}extensions.html">Modules and themes</a></li>
+            <li><a href="{{ home }}whats-new.html">What’s new</a></li>
+            <li><a href="{{ config.extra.demo }}">Live demo</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Community</h2>
+          <ul>
+            <li><a href="{{ home }}community.html">Contribute</a></li>
+            <li><a href="https://github.com/Panelica/pnlcs/discussions">Discussions</a></li>
+            <li><a href="https://forum.panelica.com/">Forum</a></li>
+            <li><a href="{{ config.extra.docs_repo }}">Docs on GitHub</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Project</h2>
+          <ul>
+            <li><a href="{{ home }}about.html">About</a></li>
+            <li><a href="{{ home }}security.html">Security</a></li>
+            <li><a href="{{ home }}privacy.html">Privacy</a></li>
+            <li><a href="https://github.com/Panelica/pnlcs">Source code</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div class="md-grid pn-foot__bottom">
+      <p>{{ config.copyright }}</p>
+      <p>Docs content is MIT licensed. <a href="{{ config.extra.docs_repo }}">Edit on GitHub</a>.</p>
+    </div>
+  </div>
+</footer>

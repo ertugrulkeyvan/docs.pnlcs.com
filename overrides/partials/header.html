@@ -1,0 +1,39 @@
+{#- Dark header shared with pnlcs.com: wordmark, search, site links, demo. -#}
+<header class="md-header md-header--lifted pn-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="{{ lang.t('header') }}">
+    <label class="md-header__button md-icon pn-drawer-btn" for="__drawer" aria-label="{{ lang.t('nav') }}">
+      {% include ".icons/lucide/menu.svg" %}
+    </label>
+    <a href="{{ nav.homepage.url | url }}" class="pn-logo" aria-label="PNLCS documentation home" data-md-component="logo">
+      <span class="pn-logo__word">PNLCS<i></i></span><span class="pn-logo__docs">Docs</span>
+    </a>
+
+    <ul class="pn-sitelinks" aria-label="pnlcs.com">
+      <li><a href="{{ config.extra.site_home }}">pnlcs.com</a></li>
+      <li><a href="{{ config.extra.site_home }}whats-new.html">What’s new</a></li>
+      <li><a href="{{ config.extra.site_home }}community.html">Community</a></li>
+    </ul>
+
+    <div class="pn-header__search">
+      {% if "search" in config.plugins %}
+        <label class="md-header__button md-icon" for="__search" aria-label="{{ lang.t('search') }}">
+          {% include ".icons/lucide/search.svg" %}
+        </label>
+        {% include "partials/search.html" %}
+      {% endif %}
+    </div>
+
+    {% if config.theme.palette and not config.theme.palette is mapping %}
+      {% include "partials/palette.html" %}
+    {% endif %}
+    {% if not config.theme.palette is mapping %}
+      {% include "partials/javascripts/palette.html" %}
+    {% endif %}
+
+    <div class="md-header__source pn-header__source">
+      {% include "partials/source.html" %}
+    </div>
+    <a class="pn-btn pn-btn--teal pn-header__demo" href="{{ config.extra.demo }}" data-cta="docs-header-demo">Live demo</a>
+  </nav>
+  {% include "partials/tabs.html" %}
+</header>

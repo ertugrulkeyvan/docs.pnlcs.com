@@ -1,0 +1,107 @@
+{% extends "main.html" %}
+{#- Landing page: start from what the reader wants to do, not from the table of contents. -#}
+
+{% block tabs %}{{ super() }}{% endblock %}
+
+{% block content %}
+{% set go %}{% include ".icons/lucide/arrow-right.svg" %}{% endset %}
+<div class="pn-home-page">
+  <section class="pn-hero">
+    <div class="pn-hero__inner">
+      <h1>PNLCS documentation</h1>
+      <p class="pn-hero__lede">Install PNLCS, sell your first plan, move over from WHMCS, and build on the API, hooks and MCP server.</p>
+      <button type="button" class="pn-hero__search" data-pn-open-search>
+        {% include ".icons/lucide/search.svg" %}
+        <span>Search the docs</span>
+        <kbd>⌘ K</kbd>
+      </button>
+      <p class="pn-hero__meta">New to PNLCS? Read <a href="{{ config.extra.site_home }}features.html">what it does</a> or try the <a href="{{ config.extra.demo }}">live demo</a> first.</p>
+    </div>
+  </section>
+
+  <section class="pn-band">
+    <div class="pn-band__inner">
+      <h2>What do you want to do?</h2>
+      <p class="pn-band__lede">Each path is a short series of pages, in order.</p>
+      <ul class="pn-tasks">
+        {% for t in [
+          ("rocket", "Install PNLCS", "With Docker, on your own server, or in a hosting panel account.", "install/"),
+          ("credit-card", "Make your first sale", "First login, the setup checklist, then a paid and provisioned order.", "getting-started/first-login/"),
+          ("repeat", "Move from WHMCS", "What carries over, what does not, and the order to switch in.", "guides/migrate-from-whmcs/"),
+          ("server", "Connect a server", "Create hosting accounts automatically when an order is paid.", "guides/connect-a-server/"),
+          ("hard-drive", "Sell VPS on Proxmox VE", "Five steps from a Proxmox node to a customer’s running VPS.", "guides/sell-vps-on-proxmox/"),
+          ("container", "Sell Docker apps", "WordPress, n8n and other apps inside the customer’s plan limits.", "guides/sell-docker-apps/"),
+          ("webhook", "Write a module or hook", "Server, gateway and registrar modules; WHMCS-style hooks.", "developer/"),
+          ("life-buoy", "Fix a problem", "Common errors and their causes, and the FAQ.", "troubleshooting/common-issues/"),
+        ] %}
+          <li>
+            <a href="{{ t[3] | url }}">
+              <span class="pn-tasks__i">{% include ".icons/lucide/" ~ t[0] ~ ".svg" %}</span>
+              <span class="pn-tasks__t">{{ t[1] }}</span>
+              <span class="pn-tasks__d">{{ t[2] }}</span>
+              <span class="pn-tasks__go">{{ go }}</span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+
+  <section class="pn-band pn-band--paper">
+    <div class="pn-band__inner">
+      <h2>Build on PNLCS</h2>
+      <p class="pn-band__lede">Everything the admin area does is also reachable from code.</p>
+      <div class="pn-build">
+        <ul>
+          <li><a href="{{ 'api/' | url }}"><strong>API reference</strong></a><span>171 actions with parameters, responses and permissions, plus an OpenAPI 3.1 file.</span></li>
+          <li><a href="{{ 'mcp/' | url }}"><strong>MCP server</strong></a><span>Give an AI assistant 15 read tools, and 7 write tools if you allow them.</span></li>
+          <li><a href="{{ 'developer/hooks/' | url }}"><strong>Hooks</strong></a><span>Run your own code when PNLCS creates an invoice, opens a ticket and more.</span></li>
+          <li><a href="{{ 'developer/modules/' | url }}"><strong>Modules and themes</strong></a><span>Add a control panel, payment gateway or registrar; restyle the client area.</span></li>
+        </ul>
+        <div class="highlight"><pre><code><span class="nb">curl</span> -G https://example.com/api/v1/getclients <span class="se">\</span>
+  -H <span class="s2">"X-API-Key: </span><span class="nv">$PNLCS_IDENTIFIER</span><span class="s2">"</span> <span class="se">\</span>
+  -H <span class="s2">"X-API-Secret: </span><span class="nv">$PNLCS_SECRET</span><span class="s2">"</span> <span class="se">\</span>
+  --data-urlencode <span class="s2">"limitnum=5"</span></code></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pn-band">
+    <div class="pn-band__inner">
+      <h2>All topics</h2>
+      <p class="pn-band__lede">The same pages as the menu, on one screen.</p>
+      <div class="pn-index">
+        {% for section in nav.items if section.children %}
+          <div>
+            <h3>{{ section.title }}</h3>
+            <ul>
+              {% for item in section.children %}
+                {% if item.children %}
+                  <li class="pn-index__group">{{ item.title }}</li>
+                  {% for sub in item.children %}
+                    <li><a href="{{ (sub.url or (sub.children | first).url) | url }}">{{ sub.title if not sub.is_index else 'Overview' }}</a></li>
+                  {% endfor %}
+                {% elif item.url %}
+                  <li><a href="{{ item.url | url }}">{{ item.title if not item.is_index else 'Overview' }}</a></li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="pn-band pn-band--paper">
+    <div class="pn-band__inner">
+      <h2>Need help?</h2>
+      <p class="pn-help">
+        <a href="https://github.com/Panelica/pnlcs/discussions">Ask in GitHub Discussions</a>
+        <a href="https://forum.panelica.com/">Panelica forum</a>
+        <a href="https://github.com/Panelica/pnlcs/issues">Report a bug in PNLCS</a>
+        <a href="{{ config.extra.docs_repo }}/issues">Report a problem with these docs</a>
+      </p>
+    </div>
+  </section>
+</div>
+{% endblock %}

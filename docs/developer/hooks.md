@@ -1,0 +1,130 @@
+# Hooks
+
+WHMCS-compatible hook system. Register callbacks against named hook points;
+core code fires them at the right moments. A throwing callback is logged and
+skipped — a broken hook can never break billing or provisioning.
+
+## Registering a hook
+
+```php
+// priority optional (default 10, lower runs first)
+add_hook('InvoicePaid', 1, function (array $vars) {
+    $invoice = $vars['invoice'];          // App\Models\Invoice
+    // ...
+});
+```
+
+## Where to put hook files
+
+| Location | Loaded |
+|---|---|
+| `app/Hooks/*.php` | always (project-level hooks) |
+| `modules/Gateways/<Name>/hooks.php` | always |
+| `modules/Servers/<Name>/hooks.php` | always |
+| `modules/Registrars/<Name>/hooks.php` | always |
+| `modules/Ssl/<Name>/hooks.php` | always |
+| `modules/Addons/<Name>/hooks.php` | only when the addon is **active** |
+
+Each file simply calls `add_hook(...)` at top level. Files are loaded once per
+request during application boot.
+
+## Firing a hook from your own code
+
+```php
+$results = run_hook('MyCustomPoint', ['foo' => $bar]);
+```
+
+## Hook points
+
+### Billing
+| Hook | Params | When |
+|---|---|---|
+| `InvoiceCreated` / `InvoiceCreation` | invoice | new invoice generated |
+| `InvoicePaid` | invoice, transactionId | invoice fully settled (any payment source) |
+| `InvoicePartiallyPaid` | invoice, amount, balance | partial payment recorded |
+
+| `RefundIssued` | invoice, amount, gateway, refund_id | a refund was issued |
+
+### Orders
+| Hook | Params | When |
+|---|---|---|
+| `OrderPlaced` / `AfterShoppingCartCheckout` | order | order created |
+| `AcceptOrder` | order, manual | order accepted (auto or by admin) |
+| `PendingOrder` | order | paid order awaiting manual acceptance |
+| `CancelOrder` | order | order being cancelled |
+| `FraudOrder` | order | order marked as fraud |
+
+### Quotes
+| Hook | Params | When |
+|---|---|---|
+| `QuoteAccepted` | quote, invoice | the customer accepted a quote (invoice raised) |
+| `QuoteDeclined` | quote, reason | the customer declined a quote |
+
+### Provisioning (server modules)
+| Hook | Params | When |
+|---|---|---|
+| `PreModuleCreate` | service | before module create |
+| `AfterModuleCreate` | service, result | module create succeeded |
+| `PreModuleSuspend` | service, reason | before suspend |
+| `AfterModuleSuspend` | service, reason | suspend succeeded |
+| `PreModuleUnsuspend` | service | before unsuspend |
+| `AfterModuleUnsuspend` | service | unsuspend succeeded |
+| `PreModuleTerminate` | service | before terminate |
+| `AfterModuleTerminate` | service | terminate succeeded |
+| `AfterModulePassword` | service | password change succeeded |
+| `AfterModuleChangePackage` | service, newProduct | package change succeeded |
+| `ModuleActionFailed` | service, action, error | any module action failed (queued for retry) |
+
+### Services (post-provisioning domain events)
+| Hook | Params | When |
+|---|---|---|
+| `ServiceActivated` | service | service became active |
+| `ServiceSuspended` | service, reason | service suspended |
+| `ServiceUnsuspended` | service | suspension lifted (on a server, or locally for a service with none) |
+| `ServiceTerminated` | service | service terminated |
+| `InvoiceCancelled` | invoice | an invoice was cancelled (admin, bulk action or API) |
+| `ClientEdit` | client, userid, changes, olddata | a client's own details changed (not the balance) |
+| `ClientDelete` | client, userid | a client is about to be deleted |
+| `EmailPreSend` | to, subject, message | a mail is about to leave; return `['abortsend' => true]` to stop it |
+| `ShoppingCartValidateCheckout` | cart, clientId, paymentMethod | the customer submits checkout; return a message (or a list) to refuse the order with it |
+| `DailyCronJob` | — | once a day (00:10, scheduler) |
+| `DownloadRequested` | download, clientId, user | a customer asks for a download, after the access check; return `['abort' => 'reason']` to refuse (403) or `['path' => '/absolute/file', 'name' => 'file.zip']` to hand over that file instead |
+| `DomainRegistered` (also `AfterRegistrarRegistration`) | domain | the registrar registered an ordered domain |
+| `DomainRenewed` (also `AfterRegistrarRenewal`) | domain, years | a renewal went through at the registrar, or was recorded for a domain with no registrar module |
+| `DomainTransferStarted` (also `AfterRegistrarTransfer`) | domain | the registrar accepted a transfer request (it completes days later at the registry) |
+| `DomainExpired` | domain, status | the daily domain sync moved a domain past its expiry date to `grace`, `redemption` or `expired` |
+
+### Clients & Support
+| Hook | Params | When |
+|---|---|---|
+| `ClientCreated` / `ClientAdd` | client | new client registered |
+| `TicketOpened` / `TicketOpen` | ticket, isAdmin | ticket opened (isAdmin: opened by staff) |
+| `TicketReplied` | ticket, replyMessage, isStaffReply | ticket reply added |
+
+### System
+| Hook | Params | When |
+|---|---|---|
+| `AfterDatabaseBackup` | file, size | the database backup was written |
+| `CurrencyRatesUpdated` | base, updated, missing | the daily exchange-rate update ran |
+
+## Debugging
+
+```php
+app(\App\Services\HookManager::class)->registered(); // point => callback count
+app(\App\Services\HookManager::class)->firedLog();   // fired this request
+```
+
+
+## Output hooks
+
+A callback returns an HTML string, which is printed as it is; anything else is ignored. As in WHMCS.
+
+| Hook | Vars | Printed |
+|---|---|---|
+| `ClientAreaHeadOutput` | user | before `</head>` on the client area, the sign-in and sign-up pages, the home page and the legal pages |
+| `ClientAreaFooterOutput` | user | before `</body>` on the same pages |
+| `ClientAreaProductDetailsOutput` | service | in a panel on the client's service page |
+| `AdminAreaHeadOutput` | admin | before `</head>` in the admin area |
+| `AdminAreaFooterOutput` | admin | before `</body>` in the admin area |
+
+A theme that replaces one of these layouts should call `hook_output()` at the same places, so addons keep working with it.

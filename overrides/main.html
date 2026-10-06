@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#141a31">
+{% endblock %}
+
+{#- Shown above every page; the reader can dismiss it (announce.dismiss). -#}
+{% block announce %}
+  <span class="pn-announce__tag">Rewrite in progress</span>
+  These pages are being checked against PNLCS main, page by page.
+  Found something wrong? <a href="{{ config.extra.docs_repo }}/issues">Open an issue</a>.
+{% endblock %}
+
+{% block content %}
+  {% include "partials/actions.html" %}
+  {% if "<h1" not in page.content %}
+    <h1>{{ page.title | d(config.site_name, true) }}</h1>
+  {% endif %}
+
+  {#- tools/build.py moves this block below the page's <h1> and fills in the date from git. -#}
+  <!--pn-top-->
+  <p class="pn-meta"><!--pn-updated--></p>
+
+  {% if page.meta and page.meta.vars %}
+    <form class="pn-vars" data-pn-vars aria-labelledby="pn-vars-title" onsubmit="return false">
+      <p class="pn-vars__title" id="pn-vars-title">
+        {% include ".icons/lucide/sliders-horizontal.svg" %}
+        Fill in your own values. Every command on this page updates as you type.
+      </p>
+      <div class="pn-vars__fields">
+        {% for name, default in page.meta.vars | items %}
+          <label>
+            <span>{{ name | replace("_", " ") | capitalize }}</span>
+            <input type="text" name="{{ name }}" data-default="{{ default }}" placeholder="{{ default }}" spellcheck="false" autocomplete="off">
+          </label>
+        {% endfor %}
+      </div>
+      <button type="button" class="pn-vars__reset" data-pn-vars-reset>Reset</button>
+    </form>
+  {% endif %}
+  <!--/pn-top-->
+
+  {{ page.content }}
+
+  {% if not (page.meta and page.meta.feedback == false) %}
+    <aside class="pn-feedback" data-pn-feedback>
+      <p class="pn-feedback__q">Did this page help you?</p>
+      <div class="pn-feedback__a">
+        <button type="button" data-value="yes">{% include ".icons/lucide/thumbs-up.svg" %} Yes</button>
+        <button type="button" data-value="no">{% include ".icons/lucide/thumbs-down.svg" %} No</button>
+      </div>
+      <p class="pn-feedback__thanks" hidden>
+        Thanks. If something is missing or wrong,
+        <a href="{{ config.extra.docs_repo }}/issues/new?title={{ ('Docs: ' ~ page.title) | urlencode }}&body={{ ('Page: ' ~ config.site_url ~ page.url) | urlencode }}">tell us in an issue</a>.
+      </p>
+    </aside>
+  {% endif %}
+{% endblock %}
+
+{% block footer %}
+  {% include "partials/footer.html" %}
+{% endblock %}
