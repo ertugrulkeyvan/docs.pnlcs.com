@@ -55,9 +55,19 @@ cite the file when you check it. No marketing language.
 python3 tools/upstream.py status    # new PNLCS commits since the last check, and any docs/ pages they changed
 python3 tools/upstream.py stale     # pages whose `sources:` changed since the last check
 python3 tools/upstream.py mark <commit>
+python3 tools/upstream.py sync      # merge the PNLCS docs/ changes since the last sync, three ways
 ```
 
 `PNLCS_SRC` points to a local clone of PNLCS.
+
+Two workflows do this on GitHub:
+
+- **Follow PNLCS** (daily, or by hand): runs `sync` and opens or updates the `pnlcs-sync` pull request. Our
+  own edits stay; a page both sides changed in the same place is listed as a conflict and left alone. It also
+  keeps one issue, "Pages that may be out of date", from `stale`.
+- **Publish** (every push to `main`): builds with `tools/build.py` and copies `site/` to the server with
+  rsync. It needs the `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_PATH`, `DEPLOY_SSH_KEY` and
+  `DEPLOY_KNOWN_HOSTS` secrets; without them it only builds.
 
 ## For AI assistants
 

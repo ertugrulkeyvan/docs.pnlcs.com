@@ -1,0 +1,88 @@
+name: Follow PNLCS
+
+# Once a day: merge what changed in the PNLCS docs/ folder into a pull request,
+# and keep one issue listing the pages whose code changed since they were checked.
+# Nothing reaches the site until a person merges the pull request.
+
+on:
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: follow-pnlcs
+  cancel-in-progress: false
+
+env:
+  PNLCS_SRC: ${{ github.workspace }}/../pnlcs
+  BRANCH: pnlcs-sync
+  STALE_TITLE: Pages that may be out of date
+
+jobs:
+  follow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Clone PNLCS
+        run: git clone --quiet --filter=blob:none https://github.com/Panelica/pnlcs.git "$PNLCS_SRC"
+
+      - name: Merge the docs/ changes
+        run: python3 tools/upstream.py sync --report "$RUNNER_TEMP/sync.md"
+
+      - name: Open or update the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard docs)" ]; then
+            echo "Nothing new in PNLCS docs/."
+            exit 0
+          fi
+          commit=$(python3 -c "import json; print(json.load(open('data/upstream.json'))['commit'])")
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git switch -C "$BRANCH"
+          git add -A docs data/upstream.json
+          git commit --quiet -m "Sync with PNLCS docs at $commit"
+          git push --quiet --force origin "$BRANCH"
+          {
+            cat "$RUNNER_TEMP/sync.md"
+            echo
+            echo "Check the merged pages and the build before merging; merging publishes the site."
+          } > "$RUNNER_TEMP/body.md"
+          if [ "$(gh pr view "$BRANCH" --json state -q .state 2>/dev/null)" = "OPEN" ]; then
+            gh pr edit "$BRANCH" --title "Sync with PNLCS docs at $commit" --body-file "$RUNNER_TEMP/body.md"
+          else
+            gh pr create --base main --head "$BRANCH" --title "Sync with PNLCS docs at $commit" --body-file "$RUNNER_TEMP/body.md"
+          fi
+
+      - name: Update the out-of-date pages issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git switch --quiet main
+          python3 tools/upstream.py stale > "$RUNNER_TEMP/stale.txt"
+          cat "$RUNNER_TEMP/stale.txt"
+          number=$(gh issue list --state open --search "\"$STALE_TITLE\" in:title" --json number -q '.[0].number')
+          if grep -q '^0 page(s) may be out of date' "$RUNNER_TEMP/stale.txt"; then
+            [ -n "$number" ] && gh issue close "$number" --comment "No page is out of date any more."
+            exit 0
+          fi
+          {
+            echo "The code these pages describe (their \`sources:\`) changed in PNLCS after the docs were last checked."
+            echo "Fix the pages, then run \`python3 tools/upstream.py mark\` and commit \`data/upstream.json\`."
+            echo
+            echo '```'
+            cat "$RUNNER_TEMP/stale.txt"
+            echo '```'
+          } > "$RUNNER_TEMP/issue.md"
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --body-file "$RUNNER_TEMP/issue.md"
+          else
+            gh issue create --title "$STALE_TITLE" --body-file "$RUNNER_TEMP/issue.md"
+          fi

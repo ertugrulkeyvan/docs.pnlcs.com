@@ -7,6 +7,7 @@ through a local clone of PNLCS (PNLCS_SRC, default ../../../pratix/pnlcs-modulle
     python3 tools/upstream.py status        # what changed in PNLCS since the last check
     python3 tools/upstream.py stale         # pages whose `sources:` changed since they were checked
     python3 tools/upstream.py mark <commit> # record that the docs are checked up to <commit>
+    python3 tools/upstream.py sync [--report FILE]  # merge PNLCS docs/ changes since the last sync
     python3 tools/upstream.py import        # first import only: record per-page dates from PNLCS docs/
 
 A page lists the code it describes in its front matter:
@@ -25,6 +26,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 from datetime import date
 from pathlib import Path
 
@@ -37,6 +39,12 @@ REF = os.environ.get("PNLCS_REF", "origin/main")
 
 def git(*args: str) -> str:
     return subprocess.run(["git", "-C", str(SRC), *args], capture_output=True, text=True, check=True).stdout
+
+
+def git_blob(rev: str, path: str) -> bytes | None:
+    """A file as PNLCS had it at `rev`, or None if it did not exist there."""
+    result = subprocess.run(["git", "-C", str(SRC), "show", f"{rev}:{path}"], capture_output=True, check=False)
+    return result.stdout if result.returncode == 0 else None
 
 
 def load() -> dict:
@@ -128,13 +136,88 @@ def cmd_mark(commit: str) -> int:
     return 0
 
 
+def merge3(ours: bytes, base: bytes, theirs: bytes) -> bytes | None:
+    """Three-way merge with `git merge-file`; None when the two sides conflict."""
+    with tempfile.TemporaryDirectory() as tmp:
+        paths = []
+        for name, data in (("ours", ours), ("base", base), ("theirs", theirs)):
+            path = Path(tmp) / name
+            path.write_bytes(data)
+            paths.append(str(path))
+        result = subprocess.run(["git", "merge-file", "-p", *paths], capture_output=True, check=False)
+    return result.stdout if result.returncode == 0 else None
+
+
+def cmd_sync(report: Path | None) -> int:
+    """Bring the PNLCS docs/ changes since the last sync into these pages.
+
+    Each changed page is merged three ways (the PNLCS page at the last sync, ours, the PNLCS page now), so
+    our own edits stay. A page both sides changed in the same place is left as it is and listed as a conflict.
+    """
+    state = load()
+    base = state.get("commit")
+    if not base:
+        print("no synced commit; run `import` first")
+        return 1
+    head = git("rev-parse", "--short", REF).strip()
+    lines = [f"PNLCS `docs/` changes from `{base}` to `{head}`.", ""]
+    if git("rev-parse", base) == git("rev-parse", REF):
+        print(f"PNLCS docs/ unchanged since {base}.")
+        return 0
+
+    done: dict[str, list[str]] = {"merged": [], "added": [], "conflict": [], "deleted": []}
+    for row in git("diff", "--name-status", "--no-renames", f"{base}..{REF}", "--", "docs").splitlines():
+        status, path = row.split("\t", 1)
+        rel = path.removeprefix("docs/")
+        ours = DOCS / rel
+        if status == "D":
+            done["deleted"].append(rel)
+            continue
+        theirs = git_blob(REF, path) or b""
+        if not ours.exists():
+            ours.parent.mkdir(parents=True, exist_ok=True)
+            ours.write_bytes(theirs)
+            done["added"].append(rel)
+        else:
+            merged = merge3(ours.read_bytes(), git_blob(base, path) or b"", theirs)
+            if merged is None:
+                done["conflict"].append(rel)
+                continue
+            ours.write_bytes(merged)
+            done["merged"].append(rel)
+        state.setdefault("files", {})[rel] = git("log", "-1", "--format=%cs", REF, "--", path).strip()
+
+    titles = {
+        "merged": "Merged",
+        "added": "New in PNLCS, added here (put them in the `nav:` of mkdocs.yml)",
+        "conflict": "Conflicts, left unchanged: merge these by hand",
+        "deleted": "Deleted in PNLCS, kept here: decide by hand",
+    }
+    for key, title in titles.items():
+        if done[key]:
+            lines += [f"**{title}**", ""] + [f"- `{rel}`" for rel in done[key]] + [""]
+    if git("diff", "--name-only", f"{base}..{REF}", "--", "mkdocs.yml").strip():
+        lines += ["PNLCS also changed its `mkdocs.yml`; compare its `nav:` with ours.", ""]
+
+    state["commit"] = head
+    save(state)
+    text = "\n".join(lines)
+    print(text)
+    if report:
+        report.write_text(text + "\n")
+    return 0
+
+
 def main(argv: list[str]) -> int:
     if not SRC.exists():
         print(f"PNLCS clone not found at {SRC}; set PNLCS_SRC")
         return 1
-    if not argv or argv[0] not in {"status", "stale", "mark", "import"}:
+    if not argv or argv[0] not in {"status", "stale", "mark", "import", "sync"}:
         print(__doc__)
         return 1
+    if argv[0] == "sync":
+        report = Path(argv[2]) if len(argv) > 2 and argv[1] == "--report" else None
+        return cmd_sync(report)
     if argv[0] == "mark":
         return cmd_mark(argv[1] if len(argv) > 1 else REF)
     return {"status": cmd_status, "stale": cmd_stale, "import": cmd_import}[argv[0]]()

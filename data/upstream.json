@@ -1,5 +1,5 @@
 {
-  "checked": "2d724001",
+  "checked": "6af8ac59",
   "commit": "6af8ac59",
   "files": {
     "api/affiliates.md": "2026-09-24",
@@ -24,6 +24,7 @@
     "developer/hooks.md": "2026-10-19",
     "developer/index.md": "2026-09-24",
     "developer/modules.md": "2026-10-19",
+    "developer/releasing.md": "2026-10-13",
     "developer/themes.md": "2026-10-10",
     "developer/translations.md": "2026-10-10",
     "getting-started/first-login.md": "2026-09-24",
@@ -64,11 +65,10 @@
     "install/updating.md": "2026-10-13",
     "mcp/index.md": "2026-09-24",
     "mcp/tools.md": "2026-09-24",
+    "modules/aapanel.md": "2026-10-10",
     "reference/scheduled-commands.md": "2026-10-07",
     "troubleshooting/common-issues.md": "2026-09-24",
-    "troubleshooting/faq.md": "2026-09-24",
-    "developer/releasing.md": "2026-10-13",
-    "modules/aapanel.md": "2026-10-10"
+    "troubleshooting/faq.md": "2026-09-24"
   },
   "imported_at": "2026-10-06"
 }

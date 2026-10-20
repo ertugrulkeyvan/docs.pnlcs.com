@@ -1,0 +1,54 @@
+name: Publish
+
+# Every push to main builds the site and copies it to the server.
+# Until the DEPLOY_* secrets exist it only builds, so a broken page still shows up here.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # tools/build.py reads the "Updated" dates from git history
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - run: python3 tools/build.py
+
+      - name: Copy to the server
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          if [ -z "$DEPLOY_SSH_KEY" ]; then
+            echo "::notice::DEPLOY_* secrets are not set yet: built, not published."
+            exit 0
+          fi
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy
+          chmod 600 ~/.ssh/deploy
+          # .well-known (certificates) and .user.ini belong to the server, not to the site.
+          rsync -az --delete --exclude .well-known --exclude .user.ini \
+            -e "ssh -i ~/.ssh/deploy -o IdentitiesOnly=yes" \
+            site/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
