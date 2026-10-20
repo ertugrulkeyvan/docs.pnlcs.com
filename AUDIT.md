@@ -27,7 +27,7 @@ PNLCS `docs/` changes up to **6af8ac59** (2026-10-20) are merged in: 13 pages up
   - M: wizard default language offers 12 locales; requirements step also checks `vendor/`, `public/build/`, `storage/framework`, `storage/logs`; admin needs a first name and a 6+ character password; the database step only skips when `migrations` exists.
 - [x] `install/docker.md` W: invoice PDFs are rendered on demand, never stored [app/Services/InvoicePdfService.php].
 - [x] `install/backups.md` W: same, "generated invoice PDFs" are not in `storage/`.
-- [ ] `install/security.md` M: reCAPTCHA switches; customer account protection (emailed code before EPP code / lock change); new-device sign-in alerts (template off by default); staff can be disabled (their API keys stop too); staff 2FA recovery codes; social login needs your own OAuth client.
+- [x] `install/security.md` M: reCAPTCHA switches; customer account protection (emailed code before EPP code / lock change); new-device sign-in alerts (template off by default); staff can be disabled (their API keys stop too); staff 2FA recovery codes; social login needs your own OAuth client.
 - [x] `guides/deploy-plesk.md`
   - W: PHP `^8.4` now (installer checks ≥ 8.4.0); drop the 8.3 fallback.
   - W: `.node-version` does not exist.

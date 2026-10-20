@@ -24,13 +24,15 @@ server.
 ## Staff accounts
 
 - [ ] **Two-factor authentication** on every staff account: each person turns
-  it on under **My Account** (the menu under their name).
+  it on under **My Account** (the menu under their name). PNLCS then shows
+  backup codes once; each works one time in place of the app's code, so they
+  belong in a password manager.
 - [ ] **Least privilege.** Every role grants only what its people need
   ([Staff & Roles](../guides/staff-and-roles.md)); keep full-administrator
   roles for the few who need them.
-- [ ] **Delete accounts when people leave** (**Setup → Admin Accounts**). The
-  person can no longer sign in, and the account's API credentials stop working
-  at once.
+- [ ] **Disable or delete accounts when people leave** (**Setup → Admin
+  Accounts**). A disabled account keeps its history but cannot sign in, and
+  its API credentials stop working at once; deleting does the same for good.
 - [ ] **Read the activity log** now and then: **Utilities → Activity Log**
   records who did what.
 
@@ -50,8 +52,24 @@ server.
 - [ ] **Fraud screening** is set up if you sell to people you do not know:
   MaxMind or FraudLabs Pro under **Setup → General Settings → Fraud
   Screening**. Orders it holds wait in **Orders → Fraud**.
+- [ ] **reCAPTCHA** on the forms bots go for: **Setup → General Settings →
+  Google reCAPTCHA protection**. Enter the keys of a v2 "I'm not a robot"
+  site once, then switch it on per form: sign-in, account sign-up (register
+  page and checkout), password reset, the public contact form, and new
+  support tickets.
+- [ ] **Customer account protection** (same page, off by default): a customer
+  confirms with a six-digit code from their email before they can see a
+  domain's transfer code or change its lock. One confirmation lasts 15
+  minutes.
+- [ ] **New-device sign-in alerts**: customers get an email when their account
+  is signed in to from a device PNLCS has not seen. The **New Device Sign-in**
+  template ships disabled; enable it under **Setup → Email Templates**.
 - [ ] Customers can protect their own logins with two-factor authentication
   from their **Security** page in the client area.
+- [ ] **Social login** (Google, GitHub) uses your own OAuth client: create it
+  in the Google Cloud console or under GitHub → Settings → Developer
+  settings, with the redirect address shown under **Setup → General Settings
+  → Social Login**. Leave it off if you have not set one up.
 - [ ] Abusive addresses and domains go on **Setup → Banned IPs** and
   **Setup → Banned Emails**.
 
