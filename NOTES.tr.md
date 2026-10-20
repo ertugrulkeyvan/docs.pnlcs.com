@@ -44,7 +44,11 @@ python3 tools/build.py && python3 -m http.server 8094 --directory site
 
 ## Açık işler
 
-- [ ] Kullanıcı tasarımı onaylasın; GitHub'da `ertugrulkeyvan/docs.pnlcs.com` repo'su (henüz yok; `edit_uri` ona bakıyor).
+- [x] Repo açıldı (2026-10-20): `ertugrulkeyvan/docs.pnlcs.com`, public.
+- [x] Otomasyon (2026-10-20): **Follow PNLCS** her gün 04:17 UTC'de PNLCS `docs/` değişikliklerini üç yönlü birleştirip
+  `pnlcs-sync` PR'ı açar, "Pages that may be out of date" issue'sunu tutar. **Publish** her `main` push'unda build alır,
+  `DEPLOY_*` secret'ları girilince `site/`'ı srv1'e rsync'ler. Actions'ın PR açma izni repo ayarında açık.
+- [ ] srv1'de docs.pnlcs.com vhost + kısıtlı deploy anahtarı (AX41 oturumu, müşteri taşımasından sonra), secret'lar, sonra DNS.
 - [ ] Panelica ekibi: docs.pnlcs.com şu an `Panelica/pnlcs` GitHub Pages'ten yayında; geçiş ve upstream `docs/`'un geleceği.
 - [ ] AUDIT.md'yi bölüm bölüm işle.
 - [ ] Hooks, yetkiler, env, artisan, modüller referanslarını koddan üret.
