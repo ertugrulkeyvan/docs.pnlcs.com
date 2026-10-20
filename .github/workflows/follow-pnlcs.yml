@@ -65,7 +65,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git switch --quiet main
+          git checkout --quiet "$GITHUB_SHA"
           python3 tools/upstream.py stale > "$RUNNER_TEMP/stale.txt"
           cat "$RUNNER_TEMP/stale.txt"
           number=$(gh issue list --state open --search "\"$STALE_TITLE\" in:title" --json number -q '.[0].number')
