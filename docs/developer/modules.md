@@ -37,6 +37,7 @@ above is `Modules\Gateways\AcmePay\AcmePayModule`.
 | `name` | yes | Unique key, stored on invoices, products and settings. Lower-case, no spaces. |
 | `type` | yes | `gateway`, `server`, `registrar` or `ssl` |
 | `class` | yes | Fully qualified class name of the module |
+| `requires` | no | `{"pnlcs": ">=1.3 <2"}`: the PNLCS versions the module works with. An update to a version outside it does not start until the operator updates the module, disables it, or chooses to go ahead |
 | `version`, `display_name`, `description`, `author` | no | Informational |
 
 Two rules are enforced when the manifest is read, so a broken module cannot
@@ -60,6 +61,12 @@ out `name`, `type` or `class` is skipped silently.
 | `server` | `App\Contracts\ServerModuleInterface` | `create`, `suspend`, `unsuspend`, `terminate`, `changePassword`, `changePackage`, `usageUpdate`, `testConnection`, `getConfigFields`, `getModuleName` |
 | `registrar` | `App\Contracts\RegistrarModuleInterface` | `register`, `transfer`, `renew`, `getNameservers`, `saveNameservers`, `getEPPCode`, `getLockStatus`, `toggleLock`, `checkAvailability`, `getConfigFields`, `getModuleName` |
 | `ssl` | `App\Contracts\SslModuleInterface` | `purchaseCertificate`, `getCertificateStatus`, `renewCertificate`, `revokeCertificate`, `reissueCertificate`, `resendValidationEmail`, `changeValidationMethod`, `getApproverEmails`, `getWebServerTypes`, `getCertificateTypes`, `decodeCsr`, `generateCsr`, `testConnection`, `getConfigFields`, `getModuleName` |
+
+A server module that sells something bought per period from someone else (a
+software license, a resold service) can also offer `renew(Service $service): array`.
+It is called after a renewal invoice for the service is paid, once the due date
+has moved, so the period is bought from the vendor only when the customer has
+paid. A refusal is logged and raised as `ModuleActionFailed` (action `renew`).
 
 A gateway that can store a card and charge it later (automatic payment) also
 implements `App\Contracts\TokenizableGatewayInterface` (`beginVaulting`,
@@ -89,7 +96,8 @@ public function getConfigFields(): array
 ```
 
 Field types: `text`, `password` (never echoed back into the page), `textarea`,
-`select` (with `options`) and `yesno`. A gateway reads its saved values from
+`select` (with `options`) and `yesno`. A gateway field can carry a
+`description`, a sentence shown under it on the settings page. A gateway reads its saved values from
 `App\Models\GatewaySettings` (`gateway` = your `name`, `setting` = the field
 `name`); the Mollie and Tpay modules show the pattern in a few lines.
 

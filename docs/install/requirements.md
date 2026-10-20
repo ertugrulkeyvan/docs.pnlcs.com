@@ -5,7 +5,7 @@
 | PHP | **8.4**. The locked dependencies require it: PHP 8.3 installs, then answers every request with a 500. |
 | Database | MySQL 8.0, or MariaDB 10.6 or newer |
 | Web server | Nginx or Apache, with PHP-FPM |
-| Node.js | 18 or newer (20 LTS recommended), only to build the frontend assets |
+| Node.js | **20.19 or newer**, or 22.12 or newer, only to build the frontend assets. Vite 8 refuses to run on Node 18 and on 20 before 20.19. |
 | Composer | 2.x |
 | Tools | `git`, `unzip`, `curl`, `cron` |
 | Disk | About 130 MB for the application (code, PHP dependencies, built assets). Leave at least 2 GB free for the database, uploads and logs as they grow. `node_modules` (about 100 MB) is only needed while building. |

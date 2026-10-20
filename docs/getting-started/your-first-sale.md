@@ -26,21 +26,28 @@ name and save.
 
 **Setup → Products/Services → New Hosting Product**
 
-- **Name**: e.g. "Starter Hosting"
-- **Group**: the group you just made
-- **Server / Module**: pick the server this plan provisions on (or leave as
-  *Custom* if you'll set accounts up by hand)
-- **Auto-setup**: choose when the account is created —
-    - *On payment* — provision when the first invoice is paid (most common)
-    - *On order* — provision immediately, before payment
-    - *Manual* — you accept each order yourself
-- **Pricing**: set a price for one or more billing cycles (monthly, annually…)
+- **Product Name**: e.g. "Starter Hosting"
+- **Product Group**: the group you just made
+- **Server Module**: the kind of server this plan provisions on (Panelica,
+  cPanel, Plesk…), or none if you will set accounts up by hand. A product
+  picks a module, not a single server.
+- **Server Group** *(optional)*: limit it to the servers in one group; left on
+  *Any server of that type*, PNLCS uses any server with that module.
+- **Plan on the server**: the package the account is created with.
+- **Auto Setup**: choose when the account is created —
+    - *As soon as the first payment is received* (most common)
+    - *As soon as the order is placed*, before payment
+    - *Only when an admin accepts the order*
+- **Pricing**: a price per currency and billing cycle. `-1` disables a cycle.
 
-Save. Your product now appears in the customer shop.
+Press **Create Product**. PNLCS opens the product's edit page, where the rest
+of its settings live, for example **Free domain with this product**: the first
+year of a domain registered or transferred with it is free, and it renews at
+the normal price. The product now appears in the customer shop.
 
 !!! info "What is 'auto-setup'?"
     It decides *when* the hosting account is actually created on your server.
-    Most hosts use **on payment** so nobody gets a live account without paying.
+    Most hosts provision on the first payment so nobody gets a live account without paying.
     See [The Billing Lifecycle](../concepts/billing-lifecycle.md).
 
 ## Step 3 — Place a test order as a customer
@@ -49,7 +56,9 @@ Open an **incognito/private browser window** so you're not logged in as admin.
 
 1. Go to `https://example.com/client/register` and create a test customer.
 2. Browse the shop, pick your product, choose a billing cycle.
-3. Enter a domain name for the account and continue to checkout.
+3. Enter a domain name for the account and continue to checkout. If the
+   customer registers or transfers that domain, it is its own line in the
+   cart, next to the hosting.
 4. An **order** and an **unpaid invoice** are created.
 
 ## Step 4 — Pay the invoice

@@ -36,6 +36,9 @@ themes/
 
 - `slug`: lower-case letters, digits, `-` and `_`, starting with a letter or
   digit, at most 50 characters. It is the folder name.
+- `requires` (optional): `{"pnlcs": ">=1.3 <2"}`, the PNLCS versions the
+  theme works with. An update outside it does not start until the operator
+  updates the theme.
 - `colors`: applied as the active colour set when the theme is activated.
   Colours you leave out come from the Starter theme, so a theme can set only
   the few it changes. Look at `themes/starter/theme.json` for the full list of
@@ -74,8 +77,38 @@ Then activate it on **Setup → Appearance**. A theme with the slug of a
 built-in theme cannot be installed over it, and the active theme cannot be
 deleted.
 
+## Page descriptions and link previews
+
+The client layout prints a page's description, its Open Graph and X (Twitter)
+card tags (`partials.seo-meta`), and, with the language in the address on, its
+address in each language (`partials.locale-alternates`). A page tunes them with
+sections:
+
+- `@section('title', ...)`: the title shared links show.
+- `@section('meta_description', ...)`: its own description, instead of the
+  shop's one from **Setup → General**.
+- `@section('og_type', 'article')`: an article rather than a website.
+- `@section('seo_own', '1')`: the page writes all of these tags itself (a
+  blog with its own image, dates and language versions, for example) and the
+  layout prints none of them, so a shared link is not described twice.
+
+A theme that replaces the client layout keeps these two includes in its
+`<head>`.
+
+The shop's social media profiles (**Setup → General → Search engines and
+sharing**) are in `social_profiles()`: network => address, only the ones set,
+for `x`, `facebook`, `instagram`, `linkedin`, `youtube`, `tiktok`, `threads`
+and `medium`. `@include('partials.social-links')` draws them as icon links,
+or a theme draws its own. The home page also names them to search engines
+(schema.org `Organization`, `sameAs`) through `partials.seo-meta`.
+
 ## Keeping your theme through updates
 
-Built-in themes are part of PNLCS and are overwritten by updates; a theme with
-its own slug is not. Build yours under your own slug rather than editing a
-built-in one.
+Built-in themes are part of PNLCS and are updated with it; a theme with its
+own slug is never touched. Build yours under your own slug rather than editing
+a built-in one. (Edits to a built-in theme are not lost either: the updater
+merges them with the new version or asks you, like any change to a core file.)
+
+When an update changes a view your theme replaces, **Setup → Updates** lists it
+before you update: your copy keeps showing, without the change. New built-in
+themes take the `pnlcs-` prefix, so they never take a slug of yours.

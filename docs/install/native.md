@@ -10,6 +10,49 @@ vars:
 
 # Install on your own server
 
+## One command
+
+On a fresh Ubuntu 22.04 or 24.04, Debian 12 or 13, AlmaLinux 9 or Rocky Linux
+9 server, one command does the server work of this page (everything but
+HTTPS, and the administrator account you create in the wizard):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Panelica/pnlcs/main/install.sh | sudo bash -s -- --domain billing.example.com
+```
+
+It installs nginx, PHP 8.4 and MySQL or MariaDB, downloads the latest release
+and checks its signature against the PNLCS release key, creates the database,
+and sets up nginx, the scheduler, the firewall and (on AlmaLinux and Rocky)
+SELinux. It ends by printing the address of the install wizard, where you
+create your administrator account. Leave out `--domain` to use the server's IP
+address.
+
+- It stops before changing anything if `/var/www/pnlcs`, the database or the
+  nginx site already exists: it never touches an installation.
+- The database password is in `/root/pnlcs-install.txt` (readable by root
+  only), the full log in `/var/log/pnlcs-install.log`.
+- `--db-password` (with `--db-name`, `--db-user`, `--db-host`) uses a database
+  you created instead of installing a database server; `--version` installs
+  another release; `--help` lists every option.
+- HTTPS is not set up for you: follow [step 15](#15-turn-on-https) once the
+  domain points at the server.
+
+Run on freshly created servers, from the command to signing in as the
+administrator:
+
+| System | PHP | Database | Result |
+|---|---|---|---|
+| Ubuntu 22.04 LTS | 8.4 (ondrej PPA) | MySQL 8.0 | installed, wizard completed, scheduler runs |
+| Ubuntu 24.04 LTS | 8.4 (ondrej PPA) | MySQL 8.0 | installed, wizard completed, scheduler runs |
+| Debian 12 | 8.4 (sury) | MariaDB 10.11 | installed, wizard completed, scheduler runs |
+| Debian 13 | 8.4 (Debian) | MariaDB 11.8 | installed, wizard completed, scheduler runs |
+| AlmaLinux 9 | 8.4 (Remi) | MySQL 8.0 | installed with SELinux enforcing (no denials), wizard completed, scheduler runs |
+| Rocky Linux 9 | 8.4 (Remi) | MySQL 8.0 | installed with SELinux enforcing (no denials), wizard completed, scheduler runs |
+
+The rest of this page is the same installation done by hand.
+
+## Step by step
+
 A plain Laravel installation: PHP-FPM 8.4, MySQL or MariaDB, and Nginx. Every
 command below was run, in this order, on freshly created servers:
 
@@ -130,7 +173,7 @@ sudo systemctl enable --now php-fpm mysqld nginx
 php -v          # PHP 8.4.x — 8.3 will 500 at runtime
 php -m | grep -E '^(bcmath|curl|dom|fileinfo|gd|intl|mbstring|openssl|pdo_mysql|tokenizer|xml|zip)$' | wc -l   # 12
 mysql --version # MySQL 8.0 / MariaDB 10.6 or newer
-node -v         # v18 or newer
+node -v         # v20.19+ or v22.12+
 composer -V     # Composer version 2.x
 ```
 
@@ -252,10 +295,12 @@ username and password *you* choose. Seeding by hand creates an administrator
 first - and the wizard, seeing one, locks itself before you ever reach it,
 leaving you with a default `admin` / `admin123` account you never chose.
 
-The wizard's seeding provides everything an installation starts with: four
-starter currencies (USD, EUR, GBP, TRY), ticket departments and statuses,
-25 email templates, 30 languages, the full translation set, the knowledge
-base, and default homepage sections.
+The wizard's seeding provides what an installation starts with: four
+starter currencies (USD, EUR, GBP, TRY), VAT rules for European countries,
+ticket departments and statuses, 32 email templates, 30 languages, domain
+pricing and default homepage sections. The knowledge base articles arrive
+with the migrations in this step, and the interface texts ship in `lang/`,
+so neither depends on the seeder.
 
 *Headless installs only:* if you are scripting an installation with no
 browser step at all, `php artisan db:seed --force` is how you seed - the
@@ -286,7 +331,8 @@ pn php artisan optimize
 SELinux is enforcing on AlmaLinux and Rocky. Without these lines every page
 answers **500**: PHP-FPM may not write to `storage/`, and may not connect to
 the database. We measured exactly those two denials in the audit log of a
-clean AlmaLinux 9 server.
+clean AlmaLinux 9 server. The mail lines below came from a clean Rocky Linux 9
+server with Postfix, sending the test email with PHP mail.
 
 ```bash
 sudo semanage fcontext -a -t httpd_sys_rw_content_t "/var/www/pnlcs/storage(/.*)?"
@@ -296,7 +342,23 @@ sudo restorecon -R /var/www/pnlcs
 
 sudo setsebool -P httpd_can_network_connect_db 1   # PHP → MySQL/MariaDB
 sudo setsebool -P httpd_can_network_connect 1      # PHP → payment gateways, server and registrar APIs, SMTP
+sudo setsebool -P httpd_can_sendmail 1             # PHP mail: the local sendmail (Postfix)
 ```
+
+With **PHP mail** (Setup → General → Mail) the mail goes to the local
+`sendmail`. Laravel's default `sendmail -bs` has Postfix start its own SMTP
+daemon, which SELinux does not allow from a web request even with
+`httpd_can_sendmail`; set this in `.env` so sendmail reads the message as it
+is (the one-command installer does both):
+
+```bash
+MAIL_SENDMAIL_PATH="/usr/sbin/sendmail -t -i"
+```
+
+Without them the test email on that page fails with *Connection to "process
+/usr/sbin/sendmail -bs -i" has been closed unexpectedly*. Mail sent by the
+scheduler is not confined and goes out either way, so the failure shows only
+on what a web request sends.
 
 Do not switch SELinux off to make the errors go away — these rules give the
 application exactly what it needs and nothing more.
@@ -369,15 +431,22 @@ rewritten to `index.php`.
 Open **http://example.com/install** in your browser. The wizard walks
 through:
 
-1. **Requirements** — PHP version, every required extension, and whether
-   `storage/`, `bootstrap/cache/` and `.env` are writable. Everything must be
-   green before **Continue** appears; a red line names exactly what to fix.
-2. **Database** — skipped automatically, because you already ran the
-   migrations in step 6.
-3. **Administrator** — the username, email and password *you* choose. There
-   is no default password to change afterwards.
-4. **Application** — the public URL, the company name and the default
-   language.
+The language switch at the top of the wizard offers English, Türkçe,
+Deutsch, Polski and 中文; the language you pick there is also preselected as
+the default language on the last step.
+
+1. **Requirements** — PHP 8.4, every required extension, whether `storage/`
+   (with `framework/` and `logs/`), `bootstrap/cache/` and `.env` are
+   writable, and whether `vendor/` and `public/build/` exist (steps 2 and 7).
+   Everything must be green before **Continue** appears; a red line names
+   exactly what to fix.
+2. **Database** — skipped automatically when the migrations from step 6 have
+   all run. If some are still pending, the wizard runs them first.
+3. **Administrator** — the username, first name, email and password *you*
+   choose (at least 6 characters). There is no default password to change
+   afterwards.
+4. **Application** — the public URL, the **Application Name** (written to
+   `APP_NAME` in `.env`) and the default language, one of 12.
 5. **Finish** — the wizard writes a lock file and closes itself permanently;
    `/install` answers 404 from then on.
 

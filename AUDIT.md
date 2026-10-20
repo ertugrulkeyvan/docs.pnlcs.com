@@ -15,17 +15,20 @@ Tags: **W** wrong · **O** outdated · **M** missing.
 
 ## Install
 
-- [ ] `install/requirements.md` W: Node.js 18 → **20.19 or 22.12+** (vite 8, laravel-vite-plugin 3, rolldown) [package-lock.json].
-- [ ] `install/native.md`
+PNLCS `docs/` changes up to **6af8ac59** (2026-10-20) are merged in: 13 pages updated, `developer/releasing.md` and
+`modules/aapanel.md` added. Fixes below were checked against that commit.
+
+- [x] `install/requirements.md` W: Node.js 18 → **20.19 or 22.12+** (vite 8, laravel-vite-plugin 3, rolldown) [package-lock.json].
+- [x] `install/native.md`
   - W: `node -v # v18 or newer` → 20.19+.
   - W: the wizard seeds 32 email templates, not 25 [database/seeders/EmailTemplateSeeder.php].
   - W: the knowledge base comes from migrations, not the wizard's seeding; translations come from `lang/`; domain pricing is seeded too.
   - W: step 12.4 asks for **Application Name** (`APP_NAME`), not the company name.
   - M: wizard default language offers 12 locales; requirements step also checks `vendor/`, `public/build/`, `storage/framework`, `storage/logs`; admin needs a first name and a 6+ character password; the database step only skips when `migrations` exists.
-- [ ] `install/docker.md` W: invoice PDFs are rendered on demand, never stored [app/Services/InvoicePdfService.php].
-- [ ] `install/backups.md` W: same, "generated invoice PDFs" are not in `storage/`.
+- [x] `install/docker.md` W: invoice PDFs are rendered on demand, never stored [app/Services/InvoicePdfService.php].
+- [x] `install/backups.md` W: same, "generated invoice PDFs" are not in `storage/`.
 - [ ] `install/security.md` M: reCAPTCHA switches; customer account protection (emailed code before EPP code / lock change); new-device sign-in alerts (template off by default); staff can be disabled (their API keys stop too); staff 2FA recovery codes; social login needs your own OAuth client.
-- [ ] `guides/deploy-plesk.md`
+- [x] `guides/deploy-plesk.md`
   - W: PHP `^8.4` now (installer checks ≥ 8.4.0); drop the 8.3 fallback.
   - W: `.node-version` does not exist.
   - W: extensions are bcmath, curl, dom, fileinfo, gd, intl, mbstring, openssl, pdo_mysql, tokenizer, xml, zip [InstallController.php:32-35].
@@ -34,12 +37,12 @@ Tags: **W** wrong · **O** outdated · **M** missing.
 
 ## Getting started and concepts
 
-- [ ] `getting-started/setup-checklist.md`
+- [x] `getting-started/setup-checklist.md`
   - W: the dashboard checklist has 5 items (logo, email, gateway, server, product), not this page's 10 [DashboardController.php:102-132]; the logo / Appearance step is missing here.
   - W: Localization has no currency (that is Setup → Currencies); Invoices has no tax-display setting; "support email" is **Company Email**.
   - M: Legal (Terms / Privacy URLs, otherwise sign-up links go to `#`) and Legal identity.
-- [ ] `getting-started/your-first-sale.md`
-  - W: prices are set on the edit page after **Create Product**, not on the create form.
+- [x] `getting-started/your-first-sale.md`
+  - ~~W: prices are set on the edit page~~ — no longer true at 6af8ac59: the create form has a Pricing card again.
   - W: a product picks a server module and optional server group, not a server.
   - M: domain registration or transfer on a hosting order is its own cart line (2026-09-25); free first-year domain.
 - [ ] `concepts/overview.md` O: logins are separate users, one login can belong to several client accounts; W: invoice statuses.

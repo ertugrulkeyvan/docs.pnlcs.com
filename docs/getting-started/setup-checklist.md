@@ -1,20 +1,37 @@
 # Setup Checklist
 
 Work through these in order. Each takes a few minutes, and together they turn
-a fresh install into one that can take orders and provision hosting. The admin
-dashboard shows the same checklist and ticks items off as you complete them.
+a fresh install into one that can take orders and provision hosting.
+
+The admin dashboard shows a shorter version until it is complete: **Upload
+your logo**, **Configure email delivery**, **Add a payment gateway**,
+**Connect a server** and **Create your first product**. Each one ticks itself
+off when PNLCS sees it done. This page covers those five and the settings
+around them.
 
 !!! note
     You do not need every item to start, but **email** and at least **one
     payment gateway** are required before real customers can order.
 
-## 1. Company details
+## 1. Company details and logo
 
 **Setup → General Settings**
 
-- **Company Information**: company name, address, support email.
-- **Localization**: default language, currency and timezone.
-- **Invoices**: numbering, due terms and how tax is shown.
+- **Company Information**: company name, address and **Company Email**.
+- **Localization**: default language, default country, date format and
+  timezone.
+- **Invoices**: the numbering scheme and the default payment due (days).
+- **Terms and Privacy**: the addresses of your Terms of Service and Privacy
+  Policy. The registration form links to them; left empty, it names them
+  without a link.
+- **Legal identity**: the registered company name, when it differs from the
+  brand, plus tax office and registry numbers. Printed on invoices and legal
+  documents.
+
+**Setup → Currencies** holds the currencies you bill in; four (USD, EUR, GBP,
+TRY) are there from the start, USD as the default.
+
+**Setup → Appearance**: upload your logo. This is the dashboard's first step.
 
 This is your business identity: it appears on invoices, emails and the client
 area.
@@ -43,7 +60,7 @@ Tpay, or **Bank Transfer** for payments you confirm by hand.
 **Setup → Servers**
 
 Add the server accounts are created on (Panelica, cPanel, Plesk, DirectAdmin,
-HestiaCP, Proxmox or Vultr) and test the connection.
+HestiaCP, aaPanel, Proxmox or Vultr) and test the connection.
 
 ➡️ [Connect a Server](../guides/connect-a-server.md)
 
@@ -51,8 +68,8 @@ HestiaCP, Proxmox or Vultr) and test the connection.
 
 **Setup → Products/Services**
 
-Create a product group (for example "Shared Hosting"), then a product linked to
-your server, with a billing cycle and a price.
+Create a product group (for example "Shared Hosting"), then a product that uses
+your server's module, with a billing cycle and a price.
 
 ➡️ [Your First Sale](your-first-sale.md)
 

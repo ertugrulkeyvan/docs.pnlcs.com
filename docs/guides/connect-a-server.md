@@ -23,6 +23,17 @@ Servers**.
     - **API Key:** the `pk_live_...` key, and **API Secret:** the `sk_live_...`
       secret. Create them in the Panelica panel under **Settings → API Keys**;
       the secret is shown only once there.
+    - **Mail:** customers' mail apps are told the host name the panel gives
+      the domain's mail certificate, or else `mail.<their domain>`. When a
+      domain gets its first mailbox, PNLCS asks the panel for that domain's
+      mail certificate if it has none. The key needs the SSL permission for
+      that. A domain whose DNS is elsewhere needs its mail host name,
+      `webmail.`, `autoconfig.` and `autodiscover.` pointed at the server
+      before the certificate can be issued. When issuing failed, the
+      customer's email page lists these records (CNAMEs to the server's
+      hostname, or A records to its public address) with a button to request
+      the certificate again; a mail host name outside the customer's domain is
+      left to you.
 
 === "cPanel / WHM"
     - **Port:** 2087. **Username:** the WHM account, usually `root`.
@@ -39,7 +50,11 @@ Servers**.
 
 === "HestiaCP"
     - **Port:** 8083. **Username:** the admin account (default `admin`).
-    - Its access key in **Access Hash**, or its password in **Password**.
+    - **Access Key:** run `v-add-access-key 'admin' '*'` on the server and
+      paste the two values it prints, the Access Key ID and the Secret Access
+      Key, joined by a colon: `ID:Secret`.
+    - **Admin Password:** only for servers that still use the older
+      user-and-password login. It is not sent when an access key is set.
 
 === "Proxmox"
     - **Port:** 8006. No nameservers are needed.

@@ -14,16 +14,10 @@ to miss on Plesk specifically.
 - MySQL 8 (or MariaDB 10.11+)
 - Root or SSH access to the server for the manual steps below
 
-!!! warning "Use PHP 8.4, not 8.3"
-    PNLCS's `composer.json` states `^8.3`, but the shipped `composer.lock`
-    resolves to package versions (Symfony 8.x in particular) that require PHP
-    `>=8.4`. `composer install` will fail on PHP 8.3 with errors like
-    `symfony/xyz requires php >=8.4`. Set the domain's PHP version to **8.4**
-    in Plesk before installing — this avoids the issue entirely. If 8.4 isn't
-    available on your server, the alternative is running
-    `composer update --no-dev --optimize-autoloader` once to re-resolve an
-    8.3-compatible lock file, but starting on 8.4 is simpler and is what this
-    guide assumes from here on.
+!!! warning "PHP 8.4 is required"
+    PNLCS's `composer.json` requires PHP `^8.4` and the install wizard refuses
+    anything older. Set the domain's PHP version to **8.4** in Plesk
+    (**Domain → PHP Settings**) before installing.
 
 ## Option A — Using Plesk's Laravel Toolkit (recommended)
 
@@ -57,8 +51,7 @@ to miss on Plesk specifically.
    entry for you.
 
 !!! note "Node.js version"
-    PNLCS pins a Node version in `.node-version` (check the file — it may be
-    ahead of what your distro's package manager ships, e.g. Node 26). The
+    The frontend build needs **Node.js 20.19+ or 22.12+** (Vite 8). The
     Laravel Toolkit's own **Node.js** tab lets you pick a Node version for the
     *build step* independently of what's installed system-wide, so this
     usually isn't a manual concern under Option A.
@@ -76,8 +69,8 @@ to miss on Plesk specifically.
 
    In Plesk: **Domain → Hosting Settings → Document Root** → `pnlcs/public`.
 
-2. **Install PHP extensions.** PNLCS needs: `pdo_mysql, mbstring, bcmath,
-   ctype, fileinfo, json, openssl, tokenizer, xml, curl, gd, zip, intl`. On
+2. **Install PHP extensions.** The install wizard checks for: `bcmath, curl,
+   dom, fileinfo, gd, intl, mbstring, openssl, pdo_mysql, tokenizer, xml, zip`. On
    Plesk/Debian-based systems these come as `plesk-php84-<extension>`
    packages — check what's active first:
 
@@ -92,16 +85,15 @@ to miss on Plesk specifically.
    /opt/plesk/php/8.4/bin/php $(which composer) install --no-dev --optimize-autoloader
    ```
 
-4. **Install Node and build assets.** If the version in `.node-version` isn't
-   available via your distro's package manager (common for very recent
-   versions), use [nvm](https://github.com/nvm-sh/nvm) rather than fighting
-   distro packages:
+4. **Install Node and build assets.** You need Node.js 20.19+ or 22.12+. If
+   your distro's package manager ships an older one, use
+   [nvm](https://github.com/nvm-sh/nvm) rather than fighting distro packages:
 
    ```bash
    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
    export NVM_DIR="$HOME/.nvm"
    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-   nvm install "$(cat .node-version)"
+   nvm install 22
    npm ci
    npm run build
    ```
@@ -120,8 +112,11 @@ to miss on Plesk specifically.
    plesk repair fs example.com -y
    ```
 
-8. **Queue worker.** Plesk doesn't run long-lived processes on its own —
-   create a systemd unit:
+8. **Queue worker (optional).** The scheduler in step 9 already starts a
+   `queue:work` run every minute, so with `QUEUE_CONNECTION=database` queued
+   jobs wait at most a minute without any extra process. Add a permanent
+   worker only if you want them to run instantly. Plesk doesn't run
+   long-lived processes on its own, so create a systemd unit:
 
    ```ini
    # /etc/systemd/system/pnlcs-queue.service
@@ -147,7 +142,7 @@ to miss on Plesk specifically.
    Tasks, or `crontab -u your_subscription_system_user -e`):
 
    ```
-   * * * * * php /var/www/vhosts/example.com/pnlcs/artisan schedule:run >> /dev/null 2>&1
+   * * * * * /opt/plesk/php/8.4/bin/php /var/www/vhosts/example.com/pnlcs/artisan schedule:run >> /dev/null 2>&1
    ```
 
 ## Environment
@@ -182,12 +177,16 @@ Run these once, in order, after dependencies are installed and `.env` is set:
 ```bash
 php artisan config:clear
 php artisan key:generate   # skip if APP_KEY is already set
-php artisan migrate --force --seed
+php artisan migrate --force
 php artisan storage:link
 ```
 
-`migrate --seed` creates the default administrator account
-(`admin` / `admin123`). **Log in and change this immediately** — see
+Then open `https://app.example.com/install`. The install wizard seeds the
+starting data and creates the administrator with the username and password
+you choose. Do **not** add `--seed` to the migrate line: seeding by hand
+creates a default `admin` / `admin123` account, and the wizard, seeing an
+administrator, closes itself. Seed by hand only for a headless install with
+no browser step, and change that password first — see
 [First Login](../getting-started/first-login.md).
 
 ## Verify

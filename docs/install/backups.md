@@ -53,8 +53,8 @@ replaces the tables it contains.
 The task covers the **database only**. Two more things belong in your
 server-level backup:
 
-- **`storage/`**: ticket attachments, uploaded logos and branding, generated
-  invoice PDFs.
+- **`storage/`**: ticket attachments, uploaded logos and branding. Invoice
+  PDFs are rendered on demand from the database, so there are none to back up.
 - **`.env`**: it holds `APP_KEY`, which encrypts stored secrets such as gateway
   and registrar keys. A database restored without the matching `APP_KEY`
   cannot read them.

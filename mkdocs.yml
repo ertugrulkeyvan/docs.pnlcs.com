@@ -94,6 +94,7 @@ plugins:
         Guides:
           - guides/*.md
           - guides/proxmox/*.md
+          - modules/*.md
         API:
           - api/*.md
         MCP server:
@@ -137,6 +138,7 @@ nav:
           - Languages and translations: guides/languages.md
       - Sell:
           - Connect a server: guides/connect-a-server.md
+          - aaPanel hosting accounts: modules/aapanel.md
           - Live servers: guides/live-servers.md
           - Modules: guides/modules.md
           - Sell domains: guides/sell-domains.md
@@ -180,6 +182,7 @@ nav:
       - Hooks: developer/hooks.md
       - Themes: developer/themes.md
       - Translations: developer/translations.md
+      - Releases and updates: developer/releasing.md
       - Contributing: developer/contributing.md
   - Help:
       - Common issues: troubleshooting/common-issues.md
