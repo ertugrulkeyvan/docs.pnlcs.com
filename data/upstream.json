@@ -1,6 +1,6 @@
 {
   "checked": "6af8ac59",
-  "commit": "6af8ac59",
+  "commit": "192e21c3",
   "files": {
     "api/affiliates.md": "2026-09-24",
     "api/all-endpoints.md": "2026-09-24",
@@ -23,7 +23,7 @@
     "developer/contributing.md": "2026-09-24",
     "developer/hooks.md": "2026-10-19",
     "developer/index.md": "2026-09-24",
-    "developer/modules.md": "2026-10-19",
+    "developer/modules.md": "2026-10-21",
     "developer/releasing.md": "2026-10-13",
     "developer/themes.md": "2026-10-10",
     "developer/translations.md": "2026-10-10",
@@ -38,7 +38,7 @@
     "guides/languages.md": "2026-10-05",
     "guides/live-servers.md": "2026-09-24",
     "guides/migrate-from-whmcs.md": "2026-09-24",
-    "guides/modules.md": "2026-09-24",
+    "guides/modules.md": "2026-10-21",
     "guides/payment-gateways.md": "2026-10-13",
     "guides/proxmox/connect-the-server.md": "2026-09-27",
     "guides/proxmox/create-the-product.md": "2026-09-27",
@@ -49,6 +49,7 @@
     "guides/proxmox/troubleshooting.md": "2026-09-27",
     "guides/sell-docker-apps.md": "2026-09-24",
     "guides/sell-domains.md": "2026-10-11",
+    "guides/sell-panelica-licenses.md": "2026-10-21",
     "guides/sell-vps-on-proxmox.md": "2026-09-27",
     "guides/staff-and-roles.md": "2026-09-24",
     "guides/support-mail-piping.md": "2026-10-05",
