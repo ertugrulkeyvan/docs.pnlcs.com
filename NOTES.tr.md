@@ -38,7 +38,7 @@ pnlcs.com gibi bu da bizim repoda: **içerik bizde** (kullanıcı kararı, 2026-
 ## Önizleme
 
 ```bash
-cd ~/Desktop/ikahost/pnlcs/pnlcs-docs
+cd pnlcs-docs
 python3 tools/build.py && python3 -m http.server 8094 --directory site
 ```
 
@@ -47,10 +47,11 @@ python3 tools/build.py && python3 -m http.server 8094 --directory site
 - [x] Repo açıldı (2026-10-20): `ertugrulkeyvan/docs.pnlcs.com`, public.
 - [x] Otomasyon (2026-10-20): **Follow PNLCS** her gün 04:17 UTC'de PNLCS `docs/` değişikliklerini üç yönlü birleştirip
   `pnlcs-sync` PR'ı açar, "Pages that may be out of date" issue'sunu tutar. **Publish** her `main` push'unda build alır,
-  `DEPLOY_*` secret'ları girilince `site/`'ı srv1'e rsync'ler. Actions'ın PR açma izni repo ayarında açık.
-- [ ] srv1'de docs.pnlcs.com vhost + kısıtlı deploy anahtarı (AX41 oturumu, müşteri taşımasından sonra), secret'lar, sonra DNS.
+  `DEPLOY_*` secret'ları girilince `site/`'ı sunucuya rsync'ler. Actions'ın PR açma izni repo ayarında açık.
+- [x] Sunucuda docs.pnlcs.com yeri + yalnız yazabilen deploy kullanıcısı hazır (2026-10-22).
+- [ ] Secret'lar, ilk yükleme ve kontrol, sonra DNS.
 - [x] Panelica ekibi geçişi onayladı (2026-10-22). Upstream `docs/` yazılmaya devam ediyor, otomasyon her gün çekiyor.
 - [x] AUDIT.md bitti; referanslar (yetkiler, env, artisan, tema token'ları, genel ayarlar) koddan üretildi (2026-10-22).
-- [ ] PNLCS'e upstream merge PR'larını (`pnlcs-sync`) kullanıcı birleştiriyor (auto mode `gh pr merge`'ü engelliyor).
+- [ ] PNLCS'e upstream merge PR'larını (`pnlcs-sync`) kontrolden sonra elle birleştiriliyor.
 - [ ] GTM + çerez bandı, og görselleri, Playwright ile otomatik ekran görüntüleri.
 - [ ] pnlcs.com'daki Docs bağlantıları (menü, footer) yeni sekme yapısına göre gözden geçir.

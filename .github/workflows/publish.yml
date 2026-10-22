@@ -49,6 +49,8 @@ jobs:
           printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy
           chmod 600 ~/.ssh/deploy
           # .well-known (certificates) and .user.ini belong to the server, not to the site.
-          rsync -az --delete --exclude .well-known --exclude .user.ini \
+          # -O: the deploy user can write into the web root but does not own it,
+          # so it cannot set the folder times.
+          rsync -az -O --delete --exclude .well-known --exclude .user.ini \
             -e "ssh -i ~/.ssh/deploy -o IdentitiesOnly=yes" \
             site/ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
