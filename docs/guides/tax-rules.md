@@ -59,8 +59,10 @@ to the tax rule does not change the item until you save it again.
 
 ## Customers who pay no tax
 
-A customer marked **Tax Exempt** gets no tax on their invoices, whatever the
-rules say. The flag is shown on the client's profile (**Clients → the
+A customer marked **Tax Exempt** gets no tax on the invoices PNLCS raises
+(orders and renewals), whatever the rules say. On an invoice you build by hand,
+the rate you pick on each line is applied even to an exempt customer, so pick
+0% there. The flag is shown on the client's profile (**Clients → the
 client**), but PNLCS 1.6.1 has no field in the admin area or the API to change
 it.
 

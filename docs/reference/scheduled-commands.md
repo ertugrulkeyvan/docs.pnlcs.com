@@ -23,7 +23,7 @@ line to add there.
 
 ## What runs, and when
 
-Times are the server's time zone.
+Times are UTC: PNLCS fixes its time zone to UTC, whatever the server's own time zone is.
 
 ### Billing
 

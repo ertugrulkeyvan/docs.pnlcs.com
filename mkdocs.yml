@@ -133,12 +133,22 @@ nav:
           - Configure email: guides/configure-email.md
           - Payment gateways: guides/payment-gateways.md
           - Tax rules: guides/tax-rules.md
+          - Currencies and exchange rates: guides/currencies.md
+          - Legal pages and consent: guides/legal-pages.md
           - Custom client fields: guides/custom-fields.md
           - Themes and branding: guides/themes-and-branding.md
           - Languages and translations: guides/languages.md
       - Sell:
           - Connect a server: guides/connect-a-server.md
-          - aaPanel hosting accounts: modules/aapanel.md
+          - Server modules:
+              - aaPanel: modules/aapanel.md
+              - cPanel/WHM: modules/cpanel.md
+              - DirectAdmin: modules/directadmin.md
+              - HestiaCP: modules/hestiacp.md
+              - Panelica: modules/panelica.md
+              - Plesk: modules/plesk.md
+              - Vultr: modules/vultr.md
+              - Custom (manual): modules/custom.md
           - Live servers: guides/live-servers.md
           - Modules: guides/modules.md
           - Sell domains: guides/sell-domains.md
@@ -153,10 +163,20 @@ nav:
               - 5. The customer's panel: guides/proxmox/customer-panel.md
               - Running VPS services: guides/proxmox/running-vps.md
               - Troubleshooting: guides/proxmox/troubleshooting.md
+          - Promotions, addons and bundles: guides/promotions-and-addons.md
+          - Affiliates: guides/affiliates.md
+          - Quotes, projects and staff board: guides/quotes-and-projects.md
+      - Billing:
+          - Invoices, credit and refunds: guides/invoices.md
+          - Fraud screening: guides/fraud-screening.md
+          - Reports: guides/reports.md
+          - Polish e-invoicing (KSeF): guides/ksef-and-company-lookup.md
       - People and support:
           - Staff and roles: guides/staff-and-roles.md
           - Client logins and permissions: guides/client-logins-and-permissions.md
+          - Support desk: guides/support.md
           - Support mail piping: guides/support-mail-piping.md
+          - Notification channels: guides/notifications.md
       - Migrate from WHMCS: guides/migrate-from-whmcs.md
   - API:
       - api/index.md
@@ -188,4 +208,12 @@ nav:
   - Help:
       - Common issues: troubleshooting/common-issues.md
       - FAQ: troubleshooting/faq.md
-      - Scheduled commands: reference/scheduled-commands.md
+      - Reference:
+          - General settings: reference/general-settings.md
+          - Staff permissions: reference/staff-permissions.md
+          - Client permissions: reference/client-permissions.md
+          - Scheduled commands: reference/scheduled-commands.md
+          - Artisan commands: reference/artisan-commands.md
+          - Environment variables: reference/environment.md
+          - Theme tokens: reference/theme-tokens.md
+          - WHMCS to PNLCS: reference/whmcs-glossary.md

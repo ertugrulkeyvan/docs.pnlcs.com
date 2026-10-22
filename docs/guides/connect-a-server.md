@@ -110,8 +110,10 @@ cancelled or fraud) cannot be deleted.
       [Sell VPS on Proxmox VE](sell-vps-on-proxmox.md).
 
 === "Vultr"
-    - Your Vultr API key in **API Key**. The module talks to Vultr's API
-      directly, so the hostname is only a label.
+    - Your Vultr API key in **API Key**. Enter `api.vultr.com` as the
+      hostname and 443 as the port: the module always talks to Vultr's API,
+      but **Test** first checks that the hostname answers on that port.
+      See [Vultr cloud servers](../modules/vultr.md).
 
 !!! tip "Always test the connection"
     Press **Test** before you assign products. Most provisioning

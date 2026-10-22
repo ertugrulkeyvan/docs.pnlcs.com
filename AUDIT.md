@@ -131,35 +131,35 @@ PNLCS `docs/` changes up to **6af8ac59** (2026-10-20) are merged in: 13 pages up
 ## New pages
 
 Concepts
-- [ ] Domains and their lifecycle (statuses, grace, redemption, sync, ordered with hosting, free domain, move between accounts)
-- [ ] Clients, logins and contacts (multi-account logins, permissions, SSO links, invites)
+- [x] Domains and their lifecycle (statuses, grace, redemption, sync, ordered with hosting, free domain, move between accounts) → `covered in concepts/products-services-orders-invoices.md#domains and guides/sell-domains.md`
+- [x] Clients, logins and contacts (multi-account logins, permissions, SSO links, invites) → `covered in concepts/overview.md and guides/client-logins-and-permissions.md`
 
 Guides
-- [ ] Customer account security (reCAPTCHA, email / SMS verification, social login, sensitive-action codes, new-device alerts, 2FA)
-- [ ] Automatic payment and stored cards
-- [ ] Currencies and exchange rates (billing currency, TCMB rates, rate note on PDFs)
-- [ ] Fraud screening (MaxMind, FraudLabs)
-- [ ] Legal pages (`/legal`, versioning, customising, terms acceptance, marketing consent)
-- [ ] Promotions, product addons, bundles, free domain
-- [ ] Invoice catalogue, per-line tax, late fees
-- [ ] Affiliates
-- [ ] Support content (announcements, downloads, knowledge base, network issues, ticket statuses, escalation, predefined replies, spam filter)
-- [ ] Notification channels (email, Slack, Telegram, webhook)
-- [ ] Reports (27)
-- [ ] Polish e-invoicing (KSeF) and Company Lookup
-- [ ] Quotes, Project Management and Staff Board
-- [ ] One page per server module: cPanel, Plesk, DirectAdmin, HestiaCP, Vultr, Custom, Panelica end to end
+- [x] Customer account security (reCAPTCHA, email / SMS verification, social login, sensitive-action codes, new-device alerts, 2FA) → `covered in guides/client-logins-and-permissions.md (sign-in settings) and install/security.md`
+- [x] Automatic payment and stored cards → `covered in guides/payment-gateways.md and concepts/billing-lifecycle.md`
+- [x] Currencies and exchange rates (billing currency, TCMB rates, rate note on PDFs) → `guides/currencies.md`
+- [x] Fraud screening (MaxMind, FraudLabs) → `guides/fraud-screening.md`
+- [x] Legal pages (`/legal`, versioning, customising, terms acceptance, marketing consent) → `guides/legal-pages.md`
+- [x] Promotions, product addons, bundles, free domain → `guides/promotions-and-addons.md`
+- [x] Invoice catalogue, per-line tax, late fees → `guides/invoices.md`
+- [x] Affiliates → `guides/affiliates.md`
+- [x] Support content (announcements, downloads, knowledge base, network issues, ticket statuses, escalation, predefined replies, spam filter) → `guides/support.md`
+- [x] Notification channels (email, Slack, Telegram, webhook) → `guides/notifications.md`
+- [x] Reports (27) → `guides/reports.md`
+- [x] Polish e-invoicing (KSeF) and Company Lookup → `guides/ksef-and-company-lookup.md`
+- [x] Quotes, Project Management and Staff Board → `guides/quotes-and-projects.md`
+- [x] One page per server module: cPanel, Plesk, DirectAdmin, HestiaCP, Vultr, Custom, Panelica end to end → `modules/*.md`
 
 Reference (generate from code where possible)
-- [ ] Hooks: from `HookServiceProvider::$eventHookMap`, event properties, and `run_hook` / `hook_output` calls
-- [ ] Staff permissions (46): `App\Constants\Permissions::grouped()`
-- [ ] Client permissions (13): `App\Support\ClientPermissions::ALL`
-- [ ] Environment variables: `env()` calls in `config/` joined with `.env.example`
-- [ ] Artisan commands: `php artisan list pnlcs --format=json`
-- [ ] Built-in modules: `ModuleServiceProvider` plus `modules/*/*/pnlcs.json`
-- [ ] Theme colour tokens (56)
-- [ ] General Settings, card by card (curated; there is no settings registry)
-- [ ] WHMCS to PNLCS glossary, including hook names that differ
+- [x] Hooks: from `HookServiceProvider::$eventHookMap`, event properties, and `run_hook` / `hook_output` calls → `developer/hooks.md, checked against the event map`
+- [x] Staff permissions (46): `App\Constants\Permissions::grouped()` → `reference/staff-permissions.md`
+- [x] Client permissions (13): `App\Support\ClientPermissions::ALL` → `reference/client-permissions.md`
+- [x] Environment variables: `env()` calls in `config/` joined with `.env.example` → `reference/environment.md`
+- [x] Artisan commands: `php artisan list pnlcs --format=json` → `reference/artisan-commands.md`
+- [x] Built-in modules: `ModuleServiceProvider` plus `modules/*/*/pnlcs.json` → `developer/modules.md#built-in-modules`
+- [x] Theme colour tokens (56) → `reference/theme-tokens.md`
+- [x] General Settings, card by card (curated; there is no settings registry) → `reference/general-settings.md`
+- [x] WHMCS to PNLCS glossary, including hook names that differ → `reference/whmcs-glossary.md`
 
 ## To report upstream (code, not docs)
 
