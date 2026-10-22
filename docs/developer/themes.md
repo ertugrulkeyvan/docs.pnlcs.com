@@ -1,7 +1,16 @@
+---
+sources:
+  - app/Services/ThemeManager.php
+  - app/Services/ThemeService.php
+  - app/Support/ThemeInfo.php
+  - app/Services/Updates/Preflight.php
+  - themes/
+---
+
 # Themes
 
 A theme changes how the public site and the client area look. PNLCS ships 16
-(**Setup → Appearance**); you can install your own.
+(**Setup → Appearance**; `panelica` is active on a new installation); you can install your own.
 
 ## What a theme is
 
@@ -35,14 +44,23 @@ themes/
 ```
 
 - `slug`: lower-case letters, digits, `-` and `_`, starting with a letter or
-  digit, at most 50 characters. It is the folder name.
+  digit, at most 50 characters. It is the folder name (an uploaded ZIP is
+  installed under this slug, whatever its folder is called).
 - `requires` (optional): `{"pnlcs": ">=1.3 <2"}`, the PNLCS versions the
   theme works with. An update outside it does not start until the operator
-  updates the theme.
+  updates the theme or chooses to go ahead.
 - `colors`: applied as the active colour set when the theme is activated.
-  Colours you leave out come from the Starter theme, so a theme can set only
-  the few it changes. Look at `themes/starter/theme.json` for the full list of
-  colour names.
+  The full set has 56 tokens: 34 colours, 8 typography, 6 spacing and 8 layout
+  values, listed in `ThemeService::getTokenGroups()` (`app/Services/ThemeService.php`).
+  Each one is printed as a CSS variable, `--theme-<name>` with `_` written as `-`
+  (`primary_light` becomes `--theme-primary-light`).
+  Tokens you leave out come from the Starter preset (`ThemeService::getPresets()['starter']`),
+  so a theme can set only the few it changes; `themes/starter/theme.json` itself
+  sets only 8. A theme without `colors` leaves the current colour set as it is.
+- `name`, `version`, `author`, `description` and `screenshot` are shown on the
+  Appearance screen. `dark_colors`, `fonts` and `supports` are read from the file
+  but nothing in PNLCS uses them yet: set fonts with the typography tokens in
+  `colors`.
 
 ## Replacing views
 
@@ -74,8 +92,8 @@ the folder to the new slug, and build from there.
   `theme.json`; the files may sit inside one top-level folder).
 
 Then activate it on **Setup → Appearance**. A theme with the slug of a
-built-in theme cannot be installed over it, and the active theme cannot be
-deleted.
+built-in theme cannot be installed over it. Built-in themes and the active
+theme cannot be deleted.
 
 ## Page descriptions and link previews
 

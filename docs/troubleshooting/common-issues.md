@@ -1,3 +1,16 @@
+---
+sources:
+  - app/Support/MailTransport.php
+  - app/Listeners/SuppressMailWhenDisabled.php
+  - app/Listeners/ApplyEmailTemplate.php
+  - app/Console/Commands/ModuleQueueProcessCommand.php
+  - app/Services/ProvisioningService.php
+  - modules/Servers/AbstractServerModule.php
+  - resources/views/admin/settings/general.blade.php
+  - resources/views/admin/services/show.blade.php
+  - routes/console.php
+---
+
 # Common Issues
 
 ## Installing and updating
@@ -44,16 +57,23 @@ document root at `pnlcs/public` — nothing above it should be web-served.
 
 ### Invoices/emails never send, but nothing errors
 
-Three causes, in order of likelihood:
-1. **Mail is not configured.** Until SMTP is set under **Setup → General
-   Settings → Mail Configuration**, `MAIL_MAILER=log` is in effect and nothing
-   leaves the server.
+Four causes, in order of likelihood:
+1. **Mail is not configured.** Until a **Mail Type** (PHP Mail or SMTP) is
+   saved under **Setup → General Settings → Mail Configuration**, `.env`
+   decides, and `.env.example` ships `MAIL_MAILER=log`: nothing leaves the
+   server. The card then says *Nothing is delivered - messages are written to
+   the log file.*
 2. **The cron line is missing.** With `QUEUE_CONNECTION=database`, queued mail
    is sent by the scheduler ([installation step 13](../install/native.md#13-schedule-the-cron-runner)), which starts a worker
    every minute. No cron, no worker: jobs stay in the `jobs` table. Check with
    `crontab -u www-data -l`.
-3. **Mail is switched off** in the panel settings — the log then says
+3. **Mail is switched off**: **Enable Email Sending** on the same card is
+   unticked. The log then says
    `Outgoing mail suppressed: mail is disabled in the panel settings.`
+4. **The email's template is switched off** under **Setup → Email
+   Templates**. The log says
+   `Outgoing mail suppressed: the template is switched off.` Password resets,
+   email-address verification and confirmation codes are sent anyway.
 
 ### The last step of the install wizard answers 500
 
@@ -120,11 +140,13 @@ the password from your profile, or reinstall without seeding by hand.
 Customers get no invoices, welcome emails or ticket replies.
 
 1. **Is sending configured?** **Setup → General Settings → Mail
-   Configuration**. Until a mail type is chosen, `.env` decides, and a fresh
-   `.env` writes mail to the log instead of sending it
+   Configuration**. Until a **Mail Type** is saved, `.env` decides, and a
+   fresh `.env` writes mail to the log instead of sending it
    ([Configure Email](../guides/configure-email.md)).
-2. **Is sending switched on?** With **Enable outgoing emails** off, the log
+2. **Is sending switched on?** With **Enable Email Sending** off, the log
    says `Outgoing mail suppressed: mail is disabled in the panel settings.`
+   One kind of email missing? Its template may be switched off: the log says
+   `Outgoing mail suppressed: the template is switched off.`
 3. **Press Send Test Email** on the same screen and read the error it shows.
 4. **Is the scheduler running?** With `QUEUE_CONNECTION=database` mail waits in
    the queue until the scheduler's worker sends it (below).
@@ -137,16 +159,24 @@ Customers get no invoices, welcome emails or ticket replies.
 An invoice is paid, but no hosting account was created: the service stays
 *Pending*.
 
-1. **Does the product have a server module and a server?** A product without
-   one never provisions: set them on the product.
-2. **What is its auto-setup?** With *manual*, you accept each order yourself
-   (**Orders → Pending**). With *on payment*, paying starts it.
+1. **Does the product have a server module, and is there a server for it?**
+   A product with **Server Module** set to none never provisions. With no
+   **Server group** on the product, the first active server of that module's
+   type is used; with a group, only an active server in that group, and a full
+   or empty group makes provisioning fail.
+2. **What is its Auto Setup?** With *Only when an admin accepts the order*,
+   you accept each order yourself (**Orders → Pending**). With *As soon as the
+   first payment is received*, paying starts it.
 3. **Does the server answer?** Press **Test** next to it on **Setup →
    Servers**. Wrong credentials or a firewall on the panel port are the usual
    causes.
-4. **Did the server refuse?** A refused action is retried every five minutes
-   with growing delays, and you are notified. The API lists what is waiting,
-   with the last error: [getmodulequeue](../api/system.md#getmodulequeue).
+4. **Did the server refuse?** A failed action is queued and retried after 5,
+   10, 20 and 40 minutes, five attempts in all, and you are notified. A
+   refusal that cannot change (the panel has no such account, no module is
+   set) is not retried. The API lists what is waiting, with the last error:
+   [getmodulequeue](../api/system.md#getmodulequeue). To retry one waiting
+   entry at once, run `php artisan pnlcs:module-queue --id=<its id>`; or fix
+   the cause and press **Create Account** on the service page.
 5. **Is the scheduler running?** Retries only happen when it runs.
 
 ### Nothing happens by itself

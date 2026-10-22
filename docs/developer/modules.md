@@ -1,3 +1,19 @@
+---
+sources:
+  - app/Providers/ModuleServiceProvider.php
+  - app/Services/Module/
+  - app/Contracts/
+  - app/Services/AddonManager.php
+  - app/Providers/AddonServiceProvider.php
+  - app/Services/ReportManager.php
+  - app/Reports/AbstractReport.php
+  - app/Services/WidgetManager.php
+  - app/Providers/AppServiceProvider.php
+  - app/Http/Controllers/GatewayWebhookController.php
+  - app/Services/Updates/Preflight.php
+  - modules/
+---
+
 # Writing a module
 
 A module is a folder under `modules/`. Drop it in, add a `pnlcs.json`
@@ -217,6 +233,11 @@ A module can offer more than its interface requires:
 | `isProvisioned(Service): bool` (servers) | decide whether the staff page offers **Create** (otherwise: an active service with a username has nothing to create) |
 | `emailMergeFields(Service)` (servers), `name => value` | add `{name}` fields to the service's emails; the built-in fields win a clash |
 | `needsServerRecord(): bool` (servers), returning `false` | for a module that sells through an account kept elsewhere: it is not offered on **Setup → Servers**, and the product form asks `listPackages(null)` for its plans (an exception's message is shown as the reason when it cannot list them) |
+| `App\Contracts\ChecksAvailabilityInBulk` (registrars: `checkAvailabilityBulk`) | ask about the searched name and its suggested endings in one call; names the registry did not answer for fall back to WHOIS |
+| `App\Contracts\ManagesChildNameservers` (registrars: `getChildNameservers`, `saveChildNameserver`, `deleteChildNameserver`) | show the glue record (child nameserver) form on the domain page |
+| `App\Contracts\ManagesDomainContacts` (registrars: `getContact`, `saveContact`) | show the WHOIS contact form on the domain page |
+| `App\Contracts\ManagesWhoisPrivacy` (registrars: `setPrivacy`) | let the customer and staff switch WHOIS privacy on and off; without it the setting is shown but cannot be changed |
+| `App\Contracts\RestorableRegistrar` (registrars: `restore`) | restore a domain out of redemption once the restore invoice is paid; without it staff get a to-do to do it by hand |
 
 `customFunctions()` and `clientFunctions()` are given the service, so a module
 can offer a button only where it applies; a module that declares no parameter
@@ -230,6 +251,42 @@ module (`modules/Servers/PanelicaLicense`, [guide](../guides/sell-panelica-licen
 A `hooks.php` file in the module's folder is loaded on every request (for
 addons: only while the addon is active). See [Hooks](hooks.md).
 
+## Reports
+
+A report is a class in `modules/Reports/`: either a single file
+`modules/Reports/<Name>Report.php` (class `Modules\Reports\<Name>Report`) or a
+folder `modules/Reports/<Name>/<Name>Report.php` (class
+`Modules\Reports\<Name>\<Name>Report`). It implements
+`App\Contracts\ReportModuleInterface` (`getTitle`, `getDescription`,
+`getCategory`, `getSlug`, `generate(Request)`, `hasDateFilter`,
+`hasCurrencyFilter`, `canExport`); extending `App\Reports\AbstractReport` gives
+you the slug (from the title), a date filter, CSV export and date-range helpers.
+`generate()` returns `columns`, `rows` and optionally `totals` and `chart`.
+`App\Services\ReportManager` finds reports without registration; they are
+listed by category on **Reports** (`/admin/reports`, permission
+`view_reports`). The 27 built-in reports in `modules/Reports/` are examples.
+
+## Dashboard widgets
+
+A widget implements `App\Contracts\WidgetModuleInterface` (`getTitle`,
+`getDescription`, `getColumns` (1 to 4 quarters of the row), `getWeight` (lower
+comes first), `getPermission` (the staff permission needed to see it, or
+null), `getCacheTtl` (seconds, 0 for no cache), `getData`, `render(array $data)`).
+Widgets are not discovered: the built-in ones are registered on
+`App\Services\WidgetManager` in `AppServiceProvider`, and an addon registers its
+own from its service provider:
+
+```php
+public function boot(): void
+{
+    $this->app->make(\App\Services\WidgetManager::class)->register('reviews', new ReviewsWidget());
+}
+```
+
+A widget whose `getData()` or `render()` throws shows a short error in its box;
+the dashboard still loads.
+
+## Replacing a core service
 
 **SMS providers.** An addon for a local SMS provider implements
 `App\Contracts\SmsSender` (`send(string $to, string $message): bool`, `$to` in
@@ -238,3 +295,26 @@ E.164) and binds it in its service provider:
 Phone verification (`App\Contracts\PhoneVerifier`) then sends six-digit codes
 of its own through it when Twilio Verify is not set up (ten minutes, five
 tries); with Twilio set up, Twilio is used as before.
+
+**Phone verification and ticket mail.** The same way, an addon's service
+provider can bind its own `App\Contracts\PhoneVerifier` (`enabled()`,
+`start(string $to)`, `check(string $to, string $code)`) to replace Twilio Verify
+and the SMS codes altogether, or its own `App\Contracts\MailboxClientInterface`
+(`fetchMessages(TicketDepartment, int $limit = 25)`, `markProcessed(TicketDepartment, string $uid)`,
+`disconnect()`) to read support departments' mail some other way than IMAP
+(`App\Services\Mail\ImapMailboxClient`, used by the ticket mail import).
+
+## Built-in modules
+
+These ship with PNLCS and are registered in `app/Providers/ModuleServiceProvider.php`; their names cannot be
+taken by a third-party manifest.
+
+| Type | Modules (`name`) |
+|---|---|
+| Gateways | `banktransfer`, `stripe`, `paypal`, `authorize` (Authorize.Net), `mollie`, `razorpay`, `tpay`, `iyzico` |
+| Servers | `custom`, `panelica`, `cpanel`, `plesk`, `directadmin`, `proxmox`, `hestiacp`, `aapanel`, `vultr`, `panelicalicense` |
+| Registrars | `namecheap`, `resellerclub`, `openprovider`, `enom`, `manual`, `hrd`, `domainnameapi` |
+| SSL | `gogetssl` |
+| Addons | Company Lookup, KSeF, Project Management, Staff Board (`modules/Addons/`) |
+| Reports | 27 reports in `modules/Reports/` |
+| Dashboard widgets | 13 widgets in `app/Widgets/` |

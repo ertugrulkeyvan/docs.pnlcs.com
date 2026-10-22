@@ -1,3 +1,13 @@
+---
+sources:
+  - lang/
+  - app/Providers/TranslationServiceProvider.php
+  - app/Translation/
+  - app/Console/Commands/LangWriteCommand.php
+  - database/data/same_as_english.php
+  - database/data/email_templates/
+---
+
 # Translations
 
 PNLCS ships in 30 languages. English, Turkish, Polish, Chinese and German are
@@ -15,9 +25,30 @@ lang/
 │   ├── client.php
 │   ├── common.php
 │   └── ...
+├── en.json        462 English overrides (see below)
 ├── de/            one folder per language, the same file names
 └── ...
 ```
+
+`lang/en/` has 20 files: `aapanel`, `admin`, `auth`, `client`, `common`,
+`email`, `errors`, `group`, `install`, `messages`, `pagination`,
+`panelica_license`, `panelica`, `passwords`, `pdf`, `proxmox`, `reports`,
+`sections`, `validation` and `whmcs_import`. The complete languages (and
+Spanish) have all 20; most community languages have six (`admin`, `client`,
+`common`, `email`, `proxmox`, `whmcs_import`), and every text of a missing file
+is shown in English. Laravel's own validation messages are read first from
+the framework, so a rule without a line in `lang/<code>/validation.php` still
+shows a sentence.
+
+!!! note "`lang/en.json` wins for English"
+    `lang/en.json` holds 462 keys (431 `admin.*`, 31 `common.*`) that also exist
+    in `lang/en/admin.php` and `lang/en/common.php`. Laravel reads a language's
+    JSON file before its group files, and only for that language: no other
+    language has a JSON file, and there is no fallback to `en.json`. In English
+    these 462 texts therefore come from `en.json`, so change them there as well
+    as in the group file. Two differ today: `common.form.postcode` and
+    `common.form.state` show "Postcode" and "State" in English, not the
+    "Postcode / ZIP" and "State / Region" of `lang/en/common.php`.
 
 Each file returns an array of `key => text`. Keys are either nested or written
 flat with dots; both are read the same way:
@@ -63,7 +94,7 @@ Run them before you send anything: `php artisan test --filter=Translation`.
   nothing).
 
 **The complete languages** (Turkish, German, Polish, Chinese) also must have
-every English key, and may leave a text identical to English only when it is
+every English key, in the same order as English, and may leave a text identical to English only when it is
 listed (below). A pull request that adds an English text writes it in these
 four too, or says in the description which ones it could not.
 

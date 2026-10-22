@@ -1,3 +1,13 @@
+---
+sources:
+  - resources/views/components/vps-panel.blade.php
+  - app/Http/Controllers/Concerns/ServesVps.php
+  - app/Http/Controllers/Client/VpsController.php
+  - modules/Servers/Proxmox/ProxmoxModule.php
+  - modules/Servers/Proxmox/Concerns/
+  - lang/en/proxmox.php
+---
+
 # 5. The customer's panel
 
 A customer opens their service under **Services** and sees the virtual server
@@ -37,16 +47,20 @@ rather than dropping to zero.
 | **Snapshots** | Take a snapshot by name, roll back to it, delete it — up to the number the product allows. Rolling back starts the server again if it was running |
 | **Backups** | *Back up now* makes a full copy on the server's backup storage; *Restore* replaces the server with it and removes its snapshots; *Delete*. Up to the number the product allows, and one backup at a time |
 | **Reset the root password** | Takes effect at once through the guest agent; without the agent, at the next boot. (Not offered for containers.) |
-| **Reinstall** | Erases the server and installs a system from the product's list. The VM number, the MAC address and the IP address stay the same; a new password is set (typed, or generated and shown once) |
+| **Reinstall** | Erases the server and installs a system from the product's list. The VM number, the MAC address and the IP address stay the same; a new password is set (typed, or generated and shown once). The **SSH public keys** box shows the keys the server has now: up to 10, one per line; change them, or empty the box to install without keys |
 
-Anything that wipes data asks for the server's name first:
+A reinstall and a restore ask the customer to type a word first: the
+service's hostname (the **Server hostname** given at order), or `vps-` and
+the service number when there is none. The dialog shows the word to type.
+Rolling back or deleting a snapshot, and deleting a backup, ask for a plain
+confirmation.
 
 ![Typed confirmation](../../screenshots/client-vps-confirm.png)
 
 ## What the customer does not see
 
-The customer is not shown the Proxmox host's name or address, or any other
-machine on it. Every request the panel makes is checked against
+The panel shows the customer their server's own name and VM number, but not
+the Proxmox node, the host's address, or any other machine on it. Every request the panel makes is checked against
 the service it belongs to; a customer can only reach their own server, and
 only while the service is **active** — a suspended customer can still look,
 but not switch the server back on.

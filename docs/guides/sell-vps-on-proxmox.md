@@ -1,11 +1,21 @@
+---
+sources:
+  - modules/Servers/Proxmox/
+  - resources/views/components/vps-panel.blade.php
+  - app/Http/Controllers/Concerns/ServesVps.php
+  - app/Console/Commands/ProxmoxTasksCommand.php
+  - routes/console.php
+---
+
 # Sell VPS on Proxmox VE
 
 PNLCS sells **KVM virtual machines** and **LXC containers** on
 [Proxmox VE](https://www.proxmox.com/en/proxmox-virtual-environment). When an
-order is paid, the server is built from a template, sized, given an address
-and started — and the customer then runs it from the billing portal: power,
-live graphs, root password, reinstall, snapshots and backups. You see the same
-panel on the admin's service page.
+order is paid, the server is built from a template, sized, given an address,
+the customer's SSH keys if they gave any, and started — and the customer then
+runs it from the billing portal: power, live graphs, root password, reinstall
+(with new SSH keys), snapshots and backups. You see the same panel on the
+admin's service page.
 
 ![A customer's virtual server](../screenshots/client-vps.png)
 
@@ -37,12 +47,13 @@ you run on the same host for other reasons are never touched.
 |------|-------------|-------|------|
 | 1 | [Prepare Proxmox](proxmox/prepare-proxmox.md): a pool, a user, an API token and its permissions, the cloud-init snippet | Proxmox host shell | ~10 min, once |
 | 2 | [Connect the server](proxmox/connect-the-server.md) and press **Test** | PNLCS → Setup → Servers | 2 min |
-| 3 | [Install operating systems](proxmox/operating-systems.md) from the image library | PNLCS → Servers → Images | 1 min per system |
-| 4 | [Create the product](proxmox/create-the-product.md): resources, network, allowances, checkout options | PNLCS → Products | 5 min |
+| 3 | [Install operating systems](proxmox/operating-systems.md) from the image library | PNLCS → Setup → Servers → Images | 1 min per system |
+| 4 | [Create the product](proxmox/create-the-product.md): resources, network, allowances, checkout options | PNLCS → Setup → Products/Services | 5 min |
 | 5 | Order it yourself once and check the [customer's panel](proxmox/customer-panel.md) | Client area | 2 min |
 
 After that: [running VPS services](proxmox/running-vps.md) (adding one by
-hand, suspending, upgrading, traffic) and
+hand or linking one that already runs with **Link to an existing account**,
+suspending, upgrading, traffic) and
 [troubleshooting and questions](proxmox/troubleshooting.md).
 
 ## What you need

@@ -1,3 +1,16 @@
+---
+sources:
+  - resources/views/admin/services/show.blade.php
+  - resources/views/admin/services/partials/pve-claim.blade.php
+  - resources/views/admin/clients/show.blade.php
+  - app/Http/Controllers/Admin/VpsController.php
+  - modules/Servers/Proxmox/ProxmoxModule.php
+  - modules/Servers/Proxmox/Concerns/RunsJobs.php
+  - app/Console/Commands/ProxmoxTasksCommand.php
+  - app/Console/Commands/UsagePollingCommand.php
+  - routes/console.php
+---
+
 # Running VPS services
 
 ## The admin panel
@@ -12,7 +25,8 @@ cancelled one is left alone.
 ![The admin's VPS panel](../../screenshots/admin-vps-panel.png)
 
 The usual module actions sit above it: **Suspend**, **Unsuspend**,
-**Terminate**, **Change Password**.
+**Terminate**, **Change Password**, and **Create Account** while the service
+has no server yet.
 
 ## Adding a VPS by hand
 
@@ -25,7 +39,7 @@ On a client's **Services** tab, **Add Service**:
   server now**, and PNLCS builds it at once exactly as for an order.
 - **A server that already runs** — for a machine made before PNLCS or by
   hand: leave *Create the account…* unticked, pick the server, and choose the
-  machine under **Link an existing account**. The list shows what the token
+  machine under **Link to an existing account**. The list shows what the token
   can see, and names machines another service already has. PNLCS tags the
   chosen machine for the new service and manages it from then on; one that
   belongs to another service is refused.
@@ -33,16 +47,20 @@ On a client's **Services** tab, **Add Service**:
 The same link is on an existing service's page (**Link an existing guest**, by
 VM number).
 
+The form has no SSH key field: a server added by hand gets the customer's keys
+only when it is reinstalled from the panel with keys in the **SSH public keys**
+box.
+
 ## What happens when
 
 | Event | On Proxmox |
 |-------|-----------|
-| **Order paid** (or placed / accepted, per *Auto Setup*) | Clone of the template into the pool, with the next VM id in the range; tags and note; cores, memory, network, cloud-init (user, password, address, DNS, vendor snippet); disk grown to the product's size; protection on; started |
+| **Order paid** (or placed / accepted, per *Auto Setup*) | KVM: clone of the template into the pool, with the next VM id in the range; tags and note; cores, memory, network, cloud-init (user, password, SSH keys, address, DNS, vendor snippet); disk grown to the product's size; protection on; started. LXC: the container is created from its template with the same settings and the SSH keys |
 | **Suspend** (overdue invoice, or by hand) | *Start at boot* turned off, then shut down (forced after a minute) — a host reboot does not bring it back |
 | **Unsuspend** | *Start at boot* on, started |
 | **Terminate** | Stopped, protection lifted, deleted with its disks; its pool address goes back to the pool |
 | **Upgrade / downgrade** | New cores and memory set (a running KVM takes them at its next reboot); the disk grows if the new size is larger and is never shrunk |
-| **Every minute** | The scheduler moves on reinstalls, restores and image downloads |
+| **Every minute** | The scheduler moves on reinstalls, restores, snapshot rollbacks and image downloads |
 | **Every hour** | Disk usage and this month's traffic are read into the service |
 
 PNLCS never deletes a machine that does not carry its mark for that service,
@@ -60,7 +78,8 @@ monthly traffic.
 - **The service page** shows the reason of the last failed job in red.
 - **The application log** (`storage/logs/laravel-<date>.log`) has a line for
   every create, suspend, unsuspend, terminate, upgrade, password change and
-  link, with the outcome and Proxmox's message.
+  link, and for every finished reinstall, restore and rollback, with the
+  outcome and Proxmox's message.
 - **Utilities → Activity Log** records who pressed which button in the VPS
   panel — customer or staff — and whether it worked.
 - In Proxmox, the task list (**Datacenter → Tasks**) has the same tasks with

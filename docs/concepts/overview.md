@@ -1,3 +1,15 @@
+---
+sources:
+  - app/Models/Client.php
+  - app/Models/User.php
+  - app/Models/Contact.php
+  - app/Enums/
+  - app/Services/OrderService.php
+  - app/Providers/ModuleServiceProvider.php
+  - routes/admin.php
+  - routes/client.php
+---
+
 # How PNLCS Is Organized
 
 If you've never used a billing panel, the vocabulary can be confusing. This
@@ -15,12 +27,19 @@ Client  ──places──▶  Order  ──generates──▶  Invoice  ──w
 
 ### Client
 
-A **client** is a customer — a person or company that buys from you. Each client
-has a login to the customer portal, a billing profile, and everything they own
-(services, domains, invoices, tickets).
+A **client** is a customer account — a person or company that buys from you.
+It holds the billing profile and everything they own (services, domains,
+invoices, tickets).
+
+A **login** is a person who signs in to the client portal, and it is separate
+from the account: one account can have several logins (an owner, an
+accountant, a developer), each with its own permissions, and one login can
+belong to several accounts and switch between them. See
+[Client Logins & Permissions](../guides/client-logins-and-permissions.md).
 
 A client can also have **contacts** — additional people (e.g. a technical
-contact and a billing contact) who can be given portal access.
+contact and a billing contact) who receive the kinds of email you choose for
+them. Contacts do not sign in.
 
 ### Product
 
@@ -32,19 +51,22 @@ A **product** is *what you sell* — a plan on your price list. "Starter Hosting
 
 An **order** is a customer's *request to buy* one or more products. Placing an
 order creates the order record and an invoice. An order starts **Pending** and
-becomes **Active** once accepted (usually automatically, on payment).
+becomes **Active** once accepted: usually automatically when its invoice is
+paid, or by you for products set to wait for an admin. It can also end as
+**Cancelled** or **Fraud**.
 
 ### Invoice
 
-An **invoice** is the *bill*. It lists what's owed and its status: *Unpaid*,
-*Paid*, *Partially Paid*, *Overdue*, *Cancelled* or *Refunded*. Paying an
-invoice is what drives the rest of the system into motion.
+An **invoice** is the *bill*. It lists what's owed and has a status such as
+*Unpaid*, *Paid*, *Overdue* or *Cancelled* (the full list of nine is in
+[Products, Services, Orders & Invoices](products-services-orders-invoices.md#invoice-the-bill)).
+Paying an invoice is what drives the rest of the system into motion.
 
 ### Service
 
 A **service** is the *live thing the customer owns* after they buy — the actual
-hosting account, VPS or subscription. A service has its own status (*Active*,
-*Suspended*, *Terminated*) and its own **billing cycle**: it renews and
+hosting account, VPS or subscription. A service has its own status (for
+example *Pending*, *Active*, *Suspended*, *Terminated*) and its own **billing cycle**: it renews and
 generates new invoices on schedule, independently of the original order.
 
 !!! tip "Order vs Service — the key distinction"
@@ -56,8 +78,9 @@ generates new invoices on schedule, independently of the original order.
 
 A **server** is a machine where hosting accounts are created. A **module** is
 the integration that talks to it (Panelica, cPanel, Plesk, DirectAdmin,
-HestiaCP, Proxmox, Vultr…). When a product is linked to a server + module,
-PNLCS can create, suspend, unsuspend and terminate accounts automatically.
+HestiaCP, aaPanel, Proxmox, Vultr…). When a product is linked to a module
+(and optionally a server group), PNLCS can create, suspend, unsuspend and
+terminate accounts automatically on a server of that type.
 
 See [Servers & Modules](servers-and-modules.md).
 

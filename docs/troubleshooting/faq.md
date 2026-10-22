@@ -1,17 +1,46 @@
+---
+sources:
+  - app/Models/Product.php
+  - resources/views/admin/products/create.blade.php
+  - resources/views/admin/products/edit.blade.php
+  - app/Http/Controllers/Client/CartController.php
+  - app/Services/CartService.php
+  - resources/views/admin/clients/show.blade.php
+  - app/Http/Controllers/Admin/ClientController.php
+  - lang/en/whmcs_import.php
+  - app/Console/Commands/DbBackupCommand.php
+  - app/Console/Commands/CurrencyUpdateCommand.php
+  - routes/console.php
+---
+
 # FAQ
 
 ## How do I offer a free (zero-cost) plan?
 
 Create the product and set **Payment Type → Free** (the dropdown offers
-Recurring / One-time / Free). Do *not* put `0` in the price — that leaves the
-product with no sellable price.
+Recurring / One Time / Free), then put `0` in the billing cycle you offer;
+`-1` means the cycle is not sold. The order's zero-total invoice is marked
+paid by itself. On a Recurring or One Time product, `0` does not make a free
+plan: that cycle is simply not sold.
+
+## Can I give a free domain with hosting?
+
+Yes. On the hosting product's edit page, in the **Domain** card, tick **Free
+domain with this product**, list the extensions under **Free for these
+extensions** (e.g. `.com, .net`) and, if you like, tick the billing cycles
+under **On these billing cycles** (none ticked means every cycle). **Offer a
+domain on the order form** must be on too. When a customer registers or
+transfers a domain of a listed extension with the product, the first year of
+the domain costs nothing; it renews at its normal price. With no extension
+listed, no domain is free.
 
 ## How do I bring an existing customer/account into PNLCS?
 
 Open the client → **Services** tab → **Add Service**. Leave the options empty
-for a billing-only record; use **"Link to an existing account"** to attach the
-account that already runs on the server (PNLCS then bills *and* manages it); or
-tick **"Create the account on the server now"** to provision a brand-new one.
+for a billing-only record; on a Panelica or Proxmox server, use **Link to an
+existing account** to attach the account or virtual server that already runs
+there (PNLCS then bills *and* manages it); or tick **Create the account on the
+server now** to provision a brand-new one.
 
 ## How does PNLCS know which server account belongs to which service?
 
@@ -21,14 +50,17 @@ rely on usernames matching, so names can differ freely.
 
 ## How do I update to the latest version?
 
-Docker: `docker exec pnlcs /usr/local/bin/update.sh`. Self-hosted or inside a
-panel account: see [Updating](../install/updating.md). Your data is left untouched either
-way.
+From the admin area: **Setup → Updates**. Docker:
+`docker exec pnlcs /usr/local/bin/update.sh`. From the command line and the
+other cases: see [Updating](../install/updating.md). Your data is left
+untouched either way.
 
 ## Can PNLCS import my WHMCS data?
 
-There is no one-click importer. The API speaks WHMCS's action names, so
-migration scripts carry over; see [Migrate from WHMCS](../guides/migrate-from-whmcs.md).
+Yes: **Utilities → Import WHMCS** connects to your WHMCS database, read-only,
+and imports its tables into PNLCS with a field mapping you check first.
+The API also speaks WHMCS's action names, so migration scripts carry over; see
+[Migrate from WHMCS](../guides/migrate-from-whmcs.md).
 
 ## Where are my backups?
 
@@ -43,8 +75,9 @@ and renewals are charged to it once **Automatic Payment** is switched on
 
 ## Can I sell in several currencies?
 
-Yes: add currencies under **Setup → Currencies**; exchange rates update every
-night.
+Yes: add currencies under **Setup → Currencies**. Exchange rates update every
+morning at 05:30 while **Update exchange rates every day** is ticked on the
+same page (it is by default).
 
 ## Can an AI assistant work with PNLCS?
 

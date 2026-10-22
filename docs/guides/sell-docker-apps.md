@@ -1,3 +1,19 @@
+---
+sources:
+  - app/Http/Controllers/Admin/ProductController.php
+  - app/Http/Controllers/Admin/DockerAppController.php
+  - app/Http/Controllers/Client/ServiceController.php
+  - app/Console/Commands/ImportDockerAppsCommand.php
+  - app/Models/DockerApp.php
+  - modules/Servers/Panelica/PanelicaModule.php
+  - resources/views/admin/products/edit.blade.php
+  - resources/views/admin/docker-apps/index.blade.php
+  - resources/views/client/services/hosting/containers.blade.php
+  - resources/views/client/services/hosting/runtime-apps.blade.php
+  - database/migrations/2026_08_17_250000_seed_kb_apps_articles.php
+  - database/migrations/2026_08_24_130000_seed_kb_detailed_howtos.php
+---
+
 # Sell Docker Apps
 
 PNLCS can sell one-click applications — WordPress, n8n, databases, remote
@@ -94,16 +110,27 @@ Use this for "run your own stack" plans where a domain would be meaningless.
 **Setup → Products/Services → New Hosting Product**, then set:
 
 1. **Server Type** → `panelica`
-2. **Panelica Resources** section:
-    - **Max Containers** — at least `1`, or apps stay off
-    - **RAM (MB)** and **CPU Limit (%)** — the ceiling all their apps share
-    - **Disk (MB)** — app data lives in the customer's home directory and counts
-      against this
+2. **Panelica Resources** section, one of:
+    - **Managed mode** ticked: on provisioning PNLCS builds a matching panel
+      plan from the limits in this section. Then set:
+        - **Max Containers** — at least `1`, or apps stay off
+        - **RAM (MB)** and **CPU Limit (%)** (100 = 1 core) — the ceiling all
+          their apps share
+        - **Disk (MB)** — app data lives in the customer's home directory and
+          counts against this
+    - **Managed mode** unticked and a plan picked under **Or use an existing
+      panel plan ID**: the account gets that panel plan, and its limits are
+      the ones set on the panel
 3. One of:
     - **App Hosting** → pick an app (fixed-app product)
     - **Customer picks the app** → tick it (catalogue on the order form)
     - **Container plan** → tick it (no domain)
 4. Pricing, as with any other product
+
+A product that sells apps (any of the three options in step 3) cannot be saved
+with **Max Containers** at 0: PNLCS refuses with "This product sells container
+apps, but Max Containers is 0", because every order would fail and be rolled
+back.
 
 !!! tip "Sizing the plan"
     Look at what the apps you intend to sell actually need. The app cards in the
@@ -125,15 +152,14 @@ them, whether an app is active. This screen decides *how you sell them*:
 | **Featured** | Leads the grid, marked with a star |
 | **Order** | Your own ordering; higher comes first |
 | **Tagline** | One selling line under the name, instead of the panel's description |
-| **Logo** | Upload one, or fetch from a URL — see below |
+| **Logo** | Upload one, fetch from a URL, or remove it — see below |
 
 ### Logos
 
 Logos come from three places, and the first one that has an answer wins:
 
-1. **What you uploaded** — stored under `storage/app/public/docker-apps`
-2. **What ships with PNLCS** — committed to `public/img/apps`, listed in
-   `manifest.json`
+1. **What you uploaded or fetched** on the App Catalogue screen
+2. **What ships with PNLCS** — a set of logos included in every install
 3. **A coloured letter tile** — drawn from the slug, always available
 
 Layer 2 is why a fresh install looks finished straight away: 95 of the panel's
@@ -152,8 +178,11 @@ usable logo file, and a wrong logo is worse than a letter tile.
 URL to fetch from. That writes into layer 1, which wins over the shipped set and
 survives updates.
 
-**To fill in logos for apps added later**, either press *Fetch missing logos* on
-that screen or run:
+**Remove logo** takes your own logo off again, and the card falls back to the
+next layer.
+
+**To fill in logos for apps added later**, press *Fetch missing logos* on that
+screen (*Refetch all logos* replaces the stored ones as well), or run:
 
 ```bash
 php artisan docker-apps:import-logos             # only apps with no logo
@@ -191,13 +220,22 @@ advertise apps or pay for the lookup.
   clear mark when it needs more memory than their plan allows
 - **Install** on the card itself; the install box opens right underneath it,
   and the button says *Installing…* while images download
-- Their running apps, with **Start / Stop / Restart / Remove**
+- Their running apps, each on a card with **Start / Stop / Restart / Remove**,
+  **Open app** (the address it answers on), **Connection details** (the
+  logins the app was created with, masked, with **Copy** and **Email me these
+  details**), its components and ports, and a **Terminal** in the browser
+  (**Open shell**, or **As root**)
 - **A domain picker under each running app** — pick one of the account's own
   domains and press *Point here*, and the app is served on it; the domain shows
   as a link, and an × hands it back to ordinary web hosting
 - An app stuck in a restart loop reads **Not starting**, with a line saying what
   that usually means
 - A counter showing how many of their allowance they have used
+
+The service page also has **Laravel Apps**, **Node.js Apps** and **Python
+Apps** tiles. They list the account's apps of that kind from the panel (name,
+domain, version, status and an **Open** link); creating and deploying them is
+done in the hosting panel.
 
 Apps a customer installs are fenced to their own account: the billing key is
 operator-scoped and can see every container on the server, so PNLCS filters by
@@ -228,8 +266,8 @@ run in the same account slice and draw on the same allowance. So an app marked
 
 ## What to tell customers
 
-The knowledge base ships with six articles under **Apps & Docker**, written for
-the customer rather than the operator:
+The knowledge base ships with seven articles under **Apps & Docker**, written
+for the customer rather than the operator:
 
 - What am I buying: hosting or an app?
 - Installing an app
@@ -237,6 +275,7 @@ the customer rather than the operator:
 - My app says "Not starting"
 - How many apps can I run?
 - Removing an app
+- Your app's address, login details and shell
 
 They are ordinary knowledge base entries, so edit them under **Support →
 Knowledge Base** to match your own wording, plans or support policy.
@@ -257,7 +296,8 @@ Knowledge Base** to match your own wording, plans or support policy.
 
 **The order failed and the account is gone**
 : An App Hosting order rolls back when the app cannot be installed. The reason
-  is in the service's module log.
+  is in the "PROVISIONING FAILED" message sent to your notification channels
+  and to the company email address.
 
 **A customer's second order fails**
 : The panel keeps one account per email address. PNLCS retries once with a

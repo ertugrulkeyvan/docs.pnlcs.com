@@ -1,3 +1,8 @@
+---
+sources:
+  - app/Http/Middleware/ApiKeyAuth.php
+---
+
 # API overview
 
 PNLCS has an HTTP API with 171 actions: clients, invoices, orders, services,
@@ -73,7 +78,7 @@ Other ways are accepted for compatibility:
 |---|---|
 | `identifier` and `secret` parameters | Also `api_key` and `api_secret`. In a GET query string they end up in web server logs, so prefer the headers. |
 | `Authorization: Bearer <secret>` | The secret alone identifies the credential. |
-| `username` and `password` of a staff account | WHMCS style. Refused for accounts that use two-factor authentication. Not recommended: use a credential. |
+| `username` and `password` of a staff account | WHMCS style; `adminuser` and `adminpass` work too. The password is sent as typed, not hashed. Refused for accounts that use two-factor authentication. Not recommended: use a credential. |
 
 A failed authentication answers `401`.
 

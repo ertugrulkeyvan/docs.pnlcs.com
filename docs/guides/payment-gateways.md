@@ -1,3 +1,16 @@
+---
+sources:
+  - modules/Gateways/
+  - app/Http/Controllers/GatewayWebhookController.php
+  - app/Http/Controllers/Admin/PaymentNotificationController.php
+  - app/Support/AutoCharge.php
+  - app/Services/AutoChargeService.php
+  - app/Http/Controllers/Client/PaymentMethodController.php
+  - app/Support/formatting.php
+  - resources/views/admin/settings/general.blade.php
+  - routes/web.php
+---
+
 # Payment Gateways
 
 A **gateway** is how you get paid. At least one must be enabled before real
@@ -21,7 +34,7 @@ gateway, fill in its keys, save and enable it.
 | **Razorpay** | Key ID, Key Secret, Webhook Secret, Test Mode | `/gateway/razorpay/webhook` |
 | **Tpay** (Poland) | Open API Client ID, Open API Client Secret, Security Code, Sandbox Mode | `/gateway/tpay/webhook` |
 | **iyzico** (Turkey) | API key, Secret key, Sandbox, Instalments offered, Payment group, Let the customer store their card | none: the result comes back with the customer from iyzico's page |
-| **Bank Transfer** | Account holder, up to several banks (name, IBAN or account number, sort code, SWIFT/BIC), an additional note | none: you confirm payments by hand |
+| **Bank Transfer** | Account holder, up to three banks (shown to customers or not, bank name, IBAN or account number, sort code / routing, SWIFT/BIC), an additional note | none: you confirm payments by hand |
 
 A gateway is offered at checkout only once every required field has a value
 and it is enabled.
@@ -99,18 +112,55 @@ the invoice's.
 
 1. Enable **Bank Transfer** and enter the bank details customers see at
    checkout.
-2. After paying, a customer can send a **payment notification** from the
-   invoice, with a receipt if they like.
-3. You review it under **Billing → Payment Notifications** and approve it: the
-   invoice is marked paid and whatever waits on it (provisioning, for example)
-   runs.
+2. The customer is asked to write the invoice's **payment reference** on the
+   transfer: a short code such as `INV34` (the prefix and the invoice's
+   number). Change the prefix under **Setup → General Settings → Billing
+   currency → Payment reference prefix** (default `INV`, up to 8 characters).
+3. After paying, a customer can send a **payment notification** from the
+   invoice, with a receipt if they like. The invoice shows **Payment Pending**
+   until you decide.
+4. You review it under **Billing → Payment Notifications**:
+    - **Approve** records the payment: the invoice is marked paid and whatever
+      waits on it (provisioning, for example) runs. When less arrived than the
+      invoice owes, the rest stays open on the invoice.
+    - **Reject** needs a reason. The invoice goes back to the status it had
+      (unpaid or overdue), and the customer gets the reason in the **Payment
+      Notification Rejected** email so they can pay again.
 
 ## Stored cards and automatic payment
 
 Stripe, iyzico and PayPal can store a customer's card at the gateway and
-charge it for renewals. Settings are under **Setup → General Settings →
-Automatic Payment**. Card numbers never pass through PNLCS: the customer
+charge it for renewals. Card numbers never pass through PNLCS: the customer
 enters them on the gateway's own form.
+
+Nothing is charged until you switch it on under **Setup → General Settings →
+Automatic Payment**:
+
+| Setting | Default |
+|---|---|
+| **Pay invoices with the card the customer has stored** | Off |
+| **Charge this many days before the due date** | 3 |
+| **Attempts per invoice** | 3 |
+| **Days between attempts** | 3 (at least 1) |
+
+The run starts every day at 06:45, before overdue services are suspended and
+reminders go out. It collects every unpaid invoice that is due, not only
+renewals, including anything already owed on the day you switch it on. Run
+`php artisan pnlcs:auto-charge --dry-run` first to see what the first morning
+would charge.
+
+While it is on, customers can store a card and switch **Automatic payment**
+on or off for their account under **Payment Methods** in the client area. It
+is on for each account until they turn it off. When a charge fails, or the
+bank asks the customer to confirm it, they are emailed (**Automatic Payment
+Failed**, **Automatic Payment Authentication Required**).
+
+## Gateway Logs
+
+**Utilities → System Logs → Gateway Logs** lists what a gateway recorded,
+filterable by gateway and date, kept for 90 days by default. In PNLCS 1.6.1
+only **Tpay** (transactions, refunds, refused webhooks) and **iyzico** write
+there; the other gateways write to the application log file instead.
 
 ## Refunds
 

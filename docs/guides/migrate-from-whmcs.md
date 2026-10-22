@@ -1,5 +1,13 @@
 ---
 offer: true
+sources:
+  - app/Http/Controllers/Admin/WhmcsImportController.php
+  - app/Services/WhmcsImport/
+  - lang/en/whmcs_import.php
+  - app/Http/Controllers/Admin/ClientController.php
+  - resources/views/admin/clients/show.blade.php
+  - modules/Servers/Panelica/PanelicaModule.php
+  - modules/Servers/Proxmox/ProxmoxModule.php
 ---
 
 # Migrate from WHMCS
@@ -8,10 +16,11 @@ Moving from WHMCS to PNLCS? Because PNLCS deliberately mirrors WHMCS concepts,
 the mental model carries straight over — clients, products, orders, invoices,
 services, tickets and modules all mean the same thing.
 
-!!! note "There is no one-click importer yet"
-    PNLCS does not ship an automated WHMCS database importer. This guide
-    describes the practical, low-risk way to move. If you'd like to help build
-    an importer, it's a welcome [contribution](https://github.com/Panelica/pnlcs/issues).
+!!! note "What the importer moves"
+    **Utilities → Import WHMCS** reads clients, domains and services straight
+    from your WHMCS database ([below](#import-from-the-whmcs-database)).
+    Products, invoices, tickets and settings are not imported: you set those
+    up in PNLCS yourself.
 
 ## Recommended approach: run both, cut over gradually
 
@@ -39,12 +48,14 @@ servers — PNLCS just needs to manage them going forward.
 
 ### 4. Bring customers over
 
-For each customer, create a **client** in PNLCS and add their existing
+Import them ([below](#import-from-the-whmcs-database)), or create them by hand:
+for each customer, create a **client** in PNLCS and add their existing
 **services**: on the client, **Services → Add Service**, with the right product,
-next due date and price. On a Panelica server, **Link to an existing account**
-lists the accounts already on it; pick the customer's, and PNLCS manages that
-account from then on (suspend, terminate, password). Leave it empty for a
-billing-only record. New renewal invoices then bill from PNLCS.
+next due date and price. On a Panelica or Proxmox server, **Link to an existing
+account** lists what is already on it (the panel's accounts, or the virtual
+machines); pick the customer's, and PNLCS manages it from then on (suspend,
+terminate, password). Leave it empty for a billing-only record. New renewal
+invoices then bill from PNLCS.
 
 Two common patterns:
 
@@ -58,6 +69,42 @@ Two common patterns:
 Update your billing URL, client links and any signup forms to your PNLCS
 install. Redirect the old WHMCS URL if you can.
 
+## Import from the WHMCS database
+
+**Utilities → Import WHMCS**. The WHMCS database is only read; nothing in it
+is changed.
+
+1. **Connect**: enter the WHMCS database's host, port, database, username,
+   password and **Table prefix** (`tbl` by default). **Test connection**
+   checks it; **Save and continue** opens the mapper. PNLCS must be able to
+   reach that database server over the network.
+2. **Map the fields**: pick a **Source table**: `tblclients` imports clients,
+   `tbldomains` domains, `tblhosting` services. Each WHMCS field is matched to
+   a PNLCS field (with a suggestion where the names agree) or skipped. You can
+   also set constant values and search-and-replace rules, and save the
+   mapping to reuse it. WHMCS client custom fields appear as `custom:<name>`;
+   one with the same name as a PNLCS custom field maps onto it.
+3. **Import mode**: **Add new**, **Add and update** or **Update only**, with a
+   **Match key** that decides whether a record already exists (email for
+   clients, domain name for domains and services).
+4. **Preview** shows the first 10 rows as WHMCS has them and as PNLCS will
+   store them, with any problems listed. **Run import** then imports them and
+   opens the import log: how many were added, updated, skipped and failed,
+   with the reason for each.
+
+Import in this order:
+
+- **Clients first.** They get a random password: each customer sets their
+  own with "Forgot password" on their first visit. Tell them before you
+  switch.
+- **Domains** are linked to the PNLCS client with the same email as their
+  WHMCS owner.
+- **Services** are linked to the client by email, to a PNLCS product through
+  **Product mapping** (or a product with the same name), and to the PNLCS
+  server with the same name. A service whose product or server is not found
+  is still imported without it and noted in the log. The WHMCS service
+  password is not imported.
+
 ## Handy facts for planners
 
 - **Data model parity:** WHMCS's clients/products/orders/invoices/services map
@@ -69,6 +116,9 @@ install. Redirect the old WHMCS URL if you can.
   differences.
 - **Passwords:** hosting account passwords live on the control panel, not in
   PNLCS — moving billing doesn't disturb live sites.
+- **Hooks:** many WHMCS hook names keep working, but the parameters are
+  PNLCS objects and some hooks are not there; see
+  [Hooks](../developer/hooks.md) for the differences.
 
 ## Get help
 

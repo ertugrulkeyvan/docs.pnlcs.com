@@ -1,13 +1,25 @@
+---
+sources:
+  - resources/views/admin/products/create.blade.php
+  - resources/views/admin/products/partials/proxmox.blade.php
+  - resources/views/client/cart/configure.blade.php
+  - app/Http/Controllers/Client/CartController.php
+  - modules/Servers/Proxmox/ProxmoxPlan.php
+  - modules/Servers/Proxmox/ProxmoxOrderOptions.php
+  - modules/Servers/Proxmox/ProxmoxModule.php
+  - lang/en/proxmox.php
+---
+
 # 4. Create the product
 
 **Setup → Products/Services → Create Product.** Give it a name and a group,
-choose type **VPS/Dedicated** and module **Proxmox VE**, set the prices and
-save. The Proxmox settings open on the product's edit page.
+choose Product Type **VPS/Dedicated** and Server Module **Proxmox VE**, set
+the prices and save. The Proxmox settings open on the product's edit page.
 
 !!! tip "Auto setup"
-    *Auto Setup* decides when the server is built: **when the order is paid**
-    (the usual choice), **when the order is placed**, or **only when an admin
-    accepts the order**.
+    *Auto Setup* decides when the server is built: **as soon as the first
+    payment is received** (the usual choice), **as soon as the order is
+    placed**, or **only when an admin accepts the order**.
 
 The **Proxmox VE virtual servers** card reads its lists live from the
 cluster — pick the server in *Lists from* at the top right. The summary line
@@ -38,11 +50,11 @@ above the sections always shows what one order gets.
 | **KVM template to clone** | The template new servers are copied from. **Install ready-made systems** under it opens the [image library](operating-systems.md) |
 | **Container template** | LXC only: the `vztmpl` the container is created from |
 | **Disk storage** | Where the new server's disk goes |
-| **Installer ISO** | Instead of a template, boot an installer ([see the note](operating-systems.md#installer-isos)) |
-| **Login user** | The user cloud-init creates; `root` by default |
-| **Upgrade packages on first boot** | cloud-init runs the system's upgrade once; the first start is slower |
+| **Installer ISO** | KVM only: instead of a template, boot an installer ([see the note](operating-systems.md#installer-isos)) |
+| **Login user** | KVM only: the user cloud-init creates; `root` by default |
+| **Upgrade packages on first boot** | KVM only: cloud-init runs the system's upgrade once; the first start is slower |
 | **Nesting** | LXC only: allows Docker inside the container |
-| **Protect from deletion** | Proxmox's protection flag, so nobody deletes the server by accident in the Proxmox UI. PNLCS lifts it only while terminating |
+| **Protect from deletion** | On by default. Proxmox's protection flag, so nobody deletes the server by accident in the Proxmox UI. PNLCS lifts it only to terminate, reinstall or restore the server, and puts it back after a reinstall or restore |
 
 ## 3 · Network
 
@@ -50,7 +62,7 @@ above the sections always shows what one order gets.
 |-------|---------|
 | **Network bridge** | The bridge servers are plugged into, listed from the node |
 | **IPv4 address** | *DHCP on the bridge*, or *one from the server's IPv4 pool* (each server gets its own fixed address) |
-| **IPv6 address** | None, or SLAAC |
+| **IPv6 address** | None, or SLAAC. Applied to LXC containers only; a KVM server ignores it, so set IPv6 up inside the system |
 | **DNS servers** | Given to the server through cloud-init, e.g. `1.1.1.1 8.8.8.8` |
 | **VLAN tag** | Puts the network card on a VLAN (`0` = none) |
 | **Speed limit (MB/s)** | Caps the network card (`0` = none) |
@@ -94,6 +106,11 @@ module reads, the part after is what the customer sees.
 - a running summary with each choice and the total;
 - **Server hostname** instead of the domain-purchase box shown for web
   hosting. It becomes the server's name; left empty, the server is named `vps-<VM id>`.
+- **SSH public keys** (optional): up to 10, one per line, in OpenSSH format.
+  They are put on the server when it is built (through cloud-init on KVM, so
+  not on a server installed from an ISO), and the customer can change them
+  when reinstalling. A pasted private key or a line that is not a public key
+  is refused.
 
 Next: order it once yourself and look at the
 [customer's panel](customer-panel.md).

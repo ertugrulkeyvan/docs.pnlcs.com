@@ -1,3 +1,14 @@
+---
+sources:
+  - modules/Servers/Proxmox/
+  - lang/en/proxmox.php
+  - app/Http/Controllers/Concerns/ServesVps.php
+  - app/Http/Controllers/Client/CartController.php
+  - app/Console/Commands/ProxmoxTasksCommand.php
+  - app/Console/Commands/ModuleQueueProcessCommand.php
+  - resources/views/components/vps-panel.blade.php
+---
+
 # Troubleshooting and questions
 
 ## Problems and their fixes
@@ -9,14 +20,15 @@
 | Test: a right is **missing on /pool/…** | The role lacks it, or the ACL is on another path | Run the printed `pveum` commands |
 | Test: **SDN.Use** missing | Since Proxmox 8, a server cannot be put on a bridge without it | `pveum acl modify /sdn/zones/localnetwork --users pnlcs@pve --roles PVESDNUser` |
 | Test: *no templates visible* | No template, or not in the pool | Install one from the [image library](operating-systems.md), or `pveum pool modify pnlcs --vms <id>` |
-| Order paid, but the service stays *Pending* | The create failed | The reason is on the service page and in the log; fix it and press **Create Account** on the service |
+| Order paid, but the service stays *Pending* | The create failed | It is retried after 5, 10, 20 and 40 minutes and you are notified; the reason is in the notification and the log. Fix it and press **Create Account** on the service |
 | The customer cannot sign in over SSH with the password | The image refuses password logins and root | Set the [vendor snippet](prepare-proxmox.md#the-cloud-init-snippet) on the server, then reinstall the server |
 | *Addresses: none reported yet* | The guest agent is not running in the server yet | Wait for the first boot to finish; with the vendor snippet the agent is installed on first boot |
 | A new password *"takes effect at the next reboot"* | The guest agent does not run in that server | Reboot it, or install `qemu-guest-agent` in it |
 | The disk card shows only the size | Same: no guest agent | As above |
 | Image library: *"may not fetch images yet"* | The token lacks `Datastore.AllocateTemplate` / `Sys.AccessNetwork` | Run the three commands on that page |
 | Image library: *no storage holds import content* | No directory storage has the *import* type | `pvesm set local --content <its current types>,import` |
-| Reinstall or restore *"under way"* for a long time | The scheduler is not running | Check the [cron runner](../../install/native.md#13-schedule-the-cron-runner); it moves jobs on every minute |
+| Reinstall or restore *"under way"* for a long time | The scheduler is not running | Check the [cron runner](../../install/native.md#13-schedule-the-cron-runner); it moves jobs on every minute. A job not finished after two hours is stopped as failed |
+| Ordering or reinstalling: *"This does not look like an SSH public key"* | A line is not an OpenSSH public key, a private key was pasted, or there are more than 10 keys | One public key per line, the contents of the `.pub` file |
 | A backup fails | The backup storage lacks the *backup* content type, or the token's rights on it | Press Test: it checks both and says which |
 | In a cluster, creating on another node fails | The template is on one node's local storage, which only that node can clone from | Set the product's node to the template's node, or keep templates on shared storage |
 
@@ -50,7 +62,12 @@ done on KVM; LXC is covered by the automated tests.
 Not yet.
 
 **Can customers add SSH keys?**
-Not from the panel yet; the password is set through cloud-init.
+Yes, up to 10 public keys: in the **SSH public keys** box when they order, and
+again in the **Reinstall** form, which shows the current keys (change them, or
+empty the box to remove them). The keys are put on the server when it is
+built or reinstalled: through cloud-init on KVM, at creation on LXC. A KVM
+server installed from an ISO does not get them. The root password is set as
+well.
 
 **Does PNLCS change anything else on my Proxmox?**
 No. It works only on the servers it made or that you linked to a service —
