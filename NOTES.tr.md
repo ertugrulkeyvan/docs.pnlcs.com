@@ -28,12 +28,12 @@ pnlcs.com gibi bu da bizim repoda: **içerik bizde** (kullanıcı kararı, 2026-
 - Mobil menü: ana sayfada kenar çubuğu yalnız masaüstünde gizli (`hide: navigation` kullanma, mobil menüyü boşaltır).
   Drawer başlığı `overrides/partials/nav.html`; altında Live demo + pnlcs.com bağlantıları.
 - Önbellek: `tools/build.py` CSS/JS adreslerine `?v=<içerik özeti>` ekler; `zensical build` tek başına yetmez, hep build.py.
-- Eskime takibi: `sources:` + `tools/upstream.py stale`. Şu an yalnız API, MCP tools ve native install'da var.
+- Eskime takibi: `sources:` + `tools/upstream.py stale`; günlük otomasyon eskiyen sayfaları issue'da listeler.
 
 ## İçerik durumu
 
-`AUDIT.md`: üç ajanın kodla karşılaştırması (2d724001). API ve MCP sayfaları üretiliyor ve güncel; geri kalan
-sayfalarda ~100 bulgu, ~25 yeni sayfa ihtiyacı. İçerik henüz **düzeltilmedi**; bu ilk hâl tasarım + araçlar.
+2026-10-22: bütün sayfalar PNLCS 1.6.1'e (cf89b175) göre kontrol edildi, ~30 yeni sayfa yazıldı (93 sayfa).
+`AUDIT.md`'de açık madde yok; `data/upstream.json` `checked` = cf89b175. Her sayfada `sources:` var (20 sayfa hariç).
 
 ## Önizleme
 
@@ -49,8 +49,8 @@ python3 tools/build.py && python3 -m http.server 8094 --directory site
   `pnlcs-sync` PR'ı açar, "Pages that may be out of date" issue'sunu tutar. **Publish** her `main` push'unda build alır,
   `DEPLOY_*` secret'ları girilince `site/`'ı srv1'e rsync'ler. Actions'ın PR açma izni repo ayarında açık.
 - [ ] srv1'de docs.pnlcs.com vhost + kısıtlı deploy anahtarı (AX41 oturumu, müşteri taşımasından sonra), secret'lar, sonra DNS.
-- [ ] Panelica ekibi: docs.pnlcs.com şu an `Panelica/pnlcs` GitHub Pages'ten yayında; geçiş ve upstream `docs/`'un geleceği.
-- [ ] AUDIT.md'yi bölüm bölüm işle.
-- [ ] Hooks, yetkiler, env, artisan, modüller referanslarını koddan üret.
+- [x] Panelica ekibi geçişi onayladı (2026-10-22). Upstream `docs/` yazılmaya devam ediyor, otomasyon her gün çekiyor.
+- [x] AUDIT.md bitti; referanslar (yetkiler, env, artisan, tema token'ları, genel ayarlar) koddan üretildi (2026-10-22).
+- [ ] PNLCS'e upstream merge PR'larını (`pnlcs-sync`) kullanıcı birleştiriyor (auto mode `gh pr merge`'ü engelliyor).
 - [ ] GTM + çerez bandı, og görselleri, Playwright ile otomatik ekran görüntüleri.
 - [ ] pnlcs.com'daki Docs bağlantıları (menü, footer) yeni sekme yapısına göre gözden geçir.
