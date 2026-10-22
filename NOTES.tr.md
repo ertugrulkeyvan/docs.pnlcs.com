@@ -49,7 +49,8 @@ python3 tools/build.py && python3 -m http.server 8094 --directory site
   `pnlcs-sync` PR'ı açar, "Pages that may be out of date" issue'sunu tutar. **Publish** her `main` push'unda build alır,
   `DEPLOY_*` secret'ları girilince `site/`'ı sunucuya rsync'ler. Actions'ın PR açma izni repo ayarında açık.
 - [x] Sunucuda docs.pnlcs.com yeri + yalnız yazabilen deploy kullanıcısı hazır (2026-10-22).
-- [ ] Secret'lar, ilk yükleme ve kontrol, sonra DNS.
+- [x] Yayında (2026-10-22): secret'lar girildi, Publish her `main` push'unda sunucuya yüklüyor, DNS yeni sunucuya çevrildi.
+- [ ] Eski GitHub Pages yayını (Panelica deposu) trafik almıyor; kaldırılması ya da yönlendirilmesi Panelica ekibiyle konuşulacak.
 - [x] Panelica ekibi geçişi onayladı (2026-10-22). Upstream `docs/` yazılmaya devam ediyor, otomasyon her gün çekiyor.
 - [x] AUDIT.md bitti; referanslar (yetkiler, env, artisan, tema token'ları, genel ayarlar) koddan üretildi (2026-10-22).
 - [ ] PNLCS'e upstream merge PR'larını (`pnlcs-sync`) kontrolden sonra elle birleştiriliyor.
