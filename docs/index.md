@@ -32,6 +32,5 @@ install it, run a hosting business with it, and build on it.
 
 ## Need help?
 
-- [GitHub Discussions](https://github.com/Panelica/pnlcs/discussions)
-- [Panelica forum](https://forum.panelica.com/)
+- [PNLCS community](https://community.pnlcs.com/c/help)
 - [Report a bug in PNLCS](https://github.com/Panelica/pnlcs/issues)

@@ -123,5 +123,5 @@ Import in this order:
 ## Get help
 
 Migrations are the kind of thing the community loves to compare notes on — ask
-on the [forum](https://forum.panelica.com) or open an
+in the [PNLCS community](https://community.pnlcs.com/c/help) or open an
 [issue](https://github.com/Panelica/pnlcs/issues) with your scenario.
