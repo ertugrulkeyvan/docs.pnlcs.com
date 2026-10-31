@@ -108,7 +108,7 @@ properties are the parameters, and every name in the first column fires.
 | `AfterModuleUnsuspend` | service | unsuspend succeeded |
 | `PreModuleTerminate` | service | before terminate |
 | `AfterModuleTerminate` | service | terminate succeeded |
-| `AfterModulePassword` | service | password change succeeded |
+| `AfterModulePassword` (also `AfterModuleChangePassword`) | service | password change succeeded, VPS root password included |
 | `AfterModuleChangePackage` | service, newProduct | package change succeeded |
 | `ModuleActionFailed` | service, action, error | a module action failed and was queued for retry (the Panelica License module also fires it with action `license`) |
 
