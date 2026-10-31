@@ -44,6 +44,24 @@ moves the service's next due date on by one billing cycle.
 Supported cycles: monthly, quarterly, semi-annually, annually, biennially,
 triennially.
 
+How early is set under **Setup → General Settings → Invoices → Raise renewal
+invoices (days before due)**, 14 by default. Each renewal is invoiced on its
+own day, so a customer whose services and domains renew on different dates gets
+an invoice for each.
+
+### One invoice a month
+
+Set **Consolidated billing day** to a day of the month (1–28) to bill each
+customer once a month instead. On that day every service, addon and domain due
+before the same day next month, plus the days set above, goes on one invoice
+per customer, due after **Invoice due days**. With the 1st and 0 days, the
+invoice raised on 1 December covers everything renewing in December. With the
+1st and 31 days, it covers January too, so customers pay a month ahead.
+
+Between billing days PNLCS raises only what would otherwise be invoiced late:
+a renewal due before the next billing day that was not there on the last one,
+such as a service ordered since. It is invoiced at the usual lead, no earlier.
+
 ## Payment reminders
 
 Unpaid invoices get **reminder emails** at fixed points: **7, 3 and 1 day**
