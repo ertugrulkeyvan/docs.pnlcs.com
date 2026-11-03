@@ -37,7 +37,8 @@ gateway, fill in its keys, save and enable it.
 | **Bank Transfer** | Account holder, up to three banks (shown to customers or not, bank name, IBAN or account number, sort code / routing, SWIFT/BIC), an additional note | none: you confirm payments by hand |
 
 A gateway is offered at checkout only once every required field has a value
-and it is enabled.
+and it is enabled. An enabled gateway that is missing one says **Not offered**
+on its card, and the card names the fields to fill in.
 
 ## Webhooks
 
@@ -154,6 +155,13 @@ on or off for their account under **Payment Methods** in the client area. It
 is on for each account until they turn it off. When a charge fails, or the
 bank asks the customer to confirm it, they are emailed (**Automatic Payment
 Failed**, **Automatic Payment Authentication Required**).
+
+While automatic payment is on, an open invoice also lists the customer's
+stored cards, each with a **Pay with** button. The card is charged now, the
+way a renewal is: one attempt at a time and recorded once, and if the bank
+asks the cardholder to confirm, the invoice page offers that step. Add Funds
+invoices and payments for several invoices are paid with the form, not a
+stored card.
 
 ## Gateway Logs
 

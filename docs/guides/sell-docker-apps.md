@@ -107,7 +107,7 @@ Use this for "run your own stack" plans where a domain would be meaningless.
 
 ## 3. Build the product
 
-**Setup → Products/Services → New Hosting Product**, then set:
+**Setup → Products/Services → New Product**, then set:
 
 1. **Server Type** → `panelica`
 2. **Panelica Resources** section, one of:
@@ -180,6 +180,14 @@ survives updates.
 
 **Remove logo** takes your own logo off again, and the card falls back to the
 next layer.
+
+A logo is stored under the name its **content** says it is (PNG, JPEG, GIF,
+WebP or SVG), not under the extension it arrived with, because the file is then
+served from the panel's own address. An SVG can carry script, so one is kept
+only without scripts, event handlers, embedded documents or links out. A URL
+you paste is fetched only from a public address: the panel will not fetch from
+itself, its own network or a cloud metadata service, and it checks every
+redirect the same way.
 
 **To fill in logos for apps added later**, press *Fetch missing logos* on that
 screen (*Refetch all logos* replaces the stored ones as well), or run:

@@ -95,13 +95,13 @@ is changed.
 Import in this order:
 
 - **Clients first.** They get a random password: each customer sets their
-  own with "Forgot password" on their first visit. Tell them before you
-  switch.
+  own with "Forgot password" on their first visit. The import sends no
+  email, so tell them before you switch.
 - **Domains** are linked to the PNLCS client with the same email as their
   WHMCS owner.
 - **Services** are linked to the client by email, to a PNLCS product through
   **Product mapping** (or a product with the same name), and to the PNLCS
-  server with the same name. A service whose product or server is not found
+  server with the same hostname (or, failing that, the same name). A service whose product or server is not found
   is still imported without it and noted in the log. The WHMCS service
   password is not imported.
 

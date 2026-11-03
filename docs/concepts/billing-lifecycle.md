@@ -30,12 +30,29 @@ The settings named below are on **Setup → General Settings**.
 
 ## Recurring billing
 
-Each active service has a **next due date**. **14 days** before that date,
-PNLCS generates a **renewal invoice** and emails it to the customer. One
-invoice per customer collects everything of theirs that is due: services,
-addons and domains. The invoice is due after **Default payment due (days)**
-(Invoices card, default 14), so with the defaults it falls due on the
+Each active service has a **next due date**. **Raise renewal invoices (days
+before due)** (Invoices card, default 14) before that date, PNLCS generates a
+**renewal invoice** and emails it to the customer. One invoice per customer
+collects everything of theirs that falls due in the same run: services, addons
+and domains. Renewals on different dates are invoiced on their own days, so a
+customer can get several small invoices. The invoice is due after **Default
+payment due (days)** (default 14), so with the defaults it falls due on the
 service's due date.
+
+With **Invoice each renewal separately** ticked, each service (with its own
+addons), each domain and each lone addon gets an invoice of its own, so a
+customer can renew one and let another lapse.
+
+### One invoice a month
+
+Set **Consolidated billing day** to a day of the month (1–28) to bill each
+customer once a month instead. On that day everything due before the same day
+next month, plus the lead above, goes on one invoice per customer. With the
+1st and 0 days, the invoice raised on 1 December covers everything renewing in
+December; with the 1st and 31 days it covers January too, so customers pay a
+month ahead. Between billing days PNLCS raises only what would otherwise be
+invoiced late, such as a service ordered since the last billing day, at the
+usual lead.
 
 No renewal invoice is raised for a service whose customer turned auto-renew
 off, or that has a cancellation request waiting. Paying the renewal invoice
@@ -61,9 +78,11 @@ If an invoice isn't paid:
 2. **Auto-suspend** — once the invoice has been overdue for more than
    **Suspend after (days overdue)** (Automation card, default 3), the
    customer's active services are **suspended** on the server (the site goes
-   offline, the account still exists). Note that this suspends every active
-   service of that customer, not only the one on the invoice. To hold one
-   service back, set **Do not suspend until** on the service's page.
+   offline, the account still exists). By default this suspends every active
+   service of that customer, not only the one on the invoice; tick **Suspend
+   only the services on the overdue invoice** to suspend just those (the
+   service, its overage and its addons). To hold one service back, set **Do
+   not suspend until** on the service's page.
 3. **Auto-terminate** — off by default. With **Automatically terminate
    services suspended for non-payment** ticked, a service that has been
    suspended for **Terminate after (days suspended)** (default 30) while the
@@ -71,10 +90,23 @@ If an invoice isn't paid:
    its data are deleted). `php artisan pnlcs:auto-terminate --dry-run` lists
    what it would terminate.
 
+**A product can keep its own periods.** **Suspend after (days overdue)** and
+**Terminate after (days suspended)** on the product's edit page (Product
+details card) override the general settings for its services; left empty,
+the Automation card applies. A product with its own *terminate after* is
+terminated on that schedule even while automatic termination is off for the
+rest.
+
 Once the customer has paid, a service suspended for non-payment is
 **automatically unsuspended** within 30 minutes, provided nothing on it is
 still unpaid and the customer has no other invoice overdue past the
 suspension grace period.
+A bank-transfer notice that moves an invoice to *Payment Pending* is not a
+payment: the service stays suspended until the money is in.
+
+While a service is suspended the customer can still open it and download what
+is theirs, but the panel login, the module buttons and the hosting tabs are
+refused.
 
 ## Late fees
 

@@ -98,7 +98,9 @@ Customers who own an active service of a product also get that product's
 (**Only for owners of** on the download).
 
 The service is what **renews**. As the next due date approaches, PNLCS
-generates a renewal invoice; if it goes unpaid past your grace period, the
+generates a renewal invoice (14 days before the due date by default; change
+it with **Raise renewal invoices** under **Setup → General Settings →
+Invoices**); if it goes unpaid past your grace period, the
 service is **suspended**, and, if you have turned automatic termination on,
 eventually **terminated**.
 

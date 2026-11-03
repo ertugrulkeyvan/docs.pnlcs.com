@@ -130,8 +130,9 @@ PHP-FPM is still serving the previous code from its opcode cache. Reload it:
 ### The `/install` wizard is already locked, or you never got to choose a password
 
 You ran `php artisan db:seed` by hand before opening the wizard; seeing an
-administrator, it locks itself. Sign in with `admin` / `admin123` and change
-the password from your profile, or reinstall without seeding by hand.
+administrator, it locks itself. Sign in as `admin` with the password
+`db:seed` printed (or `PNLCS_ADMIN_PASSWORD`, if you set it) and change it
+from your profile, or reinstall without seeding by hand.
 
 ## Running
 
@@ -170,13 +171,17 @@ An invoice is paid, but no hosting account was created: the service stays
 3. **Does the server answer?** Press **Test** next to it on **Setup →
    Servers**. Wrong credentials or a firewall on the panel port are the usual
    causes.
-4. **Did the server refuse?** A failed action is queued and retried after 5,
+4. **Did the server refuse?** The service's page shows why, under **Module
+   Actions**, with the next automatic try. A failed action is queued and retried after 5,
    10, 20 and 40 minutes, five attempts in all, and you are notified. A
    refusal that cannot change (the panel has no such account, no module is
    set) is not retried. The API lists what is waiting, with the last error:
    [getmodulequeue](../api/system.md#getmodulequeue). To retry one waiting
    entry at once, run `php artisan pnlcs:module-queue --id=<its id>`; or fix
-   the cause and press **Create Account** on the service page.
+   the cause and press **Create Account** on the service page. A common one
+   is a domain already set up on the server, for example left by a service
+   deleted while its account was kept: remove it on the panel, then press
+   **Create Account**.
 5. **Is the scheduler running?** Retries only happen when it runs.
 
 ### Nothing happens by itself

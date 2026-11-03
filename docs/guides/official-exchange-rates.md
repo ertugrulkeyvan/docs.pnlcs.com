@@ -1,7 +1,16 @@
+---
+sources:
+  - app/Services/OfficialRateProviders.php
+  - app/Console/Commands/CurrencyUpdateCommand.php
+  - app/Http/Controllers/Admin/SettingController.php
+  - app/Models/Invoice.php
+  - resources/views/admin/settings/general.blade.php
+---
+
 # Official Exchange Rates
 
 When you bill in a second currency (**Setup → General Settings → Invoicing →
-Billing currency**), every invoice freezes the rate it was raised at. With an
+Bill customers in**), every invoice freezes the rate it was raised at. With an
 **official rate source** chosen, that rate comes from a named publisher instead
 of the commercial rate feed, and the invoice prints where it came from: the
 publisher, the kind of rate, the publisher's own date and, where there is one,
