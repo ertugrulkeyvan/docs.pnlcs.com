@@ -78,7 +78,17 @@ jobs:
             echo "Fix the pages, then run \`python3 tools/upstream.py mark\` and commit \`data/upstream.json\`."
             echo
             echo '```'
-            cat "$RUNNER_TEMP/stale.txt"
+            # An issue body holds at most 65536 characters: keep the summary
+            # line, cut the list short and point at the full run.
+            if [ "$(wc -c < "$RUNNER_TEMP/stale.txt")" -gt 60000 ]; then
+              head -c 58000 "$RUNNER_TEMP/stale.txt" | sed '$d'
+              echo
+              echo "... list cut short; the full list is in the workflow run log, or run: python3 tools/upstream.py stale"
+              echo
+              grep 'page(s) may be out of date' "$RUNNER_TEMP/stale.txt"
+            else
+              cat "$RUNNER_TEMP/stale.txt"
+            fi
             echo '```'
           } > "$RUNNER_TEMP/issue.md"
           if [ -n "$number" ]; then
