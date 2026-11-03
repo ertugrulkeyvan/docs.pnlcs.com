@@ -47,6 +47,12 @@ cancelled or fraud) cannot be deleted.
     - **API Key:** the `pk_live_...` key, and **API Secret:** the `sk_live_...`
       secret. Create them in the Panelica panel under **Settings → API Keys**;
       the secret is shown only once there.
+    - **Verify the TLS certificate:** off by default, because a panel reached
+      by IP address or carrying its own self-signed certificate would stop
+      answering the moment it were on. Turn it on once the panel answers on a
+      host name with a certificate a browser trusts: every call PNLCS makes to
+      it then checks that certificate, as the Proxmox module's own setting
+      does.
     - **Mail:** customers' mail apps are told the host name the panel gives
       the domain's mail certificate, or else `mail.<their domain>`. When a
       domain gets its first mailbox, PNLCS asks the panel for that domain's
@@ -149,6 +155,34 @@ Each service then stays on the server it was created on. See
 Place a test order, pay it, and confirm the account exists on the server and
 the service is **Active** in PNLCS. If not, see
 [Provisioning did not happen](../troubleshooting/common-issues.md#provisioning-did-not-happen).
+
+## Ending a service
+
+The status buttons at the top of a service's page (**Active**, **Suspended**,
+**Terminated**, **Pending**, **Cancelled**) change the record in PNLCS only.
+The account on the server is suspended, unsuspended or terminated with
+**Module Actions** below them.
+
+Closing the record while its account is still on the server (marking it
+**Terminated** or **Cancelled**, or deleting it) asks first what happens to
+the account:
+
+- **Terminate on the server** (the default) removes the account, its domain
+  and its apps from the server, then closes the record. If the server refuses,
+  nothing is changed and you are told why.
+- **Keep the account on the server** closes the record only, for an account you
+  are moving or will remove yourself. This is written to the activity log.
+
+Left on the server, an account keeps running with nothing billing it, and its
+domain cannot be ordered again. For Panelica servers PNLCS asks the panel
+whether the account is still there; for other modules an active or suspended
+service is taken to have its account. An active or suspended service that is
+not linked to an account on the panel (imported, or added without **Link to an
+existing account**) is asked about too: PNLCS cannot terminate it there, so
+remove the account on the panel yourself, or keep it.
+
+A domain that is already set up on the servers an order would go to is refused
+while the customer orders, with a message asking them to contact you.
 
 ## One click into the panel
 
