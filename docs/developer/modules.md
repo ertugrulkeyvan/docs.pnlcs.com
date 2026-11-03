@@ -53,6 +53,7 @@ above is `Modules\Gateways\AcmePay\AcmePayModule`.
 | `name` | yes | Unique key, stored on invoices, products and settings. Lower-case, no spaces. |
 | `type` | yes | `gateway`, `server`, `registrar` or `ssl` |
 | `class` | yes | Fully qualified class name of the module |
+| `provider` | no | Fully qualified class of a Laravel service provider in the module's folder: its own routes, views, migrations and scheduled tasks (see below) |
 | `requires` | no | `{"pnlcs": ">=1.3 <2"}`: the PNLCS versions the module works with. An update to a version outside it does not start until the operator updates the module, disables it, or chooses to go ahead |
 | `version`, `display_name`, `description`, `author` | no | Informational |
 
@@ -114,7 +115,9 @@ public function getConfigFields(): array
 }
 ```
 
-Field types: `text`, `password` (never echoed back into the page), `textarea`,
+Field types: `text`, `password` (never echoed back into the page), `textarea`
+(add `'secret' => true` for a key or certificate that must not be shown again: the
+page then shows only that a value is set, and a blank save keeps it),
 `select` (with `options`) and `yesno`. A gateway field can carry a
 `description`, a sentence shown under it on the settings page. A gateway reads its saved values from
 `App\Models\GatewaySettings` (`gateway` = your `name`, `setting` = the field
@@ -141,6 +144,48 @@ gateway is switched on with its required settings filled in.
 - `response` (the body your provider expects, `OK` by default) and
   `http_status` set the reply. Return them on failures too, so the provider
   stops retrying.
+
+**Pages, webhooks and tables of a module.** A module may need more than the
+callback: a checkout page of its own, a return URL, a webhook that answers
+differently, a table. Name a Laravel service provider in the manifest
+(`"provider": "Modules\\Gateways\\AcmePay\\AcmePayServiceProvider"`) and
+PNLCS registers it while the module is registered, so the framework's own means
+work from the module's folder, and an update, which resets the core's files,
+leaves them in place:
+
+```php
+// modules/Gateways/AcmePay/AcmePayServiceProvider.php
+namespace Modules\Gateways\AcmePay;
+
+use Illuminate\Support\ServiceProvider;
+
+class AcmePayServiceProvider extends ServiceProvider
+{
+    public function boot(): void
+    {
+        $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadViewsFrom(__DIR__.'/views', 'acmepay');
+        $this->loadMigrationsFrom(__DIR__.'/migrations');   // run by `php artisan migrate`, a step of every update
+    }
+}
+```
+
+- A route file without middleware has none: a webhook there gets the raw body
+  and headers and no CSRF check. Put pages for customers behind the client
+  area's guards (`['web', 'banned.ip', 'client.permission', 'auth', '2fa']`).
+- **Check the gateway is on in your own controllers** (a module's routes exist
+  while its folder does). Apply a payment with
+  `app(\App\Services\PaymentService::class)->applyPayment($invoice, '<name>',
+  $transactionId, $amount)`: as with the callback, the provider's transaction
+  id is what keeps a repeat from paying twice.
+- A route named `gateway.<name>.…` counts as the gateway's own: the generic
+  `/gateway/<name>/callback` then stops answering for it. Name routes under
+  your module's own prefix otherwise.
+- A module the core shadows (a built-in name) or whose class is not of its
+  type brings no provider either. A provider that fails is logged
+  (`Module gateway <name>: service provider failed to load`) and skipped.
+- After adding or removing a module on an installation that caches routes,
+  run `php artisan optimize`.
 
 **Addons** (`modules/Addons/<Name>/<Name>Module.php`, implementing
 `App\Contracts\AddonModuleInterface`) need no manifest: any addon folder is
@@ -232,6 +277,8 @@ A module can offer more than its interface requires:
 | `servicePageHides()` (servers), a list of `server_details`, `change_password` | leave out the server's name and address on the customer's page, or the Change password button on the staff page |
 | `isProvisioned(Service): bool` (servers) | decide whether the staff page offers **Create** (otherwise: an active service with a username has nothing to create) |
 | `emailMergeFields(Service)` (servers), `name => value` | add `{name}` fields to the service's emails; the built-in fields win a clash |
+| `accountOnServer(Service): ?bool` (servers) | ask staff what happens to the account before they close a service record (mark it Terminated or Cancelled, or delete it) while the account is still on the server: `true` it is there, `false` it is gone, `null` the module cannot tell. Without it, an active or suspended service is taken to have its account ([guide](../guides/connect-a-server.md#ending-a-service)) |
+| `domainHostedOn(Server, string $domain): ?bool` (servers) | refuse an order, while the customer orders, for a domain that is already set up on the servers the order would go to; `null` (could not ask) lets the order through |
 | `needsServerRecord(): bool` (servers), returning `false` | for a module that sells through an account kept elsewhere: it is not offered on **Setup → Servers**, and the product form asks `listPackages(null)` for its plans (an exception's message is shown as the reason when it cannot list them) |
 | `App\Contracts\ChecksAvailabilityInBulk` (registrars: `checkAvailabilityBulk`) | ask about the searched name and its suggested endings in one call; names the registry did not answer for fall back to WHOIS |
 | `App\Contracts\ManagesChildNameservers` (registrars: `getChildNameservers`, `saveChildNameserver`, `deleteChildNameserver`) | show the glue record (child nameserver) form on the domain page |

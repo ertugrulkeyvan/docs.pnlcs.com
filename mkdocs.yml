@@ -134,6 +134,7 @@ nav:
           - Payment gateways: guides/payment-gateways.md
           - Tax rules: guides/tax-rules.md
           - Currencies and exchange rates: guides/currencies.md
+          - Official exchange rates: guides/official-exchange-rates.md
           - Legal pages and consent: guides/legal-pages.md
           - Custom client fields: guides/custom-fields.md
           - Themes and branding: guides/themes-and-branding.md

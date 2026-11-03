@@ -36,7 +36,7 @@ provider's API. PNLCS ships with these server modules:
 
 | Module | What it provisions |
 |--------|--------------------|
-| **Panelica** | Accounts on a Panelica hosting panel (fully tested) |
+| **Panelica** | Accounts on a Panelica hosting panel |
 | **Panelica Licenses** | Panelica licenses, sold with a Panelica partner account ([guide](../guides/sell-panelica-licenses.md)) |
 | **cPanel/WHM** | WHM/cPanel accounts |
 | **Plesk** | Plesk subscriptions |
@@ -86,6 +86,22 @@ For each service, the module can:
 - **Report usage** (disk / bandwidth) back, checked every hour, for overage
   billing
 
+## Upgrades and downgrades
+
+A customer moves a service to another package from its **Upgrade /
+Downgrade** page. With the Panelica module, a package that gives less than the
+account's plan does now can be chosen only when what the account has fits it:
+apps, domains, email and FTP accounts, subdomains per domain and disk space,
+counted the way Panelica counts them when something is created. A package that
+does not fit is listed with what to remove first, and the move is refused,
+through the API's `upgradeproduct` as well. When the account uses more memory
+than a package allows, the customer is warned that their apps may be slowed
+down or stopped there.
+
+Panelica applies a plan's limits to what is created, not to what exists: a
+smaller plan removes nothing, and the account's apps share the smaller plan's
+CPU and memory. Staff can still change a service's product on its admin page.
+
 ## Reliable provisioning
 
 PNLCS only marks a service **Active** *after* the module confirms the account
@@ -117,7 +133,6 @@ API the other panels do not offer:
 Step-by-step: [Connect a Server](../guides/connect-a-server.md).
 
 !!! tip "Which panel should I use?"
-    PNLCS works with all the panels above. If you're still choosing, the
-    **Panelica** module is the most thoroughly tested, and
+    PNLCS works with all the panels above. If you're still choosing,
     [Panelica](https://panelica.com) is a modern cPanel/Plesk alternative with
     built-in isolation (no CloudLinux) and universal migration.

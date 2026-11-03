@@ -184,9 +184,10 @@ php artisan storage:link
 Then open `https://app.example.com/install`. The install wizard seeds the
 starting data and creates the administrator with the username and password
 you choose. Do **not** add `--seed` to the migrate line: seeding by hand
-creates a default `admin` / `admin123` account, and the wizard, seeing an
-administrator, closes itself. Seed by hand only for a headless install with
-no browser step, and change that password first — see
+creates the administrator `admin` with a random password, printed once in
+the command's output (or `PNLCS_ADMIN_PASSWORD`, if you set it), and the
+wizard, seeing an administrator, closes itself. Seed by hand only for a
+headless install with no browser step, and change that password first — see
 [First Login](../getting-started/first-login.md).
 
 ## Verify

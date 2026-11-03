@@ -18,10 +18,13 @@ sources:
 ## How do I offer a free (zero-cost) plan?
 
 Create the product and set **Payment Type → Free** (the dropdown offers
-Recurring / One Time / Free), then put `0` in the billing cycle you offer;
-`-1` means the cycle is not sold. The order's zero-total invoice is marked
-paid by itself. On a Recurring or One Time product, `0` does not make a free
-plan: that cycle is simply not sold.
+Recurring / One Time / Free) and leave the prices as they are. The store shows
+it as **Free**, the customer has no billing cycle to choose and no payment
+method to pick, and the order's invoice is settled as soon as it is placed. To
+offer particular cycles instead, enter `0` for those and leave `-1` on the
+rest. A free product is one per customer. With **Auto Setup → Manual** it
+waits for you to accept the order; with the other two settings it is set up
+straight away.
 
 ## Can I give a free domain with hosting?
 

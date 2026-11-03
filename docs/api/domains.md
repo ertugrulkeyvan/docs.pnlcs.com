@@ -155,7 +155,7 @@ Get the contact details of a domain.
 
 `GET /api/v1/domaingetwhoisinfo`
 
-**Permission:** `list_domains`
+**Permission:** `manage_domains`
 
 **Parameters**
 
@@ -280,7 +280,7 @@ Get the transfer (EPP) code of a domain.
 
 `GET /api/v1/domainrequestepp`
 
-**Permission:** `list_domains`
+**Permission:** `manage_domains`
 
 **Parameters**
 

@@ -44,9 +44,33 @@ Customers can only order extensions that are listed and enabled here.
 | **Auto Registrar** | The registrar module that registers this extension, by its key in lower case (`domainnameapi`, `enom`, `namecheap`, `hrd`...). Empty: orders for it use **Manual** and you register them by hand |
 | **Sort Order**, **Enabled** | Order in the lists; whether it is sold |
 
-Prices are in your default currency. The public domain pages show them in US
+Prices are in your default currency, and the column headings say which that
+is. The public domain pages show them in US
 dollars when a USD currency is set up (**Setup → Currencies**), unless the
 visitor picked a currency of their own.
+
+### Prices from the registrar
+
+The **HRD** and **OVHcloud** modules can fill the prices in for you. Set a
+**Margin (%)** in the registrar's settings and press **Sync prices** on its
+card (**Setup → Domain Registrars**):
+
+- only the extensions whose **Auto Registrar** is that module are touched;
+- each purchase price gets the margin and is rounded up to a whole unit;
+- a price the registrar does not publish stays as you set it; it does not
+  become zero;
+- an extension the registrar does not price at all is counted as *skipped*
+  and left alone;
+- the time of the last sync is shown beside the button.
+
+!!! warning "The registrar has to quote in your shop currency"
+    HRD quotes in złoty, and OVH in the currency of your OVH account. If that
+    is not the currency your shop prices in, the sync refuses and says so
+    rather than writing numbers that are wrong by the exchange rate.
+
+Nothing is automatic: a sync happens when you press the button, so you can
+check what it did (**Utilities → System Logs → Module Log** records every
+change) before customers see the new prices.
 
 ## 2. Choose a registrar
 
@@ -61,7 +85,8 @@ Open it, enter the credentials from your registrar account, and switch it on.
 | **ResellerClub** | Reseller ID, API key, test mode |
 | **OpenProvider** | Username, password, sandbox mode |
 | **Enom** | Username (UID), password, test mode |
-| **HRD** (Poland) | Login, API hash, API password, default nameserver group, PESEL field, CSA field |
+| **HRD** (Poland) | Login, API hash, API password, default nameserver group, PESEL field, CSA field, margin |
+| **OVHcloud** | Application key, application secret, consumer key, API region (EU / CA / US), margin, OVH contact field |
 | **DomainNameAPI** (Turkey) | Reseller ID, live and test API keys, test mode, default nameservers |
 | **Manual** | Nothing: you register names yourself at any registrar and record them in PNLCS |
 
