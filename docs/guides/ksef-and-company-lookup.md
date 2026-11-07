@@ -60,8 +60,9 @@ Both pages need the **manage products** permission.
 - A **qualified seal or signature certificate from MCU**, KSeF's certificate
   module, with its **private key**, both in PEM format. KSeF 2.0 signs in
   with this certificate; there is no separate API token.
-- Your company name filled in under **Setup → General Settings**: it is the
-  seller name on the invoice.
+- Your company name and address filled in under **Setup → General Settings →
+  Company → Company Information**: they are the seller name and address on
+  the invoice.
 - Your customers' NIP in their **Tax ID / VAT Number** field. A customer
   without one is sent as a buyer with no tax number.
 - A working [queue](../reference/scheduled-commands.md#the-queue). With
@@ -84,9 +85,9 @@ Both pages need the **manage products** permission.
 | **Request timeout (seconds)** | Default `60`. |
 
 NIP, private key and certificate are all required; without them nothing is
-sent and the connection test says so. The private key and certificate are
-shown again in their boxes whenever the page is opened, so keep this page to
-the staff who need it.
+sent and the connection test says so. Once saved, the private key is never
+shown again: its box stays empty, and leaving it empty on a later save keeps
+the stored key. The certificate, which is public, is shown in its box.
 
 Save, then press **Test connection** at the top of the page. It signs in to
 the chosen environment and reports `Connection to the KSeF API works.`, or
@@ -106,7 +107,7 @@ sent. A failed submission shows KSeF's error message under its row.
 |---|---|
 | **Pending** | Queued, not sent yet. |
 | **Accepted** | KSeF accepted the invoice and gave it a KSeF number. |
-| **Sent** | KSeF took the invoice but had not finished processing it within about 20 seconds. PNLCS does not ask again later. |
+| **Sent** | KSeF took the invoice but had not finished processing it within about 20 seconds. PNLCS does not ask again later, records no KSeF number and sends no KSeF email. |
 | **Error** | Signing in, sending or KSeF's check failed. The reason is shown under the row. |
 | **Corrected** | You marked it as replaced by a correction invoice. |
 
@@ -124,20 +125,17 @@ number or the error.
   yourself; once paid it is sent to KSeF like any other invoice, as a normal
   invoice rather than a correction.
 
-### Known limits in 1.6.1
+### Known limits
 
-!!! warning "Check these before going live"
-    - **Sent** never moves on to **Accepted**, and the number shown for it is
-      KSeF's reference for the submission, not a KSeF number. The customer
-      is emailed with that reference.
-    - When KSeF rejects the invoice after taking it, the row shows **Error**,
-      but the customer still gets the KSeF email with the reference number.
-    - The verification QR on the PDF points at KSeF's test site whatever
-      environment you chose.
-    - The seller address sent to KSeF is `Polska`, not your company address.
+!!! warning "Check this before going live"
+    **Sent** never moves on to **Accepted**: PNLCS does not ask KSeF again
+    later. Such an invoice has no KSeF number in PNLCS, no KSeF block on its
+    PDF, and the customer gets no KSeF email, so no email with the invoice
+    at all. Check it in KSeF itself.
 
-    Check each invoice on **Billing → KSeF Status** and in KSeF itself until
-    these are fixed.
+The customer email, the KSeF number on the PDF and its verification QR code
+(built for the environment you chose) come only once KSeF has accepted the
+invoice.
 
 ### Switching it off
 
@@ -213,5 +211,6 @@ registers are written to the application log, not to Module Logs.
 
 !!! note "The lookup address is public"
     The browser asks PNLCS, and PNLCS asks the registers, so your keys never
-    reach the browser. That address answers anyone, signed in or not, up to
-    30 requests a minute.
+    reach the browser. While the addon is active, that address answers
+    anyone, signed in or not, up to 30 requests a minute. While it is
+    switched off, it answers nothing and asks no register.

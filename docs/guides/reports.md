@@ -32,13 +32,12 @@ Reports tagged **Date filter** have **From** and **To** fields and a
 **Generate** button. They start on the current month: the 1st of the month
 to today. Both days are included.
 
-Two reports work on a year or month instead, and their page has no field
-for it:
+Two reports work on a year or month instead, and start on the current one:
 
-- **Annual Income Report** shows the current year. For another year, add
-  `?year=2025` to the address.
-- **Daily Performance** shows the current month. For another month, add
-  `?year=2025&month=3`.
+- **Annual Income Report** has a **Year** field.
+- **Daily Performance** has a **Year** field and a **Month** list.
+
+Press **Generate** after changing them.
 
 All other reports show what is in the database now.
 
@@ -54,16 +53,16 @@ column names as its first row. The totals row is not included.
 |---|---|---|---|
 | **Active Services** | Service | — | Active services with client, product, domain, amount, cycle and next due date, soonest due first (up to 500). |
 | **Affiliates Overview** | Affiliate | — | Each affiliate's visitors, balance, withdrawn and total earned, with totals. See [Affiliates](affiliates.md). |
-| **Aging Invoices** | Financial | — | Unpaid and overdue invoices with days overdue, in brackets 0-30, 31-60, 61-90 and 90+ days. |
+| **Aging Invoices** | Financial | — | Unpaid, overdue and part-paid invoices with their total, the balance still owed and days overdue, in brackets 0-30, 31-60, 61-90 and 90+ days. |
 | **Annual Income Report** | Financial | Year | Income, fees, refunds and net per month of the year, with totals. |
 | **Clients by Country** | Client | — | Number of clients and active clients per country. |
-| **Client Sources** | Client | — | Clients grouped by the text of their notes field (filled by a WHMCS import). Clients without notes count as *Direct/Unknown*. Top 20. |
+| **Client Sources** | Client | — | Number of clients who came through an affiliate (*Affiliate referral*) and of those who did not (*Direct/Unknown*). |
 | **Customer Retention** | Client | — | Active and inactive/closed clients, retention rate, and the average age of active clients in days. |
 | **Daily Performance** | Financial | Month | For each day of the month: active orders, new invoices, paid invoices and new tickets. |
 | **Disk Usage Summary** | Service | — | Disk used, limit and usage % per active service from the last usage poll, fullest first (up to 100). |
 | **Domain Renewal Reminders** | Domain | — | Active domains expiring in the next 90 days, with registrar, days left and renewal amount. |
 | **Domains Overview** | Domain | — | Number of domains and recurring revenue per status and registrar. |
-| **Income by Product** | Financial | Dates | Revenue and number of invoices per product, from invoices paid in the period. |
+| **Income by Product** | Financial | Dates | Revenue and number of invoices per product, from invoices paid in the period. Only hosting and overage lines are credited to a product; domain, addon and upgrade lines are not. |
 | **Income Forecast** | Financial | — | Renewals due and projected income per month for the next 12 months, from active services. |
 | **Income Summary** | Financial | Dates | Income, fees and refunds per month from transactions in the period. |
 | **New Customers** | Client | Dates | New client accounts per month. |

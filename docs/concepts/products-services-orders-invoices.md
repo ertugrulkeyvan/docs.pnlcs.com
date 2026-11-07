@@ -32,7 +32,11 @@ A **product** is an entry on your price list. It defines:
   accepts the order*
 - A **payment type** (*Recurring*, *One Time* or *Free*) and **pricing** per
   currency and billing cycle (monthly, quarterly, semi-annually, annually,
-  biennially, triennially; `-1` turns a cycle off)
+  biennially, triennially; `-1` turns a cycle off). A *Free* product with no
+  cycle priced is sold monthly at no charge, and is never invoiced again
+- Whether customers may move to another package (**Customers can move to
+  another package**, on by default) and which ones (**Upgrade packages**;
+  none ticked allows any package of the same module)
 - Optional **configurable options**, **add-ons**, a **free domain** (the first
   year of a domain registered or transferred with it, for the extensions and
   cycles you choose), welcome email, and stock limits
@@ -46,7 +50,8 @@ When a customer checks out, PNLCS creates an **order**. The order:
 
 - Records who bought, what, and at what price
 - Generates an **invoice** for the total (an order that totals zero, such as
-  a free product, is marked paid at once)
+  a free product, is marked paid at once; a cart of free products only is not
+  asked for a payment method)
 - Creates a **pending service** for each product and a **pending domain** for
   each domain registration or transfer (a domain ordered with hosting is its
   own line in the cart)
@@ -60,6 +65,10 @@ Order statuses:
 | **Cancelled** | Called off; its services are cancelled (accounts on a server are terminated) and an unpaid invoice is cancelled |
 | **Fraud** | Flagged as fraudulent, by you or by fraud screening; its active services are suspended and an unpaid invoice is cancelled |
 
+A cancelled or fraud order can be put back with **Set back to Pending** on the
+order's page: its cancelled invoice is reopened (what was paid on it is owed
+again), and services that the fraud verdict suspended are switched back on.
+
 ## Invoice — the bill
 
 An **invoice** is generated for the order and later for each renewal. It carries
@@ -67,7 +76,7 @@ line items, tax, credit applied and a status:
 
 | Status | Meaning |
 |--------|---------|
-| **Draft** | Not issued yet. Only the API creates drafts ([createinvoice](../api/invoices.md#createinvoice) with `status=draft`); reminders and automatic payment skip them |
+| **Draft** | Not issued yet. Only the API creates drafts ([createinvoice](../api/invoices.md#createinvoice) with `status=draft`). The customer does not see it, no email is sent and no credit is applied until it is published (`updateinvoice` with `status=unpaid`); reminders and automatic payment skip it |
 | **Unpaid** | Awaiting payment |
 | **Partially Paid** | Some money received, a balance remains |
 | **Payment Pending** | A customer reported an offline (bank transfer) payment, awaiting your approval (the **Awaiting approval** tab on the invoice list) |
@@ -76,6 +85,11 @@ line items, tax, credit applied and a status:
 | **Collections** | Set only by hand (through the API); PNLCS never sets it. Still counts as owed, but gets no reminders and is never charged automatically |
 | **Cancelled** | Voided; anything already paid on it goes back to the client's credit |
 | **Refunded** | Everything paid on it was returned (a partial refund puts it back to *Partially Paid*) |
+
+Tax on an invoice follows **Setup → Tax Rules**: **Charge tax** off adds no
+tax at all (the rules are kept), and **Prices include tax** makes the price
+shown what the customer pays, with the tax worked out of it instead of added
+on top. Each invoice keeps the mode it was issued with.
 
 **Paying an invoice is the trigger** for almost everything: it accepts the
 order, activates and provisions the service (unless its product waits for an
@@ -93,6 +107,13 @@ live account. A service has:
 - Its own **billing cycle** and **next due date**
 - A link to the **server** it lives on and the **username** on that server
 
+The **Manage Status** buttons on a service's admin page change the status in
+PNLCS only; the account on the server is suspended or terminated with
+**Module Actions**. Deleting a service, or marking it *Terminated* or
+*Cancelled*, while its account is still on the server asks first: **Terminate
+on the server and delete** (the default), or keep the account and close the
+record only. If the server refuses, nothing is changed.
+
 Customers who own an active service of a product also get that product's
 **downloads**, if you have kept a download to owners of certain products
 (**Only for owners of** on the download).
@@ -100,7 +121,7 @@ Customers who own an active service of a product also get that product's
 The service is what **renews**. As the next due date approaches, PNLCS
 generates a renewal invoice (14 days before the due date by default; change
 it with **Raise renewal invoices** under **Setup → General Settings →
-Invoices**); if it goes unpaid past your grace period, the
+Invoicing**); if it goes unpaid past your grace period, the
 service is **suspended**, and, if you have turned automatic termination on,
 eventually **terminated**.
 

@@ -29,20 +29,18 @@ Vultr's certificate is verified.
 ## Configure PNLCS
 
 1. In **Setup → Servers**, add a server of type **Vultr**:
-    - **Hostname**: `api.vultr.com`. The module itself always calls Vultr's API address, but **Test** first opens a
-      connection to this host and port, so it must be a host that answers.
-    - **Port**: 443 (the form fills it in). A server saved with no port is tested on port 22.
+    - **Hostname**: `api.vultr.com`. It is only a label: the module and **Test** always call Vultr's API address.
+    - **Port**: 443 (the form fills it in). It is not used.
     - **API Key**: your Vultr API key. Password, username and nameservers are not used.
-    - **Max Accounts** counts instances when PNLCS chooses a server from a [server group](../guides/connect-a-server.md#server-groups).
-2. Press **Test**. It passes when the host and port answer and Vultr accepts the key on its account endpoint
-   (`GET /account`).
+    - **Max Accounts** counts instances: a server that has reached it gets no new ones, with or without a [server group](../guides/connect-a-server.md#server-groups).
+2. Press **Test**. It passes when Vultr accepts the key on its account endpoint (`GET /account`). No connection is
+   opened to the record's hostname and port.
 
 An active server cannot be saved without the API key.
 
 | Test message | Meaning |
 |---|---|
-| `Connection to <host>:<port> successful (… ms). Module: vultr` | The host answered and Vultr accepted the key |
-| `Connection to <host>:<port> failed: …` | The hostname or port on the server record does not answer |
+| `Connection to <host>:<port> successful (… ms). Module: vultr` | Vultr accepted the key |
 | `Reached <host>, but VULTR refused the credentials. Check the API key.` | Vultr refused the key, or the call failed |
 
 ## The product
@@ -107,7 +105,7 @@ is not among them is counted as an error.
 
 | Message | Cause |
 |---|---|
-| `No Vultr server configured.` | No active Vultr server, or none with room in the product's server group |
+| `No Vultr server configured.` | No active Vultr server, or none below its **Max Accounts** (in the product's server group, when it has one) |
 | `Vultr API key not configured.` | The server record has no API key |
 | `VPS creation failed: <Vultr's error>` | Vultr refused the instance: plan not in that region, OS id unknown, no balance, invalid key |
 | `Vultr instance ID not found.` | The service was never created on Vultr, or was added by hand |

@@ -512,7 +512,7 @@ Update an existing invoice.
 | 404 | No such invoice. |
 
 !!! note
-    status=paid records the payment the way the admin area does (transaction, paid event, provisioning). status=cancelled hands back any credit applied. Other statuses only change the label.
+    status=paid records the payment the way the admin area does (transaction, paid event, provisioning). status=cancelled hands back any credit applied. status=unpaid on a draft issues it: the invoice created mail and hooks go out and the client's credit balance is applied, as when an invoice is created unpaid. Other statuses only change the label.
 
 **Example**
 

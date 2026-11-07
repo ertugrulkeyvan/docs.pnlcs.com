@@ -51,7 +51,8 @@ When you add a server you pick its **Server Type** (which module handles it).
 A **product** then picks a **Server Module**, not a single server, and
 optionally a **Server group**. When the account is created, PNLCS chooses a
 server of that type: from the product's group if it has one, otherwise the
-first active server with that module. The service then stays on that server.
+first active server with that module that has not reached its **Max
+Accounts**. The service then stays on that server.
 
 **Setup → Modules** lists every installed module (servers, payment gateways,
 registrars, SSL modules and addons), whether it is *Built-in* or
@@ -89,7 +90,9 @@ For each service, the module can:
 ## Upgrades and downgrades
 
 A customer moves a service to another package from its **Upgrade /
-Downgrade** page. With the Panelica module, a package that gives less than the
+Downgrade** page. The product decides which packages are offered
+(**Upgrade packages**), or keeps its customers where they are
+(**Customers can move to another package** unticked). With the Panelica module, a package that gives less than the
 account's plan does now can be chosen only when what the account has fits it:
 apps, domains, email and FTP accounts, subdomains per domain and disk space,
 counted the way Panelica counts them when something is created. A package that
@@ -112,6 +115,13 @@ queued and **retried automatically** up to 5 times, with growing gaps
 are alerted again. An error that can never come right (for example, no server
 module configured) is not retried at all, and the alert says so.
 Nothing silently shows "active" without a real account behind it.
+The service's admin page shows the server's answer and the next automatic
+try under **Setup has not finished:**; the customer is told only that setup is
+not finished yet and that there is no need to order again.
+
+While ordering, a domain already set up on the server the order would go to is
+refused (checked with Panelica; a server that cannot be asked does not stop
+the order).
 
 You can see what is waiting and retry; see
 [Provisioning did not happen](../troubleshooting/common-issues.md#provisioning-did-not-happen).

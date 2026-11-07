@@ -52,7 +52,7 @@ Create a new client account.
 |---|---|---|---|
 | `firstname` | string | yes | Up to 255 characters. |
 | `lastname` | string | yes | Up to 255 characters. |
-| `email` | email | yes | Must not belong to another client. |
+| `email` | email | yes | Must not belong to another client. The address of a deleted client may be used again. |
 | `password2` | string | no | At least 8 characters. When sent, a client-area login is created with it. password is accepted too. |
 | `companyname` | string | no | Company name. |
 | `address1` | string | no | Street address. |
@@ -803,7 +803,7 @@ Update an existing client's details.
 | `clientid` | integer | yes | The client. |
 | `firstname` | string | no | Cannot be empty. |
 | `lastname` | string | no | Cannot be empty. |
-| `email` | email | no | Must not belong to another client. The login that signed in with the old address moves with it. |
+| `email` | email | no | Must not belong to another client (a deleted client's address may be used again). The login that signed in with the old address moves with it. |
 | `companyname` | string | no | Company name. |
 | `address1` | string | no | Street address. |
 | `city` | string | no | City. |

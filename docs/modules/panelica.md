@@ -4,6 +4,8 @@ sources:
   - modules/Servers/AbstractServerModule.php
   - app/Services/ProvisioningService.php
   - app/Services/DomainHosting.php
+  - app/Services/UpgradeService.php
+  - app/Services/HostedDomainCheck.php
   - app/Http/Controllers/Admin/ConfigController.php
   - app/Http/Controllers/Admin/ProductController.php
   - app/Http/Controllers/Admin/ClientController.php
@@ -32,7 +34,8 @@ PNLCS service page, or sign in to the panel with one click.
   what its scopes cover: apps need the `docker:*` scopes, and the mail certificate request needs the SSL scope.
 - **At least one plan** on the panel, unless every product uses [managed mode](#managed-mode).
 
-The panel's certificate is **not verified**, so a self-signed certificate works. Requests are signed with
+The panel's certificate is **not verified** unless you tick **Check the panel's TLS certificate (only if it has a
+trusted one)** on the server, so a self-signed certificate works by default. Requests are signed with
 HMAC-SHA256 over the method, path, a timestamp and the body, using the secret, and carry the key in `X-API-Key`.
 
 The module never installs Panelica, opens firewall ports or creates API keys.
@@ -47,14 +50,16 @@ The module never installs Panelica, opens firewall ports or creates API keys.
     - **Port**: the panel port, 8443 by default.
     - **API Key**: the `pk_live_...` key. **API Secret**: the `sk_live_...` secret. Both are stored encrypted.
       Username is not used.
+    - **Check the panel's TLS certificate (only if it has a trusted one)**: off by default. Tick it only when the
+      panel has a certificate PNLCS trusts for the name it calls; otherwise every call to the panel fails.
     - **Nameservers**: the servers customers' domains should use. [Set up on my hosting](#set-up-on-my-hosting)
       points domains at them.
 2. Press **Test**. It passes when the port answers within five seconds and the panel's server status
    (`/v1/server/status`) answers `online` to a signed request.
 3. Create the product, below.
 
-An active server cannot be saved without the API Secret. The message says "A PANELICA server signs in with an API
-key. Fill in the API key field": it is the **API Secret** box that is checked.
+An active server cannot be saved without the API Secret: "A PANELICA server signs in with its API Secret. Fill in
+the API Secret field - the password is not used for this module."
 
 ### What Test reports
 
@@ -77,7 +82,7 @@ The **Panelica Resources** card holds the rest:
 | Setting | Effect |
 |---|---|
 | **Managed mode** | PNLCS builds a panel plan from the limits in this card. See [Managed mode](#managed-mode) |
-| **Or use an existing panel plan ID** | The plan used when a service **changes package** to this product. See [Package changes](#package-changes) |
+| **Or use an existing panel plan ID** | Used when **Plan on the server** is left on **Use the server default**, for new accounts and for [package changes](#package-changes) |
 | **App Hosting** | Install this app when the account is created and serve it on the customer's domain |
 | **Customer picks the app** | The order form shows the app catalogue; the chosen app is installed |
 | **Container plan** | Sells container resources only: no domain is asked for or created |
@@ -103,11 +108,21 @@ account was not created." The panel's answer is written to the log.
 
 ### Package changes
 
-A package change (an upgrade, a downgrade, or staff choosing another product) moves the account to the plan in the
-new product's **Or use an existing panel plan ID** field. It does not read **Plan on the server** and does not
-build a managed plan. A product without that field set refuses package changes with "New product does not have a
-panelica_plan_id configured." On products you upgrade between, set that field to the same plan as **Plan on the
-server**.
+A package change (an upgrade, a downgrade, or staff choosing another product) moves the account to the new
+product's plan, chosen as for a new account: **Plan on the server**, else **Or use an existing panel plan ID**. When
+the new product is in managed mode, its `pnlcs-p<product id>` plan is created or updated from its limits first, and
+the account is moved onto it. A product with no plan refuses package changes with "New product does not have a
+Panelica plan configured."
+
+**What the account has is checked first.** The panel applies a plan's limits only when something is created, so a
+move onto a smaller plan would leave the account over it. When a customer asks for an upgrade or downgrade (on the
+client area's **Upgrade / Downgrade** page or through the API), PNLCS compares what the account has with the new
+package's limits: apps (stopped ones count too), domains, email accounts, FTP accounts, subdomains per domain, and
+disk space. Only limits smaller than the account's current plan are checked. A package that cannot hold the account
+is shown greyed out under "Before you can move to this package:" with what to remove, for example "Apps: you have 3
+and this package allows 2. Remove 1 first.", and a request for it is refused. Memory use above the package's limit is
+only a warning; that package stays selectable. Anything the panel does not answer is not checked, and databases are
+not counted. Staff changing a service's product on its page are not checked.
 
 ## Creating an account
 
@@ -128,6 +143,11 @@ server**.
 6. **The app**, if the product installs one or the customer chose one. If it cannot be installed, the account is
    deleted again.
 
+While ordering, the cart already asks the panel whether the domain is on it (the servers of the product's server
+group, else the first active Panelica server). If it is, the customer sees ":domain is already set up on our
+servers, so it cannot be ordered again. If it is yours, please contact us." A panel that does not answer does not
+stop the order; setup still checks.
+
 The service stores the panel user id, the domain id and, for an app, its container id. Every later action on the
 service uses the stored user id.
 
@@ -141,6 +161,10 @@ the service to it (below).
 - **Suspend** and **unsuspend** the panel account. The suspension reason is passed to the panel.
 - **Terminate**: deletes the panel account. **This removes the customer's account from the server.** Take a backup
   first if you may need the data.
+- **Closing a service whose account is still on the panel.** Deleting a service, or marking it Terminated or
+  Cancelled with the status buttons, first asks the panel whether the account is still there. If it is, or PNLCS
+  cannot tell, staff choose between "Terminate on the server and delete" (or mark) and "Delete in PNLCS only, keep the
+  account on the server". If the panel refuses the termination, nothing is deleted or changed.
 - **Change password** of the panel account. The new password is saved on the service.
 - **Change package**: see [Package changes](#package-changes).
 - **Usage**, every hour: disk used and disk quota in MB, and this month's bandwidth in MB, for each active service.
@@ -205,7 +229,7 @@ it.
 
 | Message | Cause |
 |---|---|
-| `No Panelica server configured.` | No active Panelica server, or none with room in the product's server group |
+| `No Panelica server configured.` | No active Panelica server, or none below its **Max Accounts** (in the product's server group, when it has one) |
 | `Service is missing client or domain.` | An order without a domain on a product that is not a container plan |
 | `"<domain>" is not a valid domain name. It needs a name and an extension, like example.com.` | The domain has no dot or invalid characters |
 | `The domain "<domain>" already exists on this server. Use a different domain, or remove it from the panel first.` | The domain is on the panel already |
@@ -215,10 +239,13 @@ it.
 | `App installation failed (account rolled back): <reason>` | The app could not be installed; the account was deleted |
 | `Panelica user ID not found in service notes.` | The service is not linked to a panel account. Not retried |
 | `Suspend failed: the account does not exist on the Panelica server (user <id>).` | The panel reports the account missing, and a lookup confirms it. Not retried; the same wording is used for unsuspend and terminate |
-| `New product does not have a panelica_plan_id configured.` | See [Package changes](#package-changes) |
+| `New product does not have a Panelica plan configured.` | See [Package changes](#package-changes) |
+| `Managed plan of the new product could not be prepared on the panel.` | A package change onto a managed product; the panel refused its plan |
+| `This package cannot hold what your account has now. …` | A customer asked for a package the account does not fit; see [Package changes](#package-changes) |
 
 Failed creates, suspends, unsuspends and terminates go to the module queue and are retried; see
 [Scheduled Commands](../reference/scheduled-commands.md).
 
-The module waits 10 seconds for the panel to accept a connection (5 seconds on a customer's own page) and 30 seconds
-for most answers. Installing an app waits up to five minutes.
+The module waits 10 seconds for the panel to accept a connection and 30 seconds for most answers. On a customer's
+own page it waits 5 seconds for the connection and at most 8 seconds for each answer, with 20 seconds for all of the
+page's calls to the panel together. Installing an app waits up to five minutes.

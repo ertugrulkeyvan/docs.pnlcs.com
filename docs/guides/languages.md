@@ -66,7 +66,9 @@ A translation that drops or renames a placeholder (`:name`, `:amount`) is not
 saved; the line shows as skipped and the text keeps what it had.
 
 In the editor, a robot icon marks a text **Translated with AI**, and a tick
-marks one **Saved in the editor** by hand.
+marks one **Saved in the editor** by hand. A text that should read the same
+as in English (a brand name, a code) can be ticked **Same as English** under
+its box: it then counts as translated, and an equals sign marks it.
 
 Read the result before you rely on it: machine translation gets tone and
 context wrong. Correct any line in the editor and press **Save Changes**.
@@ -82,8 +84,11 @@ context wrong. Correct any line in the editor and press **Save Changes**.
 
 ## Export and import
 
-In a language's editor, **Export JSON** downloads every text; **Import** loads
-a JSON file in the same shape. Use it to have a translator work offline.
+In a language's editor, **Export JSON** downloads every text English has,
+with the language's own text, or empty where it has none yet. **Export
+missing** downloads only the texts not yet translated. **Import** loads a
+JSON file in the same shape; keys PNLCS does not have are left out, and the
+message names them. Use it to have a translator work offline.
 
 ## Contribute a translation
 

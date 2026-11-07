@@ -578,7 +578,7 @@ Merge one ticket into another.
 | 422 | The two ids are the same. |
 
 !!! note
-    The replies and staff notes move to mergeid; ticketid is closed and points to it.
+    The replies and staff notes move to mergeid; ticketid is closed and points to it. Closing it runs the TicketClosed hook, unless it was already closed.
 
 **Example**
 
@@ -665,6 +665,9 @@ Update ticket status or details.
 | Status | When |
 |---|---|
 | 404 | No such ticket. |
+
+!!! note
+    Setting status to Closed closes the ticket the way the admin area does, so the TicketClosed hook runs.
 
 **Example**
 

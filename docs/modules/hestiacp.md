@@ -46,7 +46,7 @@ Commands that change something are sent with `returncode=yes`, and HestiaCP must
 
 On the product, set **Server Module** to HestiaCP. The **Plan on the server** list is read from the first active HestiaCP server with `v-list-user-packages`, sorted by name. The package name is stored on the product.
 
-Choose a package. A product that has never had a package saved creates users on the package named `default`; with **Use the server default** selected and saved, the module sends an empty package name, which HestiaCP is likely to refuse.
+Choose a package. With **Use the server default**, users are created on the package named `default`.
 
 In a server group, give the package the same name on every server.
 
@@ -59,11 +59,11 @@ Create runs two commands:
 1. `v-add-user <username> <password> <client email> <package>`
 2. `v-add-domain <username> <domain>`
 
-If the second command fails, the account is still reported as created and the service becomes active; the failure is only written to the log. Check that the domain exists in HestiaCP, or add it there.
+If the second command fails, the module deletes the user it just created (`v-delete-user`) and creation fails with "Domain creation failed: <message>", so the usual retry and admin notice apply.
 
 A service without a client or a domain is refused with "Service is missing client or domain."
 
-**Username rules.** The first label of the domain, lowercased, with everything except `a-z` and `0-9` removed, cut to 16 characters; `user` if nothing is left. Leading digits are kept, and a username typed on the service beforehand is not used. There is no retry with another name: `example.com` and `example.net` both give `example`, so the second of them fails.
+**Username rules.** The first label of the domain, lowercased, with everything except `a-z` and `0-9` removed, cut to 16 characters; `user` if nothing is left. Leading digits are kept, and a username typed on the service beforehand is not used. If HestiaCP answers that the user already exists (exit code 4), for example `example.com` and `example.net` both giving `example`, the module tries once more with `s` and the service id appended, shortened to stay within 16 characters: `examples42` for service 42.
 
 **Password.** The service's password if one is set; otherwise 16 random hexadecimal characters.
 
@@ -75,7 +75,7 @@ The username and password are saved on the service, and the username in its modu
 |---|---|---|
 | Test connection | `v-list-sys-info json` | |
 | List packages | `v-list-user-packages json` | For the product form |
-| Create | `v-add-user`, then `v-add-domain` | See above |
+| Create | `v-add-user`, then `v-add-domain` | See above. `v-delete-user` if the domain fails |
 | Suspend | `v-suspend-user` | |
 | Unsuspend | `v-unsuspend-user` | |
 | Terminate | `v-delete-user` | Deletes the user |
@@ -93,18 +93,18 @@ The username and password are saved on the service, and the username in its modu
 
 - **Login to panel** (single sign-on): no **Login to panel** button is shown. Customers sign in to HestiaCP with their username and password.
 - **Listing or importing existing users** from the server.
-- Live usage on the customer's service page: the module can read it (`v-list-user`), but the service page only shows live figures for Panelica services.
 
 ## What the customer sees
 
-The service page shows the server name, the HestiaCP username, and the server's hostname and IP address. The welcome email can include the username and password through the `service_username` and `service_password` merge fields.
+The service page shows the server name, the HestiaCP username, and the server's hostname and IP address. It also shows the account's disk used (against its quota) and bandwidth used, read live from HestiaCP with `v-list-user`. The welcome email can include the username and password through the `service_username` and `service_password` merge fields.
 
 ## Error messages
 
 | Message | Cause |
 |---|---|
-| `No HestiaCP server configured.` | No active HestiaCP server, or none with room in the product's server group |
-| `Account creation failed: HestiaCP command failed (exit code <n>)` | `v-add-user` failed, for example the username already exists or the package does not |
+| `No HestiaCP server configured.` | No active HestiaCP server, or none below its **Max Accounts** (in the product's server group, when it has one) |
+| `Account creation failed: HestiaCP command failed (exit code <n>)` | `v-add-user` failed, for example the package does not exist, or the username was taken twice |
+| `Domain creation failed: <message>` | `v-add-domain` failed, for example the domain is already on the server; the new user was removed again |
 | `HestiaCP API HTTP <status>` | HestiaCP answered with an HTTP error |
 | `Unexpected HestiaCP response: <text>` | A command answered with something other than an exit code, usually an error text about the key or the IP address |
 | `HestiaCP returned non-JSON: <text>` | A list command answered with an error text instead of JSON |

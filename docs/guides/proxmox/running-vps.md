@@ -6,6 +6,8 @@ sources:
   - app/Http/Controllers/Admin/VpsController.php
   - modules/Servers/Proxmox/ProxmoxModule.php
   - modules/Servers/Proxmox/Concerns/RunsJobs.php
+  - modules/Servers/Proxmox/ProxmoxCapacity.php
+  - app/Console/Commands/ProxmoxCapacityCommand.php
   - app/Console/Commands/ProxmoxTasksCommand.php
   - app/Console/Commands/UsagePollingCommand.php
   - routes/console.php
@@ -17,7 +19,8 @@ sources:
 
 A Proxmox service's page in the admin area (**Clients → a client → Services
 → the service**) has the same panel the customer sees, plus the VM number and
-node, the pool address, an **Open in Proxmox** link and a field to link an
+node, the pool address and any additional IPv4 addresses (with the network
+card each is on), an **Open in Proxmox** link and a field to link an
 existing machine. Staff may also work on a **suspended** service's server — to
 look into it, or to take a backup before it is terminated; a terminated or
 cancelled one is left alone.
@@ -58,8 +61,8 @@ box.
 | **Order paid** (or placed / accepted, per *Auto Setup*) | KVM: clone of the template into the pool, with the next VM id in the range; tags and note; cores, memory, network, cloud-init (user, password, SSH keys, address, DNS, vendor snippet); disk grown to the product's size; protection on; started. LXC: the container is created from its template with the same settings and the SSH keys |
 | **Suspend** (overdue invoice, or by hand) | *Start at boot* turned off, then shut down (forced after a minute) — a host reboot does not bring it back |
 | **Unsuspend** | *Start at boot* on, started |
-| **Terminate** | Stopped, protection lifted, deleted with its disks; its pool address goes back to the pool |
-| **Upgrade / downgrade** | New cores and memory set (a running KVM takes them at its next reboot); the disk grows if the new size is larger and is never shrunk |
+| **Terminate** | Stopped, protection lifted, deleted with its disks; its pool addresses, additional ones included, go back to the pool |
+| **Upgrade / downgrade** | Additional IPv4 addresses are taken from the pool first; a pool that cannot give them all changes nothing. Then new cores and memory are set (a running KVM takes them at its next reboot); the disk grows if the new size is larger and is never shrunk |
 | **Every minute** | The scheduler moves on reinstalls, restores, snapshot rollbacks and image downloads |
 | **Every hour** | Disk usage and this month's traffic are read into the service |
 
@@ -75,13 +78,16 @@ monthly traffic.
 
 ## Capacity
 
-**Configuration → Servers → Capacity** on a Proxmox server shows, for each
+**Setup → Servers → Capacity** on a Proxmox server shows, for each
 node, its CPU threads, memory and guest storage next to what the guests on it
 have been given: their cores, memory and disks. What the host uses right now
 is shown too, but it says little about what the node can still take. A guest
 that sleeps today has still been sold. The "PNLCS" column counts the guests
 PNLCS set up; templates are left out. Only guests the API token can see are
-counted, so a token limited to a pool shows that pool.
+counted, so a token limited to a pool shows that pool. Below the nodes, the
+page counts the server's services in PNLCS by status and lists the
+addresses of the server's IPv4 pool in use: each address, whether it is a
+server's own or an additional one, and its service and client.
 
 **Capacity alert (%)** on the server (80 unless set) is the line: once an
 hour, `pnlcs:proxmox-capacity` checks every active Proxmox server and, when a

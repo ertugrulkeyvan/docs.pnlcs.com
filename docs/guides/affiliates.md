@@ -68,8 +68,9 @@ Rules:
 
 Commission is added when an invoice of a referred customer is **paid**.
 
-- **What counts:** the invoice's lines after discounts. **Tax is not
-  included**, and neither are *Add Funds* lines or payments that settle
+- **What counts:** the invoice's lines after discounts, each line's amount
+  times its quantity. **Tax is not included**: with prices that include
+  tax, the tax inside each line is left out too. Neither are *Add Funds* lines or payments that settle
   several invoices at once (each of those invoices earns its own commission
   when it is settled).
 - **New sale or renewal:** the invoice of an order earns the affiliate's

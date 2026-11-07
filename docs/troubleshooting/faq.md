@@ -18,12 +18,14 @@ sources:
 ## How do I offer a free (zero-cost) plan?
 
 Create the product and set **Payment Type → Free** (the dropdown offers
-Recurring / One Time / Free) and leave the prices as they are. The store shows
-it as **Free**, the customer has no billing cycle to choose and no payment
-method to pick, and the order's invoice is settled as soon as it is placed. To
+Recurring / One Time / Free) and leave the prices as they are: it is then
+sold monthly at no charge and never invoiced again. The store shows it as
+**Free**, the customer has no billing cycle to choose and, when the whole cart
+is free, no payment method to pick, and the order's invoice is settled as soon
+as it is placed. To
 offer particular cycles instead, enter `0` for those and leave `-1` on the
-rest. A free product is one per customer. With **Auto Setup → Manual** it
-waits for you to accept the order; with the other two settings it is set up
+rest. A free product is one per customer. With **Auto Setup** set to *Only when an admin
+accepts the order* it waits for you to accept the order; with the other two settings it is set up
 straight away.
 
 ## Can I give a free domain with hosting?
@@ -74,7 +76,7 @@ The API also speaks WHMCS's action names, so migration scripts carry over; see
 
 Yes, with Stripe, iyzico or PayPal: the customer stores a card at the gateway
 and renewals are charged to it once **Automatic Payment** is switched on
-(**Setup → General Settings**). See [Payment Gateways](../guides/payment-gateways.md#stored-cards-and-automatic-payment).
+(**Setup → General Settings → Invoicing**). See [Payment Gateways](../guides/payment-gateways.md#stored-cards-and-automatic-payment).
 
 ## Can I sell in several currencies?
 

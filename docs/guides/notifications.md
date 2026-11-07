@@ -20,8 +20,9 @@ or by calling a URL of your own.
 Two separate things send staff alerts:
 
 - **Built-in emails** to the **Company Email** address (**Setup → General
-  Settings**): a new ticket and a customer reply on a ticket. They need no
-  setup beyond that address and [working email](configure-email.md). See
+  Settings → Company**): a new ticket and a customer reply on a ticket. They need no
+  setup beyond that address and [working email](configure-email.md). Staff
+  can also get new tickets in their own departments by email. See
   [Staff alerts](support.md#staff-alerts).
 - **Notification channels**, set up on this page: you choose which events go
   where.
@@ -119,7 +120,8 @@ exists):
 | **Recipient Email (for email providers)** | The address, for an email provider. Ignored for the others. |
 | **Active** | Ticked to send. |
 
-A rule cannot be edited: to change one, delete it and add it again.
+**Edit** on a rule's row changes its provider, event, recipient or
+**Active** switch.
 
 ## Events
 
@@ -137,6 +139,7 @@ Business events:
 | `payment.charge_needs_review` | An automatic card charge ended in a state PNLCS cannot settle by itself; someone has to check the gateway. |
 | `ticket.opened` | A ticket is opened, by anyone. |
 | `ticket.replied` | A ticket gets a reply; the text says whether from staff or the client. |
+| `ticket.escalated` | An [escalation rule](support-mail-piping.md#escalation-rules) with its notify switch on fired for a ticket. |
 | `service.activated` | A service is activated. |
 | `service.suspended` | A service is suspended, with the reason. |
 | `service.terminated` | A service is terminated. |
@@ -147,11 +150,13 @@ System events:
 | Event | Sent when |
 |---|---|
 | `api.custom` | An integration calls [`triggernotificationevent`](../api/system.md#triggernotificationevent) in the API. |
+| `server.capacity_high` | A Proxmox node has given out more of its memory or disk than the server's capacity line. Checked every hour, sent at most once a day per node and resource. |
 | `backup.failed` | A [database backup](../install/backups.md) failed. |
 | `module.failed` | A server module action failed and was queued to try again. |
 | `module.failed_permanently` | A server module action failed and will not be tried again. |
 | `domain.registration_failed` | A registrar refused to register a domain. |
 | `domain.renew_failed` | A registrar refused to renew a domain. |
+| `domain.transfer_failed` | A registrar refused to start a paid domain transfer. |
 | `domain.manual_registration_required` | A paid domain has no registrar module; someone has to register it by hand. |
 | `registrar.balance_low` | The prepaid balance at a registrar is at the warning level. |
 | `update.available` | A newer PNLCS release is out on your [update channel](../install/updating.md). |
@@ -180,8 +185,6 @@ happens: the order, payment or ticket that caused it goes through as normal.
 
 - Alerts are sent at the moment of the event, while PNLCS handles it. A slow
   webhook URL slows that request down.
-- A transfer refused by a registrar is not offered as an event in 1.6.1, so
-  it cannot be sent anywhere.
 - An `api.custom` alert reaches a webhook with `"event": "notification"`,
   not `api.custom`.
 - This page needs the **manage settings** permission.

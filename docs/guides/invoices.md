@@ -51,13 +51,16 @@ cancel, send or remind them in one go.
 6. Check the **Summary** (net, tax per rate, gross) and press **Create
    Invoice**.
 
-The **Tax** list offers the rates that apply to the customer's country, and
-0%. Tax is worked out line by line, and the rate you pick applies even to a
-customer marked tax exempt ([Tax Rules](tax-rules.md#invoices-you-build-by-hand)).
+The **Tax** list offers the tax rules that apply to the customer's country,
+and 0%; each line keeps the rule it was built with, so lines under one rule
+share one row in the tax breakdown. Tax is worked out line by line. For a
+customer marked tax exempt, a line with a rate above 0% is written at 0%
+whatever you pick ([Tax Rules](tax-rules.md#invoices-you-build-by-hand)).
 
 Once saved, the invoice gets the next number, any credit balance the customer
 has is taken off it, and it is emailed to them (**Invoice Created**). A
-customer with a group discount gets the discount as a line of its own.
+customer with a group discount gets the discount as a line of its own, one
+per tax rate on the invoice.
 
 ### The catalogue
 
@@ -69,14 +72,15 @@ description box of a new invoice.
 
 ## Change an invoice
 
-On the invoice's page, each line's description, quantity, price and tax rate
+On the invoice's page, each line's description, quantity, price and tax rule
 can be edited in place (press Enter to save), **+ Add Item** adds a blank line
 and **×** deletes one. Totals are recalculated each time.
 
-!!! warning "Only change invoices nobody has paid"
-    PNLCS 1.6.1 lets you edit the lines of any invoice, including paid and
-    cancelled ones, and the customer may already have its PDF. Correct a paid
-    invoice with a refund or a new invoice instead.
+The lines of a **Paid**, **Cancelled** or **Refunded** invoice cannot be
+changed: the controls are hidden, and PNLCS answers *Line items cannot be
+changed on a paid, cancelled or refunded invoice.* Correct such an invoice
+with a refund or a new invoice. A **Partially Paid** invoice stays editable,
+and the customer may already have its PDF.
 
 The buttons at the top depend on the status:
 
@@ -101,10 +105,10 @@ The buttons at the top depend on the status:
 - A transaction ID already recorded for the same gateway is never counted
   twice.
 
-The amount is pre-filled with the invoice total, not with what is still owed:
-on a part-paid invoice, enter what you actually received. Choosing **Credit**
-as the gateway only labels the payment; it does not take anything from the
-customer's balance (see [Use credit](#use-credit)).
+The amount is pre-filled with what is still owed; change it to what you
+actually received. Choosing **Credit** as the gateway pays from the customer's
+credit balance, at most the balance and what is owed; it is refused when the
+customer has no credit (see [Use credit](#use-credit)).
 
 Paying an invoice in full sets off everything that follows a payment: the
 order is accepted, services are set up or renewed.
@@ -162,9 +166,9 @@ description.
 - **New invoices** take the balance automatically, up to their total; an
   invoice the balance covers in full is marked paid at once.
 - For an **invoice that already exists**, the customer presses **Use my
-  account credit** on the invoice in the client area. The admin area has no
-  button for this; integrations use the API's
-  [`applycredit`](../api/clients.md#applycredit).
+  account credit** on the invoice in the client area. Staff use **Paid** with
+  **Credit** as the gateway ([Record a payment](#record-a-payment));
+  integrations use the API's [`applycredit`](../api/clients.md#applycredit).
 
 Add Funds invoices never take credit, which would move it in a circle.
 
@@ -181,20 +185,21 @@ currency ([Currencies](currencies.md#rounding)).
 
 Some countries want a payment request first and the tax invoice only once the
 money arrives. Tick **Enable Proforma scheme** under **Setup → General
-Settings → Invoices**:
+Settings → Invoicing → Invoices**:
 
 - New invoices are **proformas**, numbered with the **Proforma numbering
   scheme** (default `PRO-{year}/{month}-{num}`).
 - When a proforma is paid, PNLCS issues the **VAT invoice**: the same lines and
-  totals, the next number of the invoice series, dated and paid that day, and
-  linked to the proforma (**Refers to proforma**). It is emailed to the
-  customer.
+  totals, the buyer details and exchange rate the proforma had, the next
+  number of the invoice series, dated and paid that day, and linked to the
+  proforma (**Refers to proforma**). Its notes add *For proforma no.:* and the
+  proforma's number. It is emailed to the customer.
 - **Hide paid proformas** (on by default) leaves paid proformas out of the
   invoice lists, for you and for the customer, so each sale shows once.
 
 ## Numbering
 
-**Setup → General Settings → Invoices**:
+**Setup → General Settings → Invoicing → Invoices**:
 
 | Setting | Default |
 |---|---|
@@ -211,8 +216,8 @@ January starts again at 1. The card shows the **Last invoice** and a
 **Preview** of the next.
 
 For bank transfers, customers quote a short reference instead of the invoice
-number: **Payment reference prefix** (**Setup → General Settings → Billing
-currency**, default `INV`) followed by the invoice's internal ID, for example
+number: **Payment reference prefix** (**Setup → General Settings → Invoicing
+→ Billing currency**, default `INV`) followed by the invoice's internal ID, for example
 `INV34`.
 
 ## The PDF
@@ -231,7 +236,12 @@ client area, and it comes with the invoice email. It shows:
   ([Currencies](currencies.md#on-the-invoice-pdf));
 - the invoice's notes.
 
+That is the built-in design. To use your own, upload an HTML template per
+language under **Language templates** (**Setup → General Settings →
+Invoicing → Invoices**); see
+[General Settings](../reference/general-settings.md).
+
 ## Late fees
 
-A fee for overdue invoices is set under **Setup → General Settings → Late
-Fees**; see [The Billing Lifecycle](../concepts/billing-lifecycle.md#late-fees).
+A fee for overdue invoices is set under **Setup → General Settings →
+Invoicing → Late Fees**; see [The Billing Lifecycle](../concepts/billing-lifecycle.md#late-fees).

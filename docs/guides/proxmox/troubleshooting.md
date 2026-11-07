@@ -20,7 +20,8 @@ sources:
 | Test: a right is **missing on /pool/…** | The role lacks it, or the ACL is on another path | Run the printed `pveum` commands |
 | Test: **SDN.Use** missing | Since Proxmox 8, a server cannot be put on a bridge without it | `pveum acl modify /sdn/zones/localnetwork --users pnlcs@pve --roles PVESDNUser` |
 | Test: *no templates visible* | No template, or not in the pool | Install one from the [image library](operating-systems.md), or `pveum pool modify pnlcs --vms <id>` |
-| Order paid, but the service stays *Pending* | The create failed | It is retried after 5, 10, 20 and 40 minutes and you are notified; the reason is in the notification and the log. Fix it and press **Create Account** on the service |
+| Order paid, but the service stays *Pending* | The create failed | It is retried after 5, 10, 20 and 40 minutes and you are notified; the reason is on the service's admin page under *Setup has not finished:*, in the notification and in the log. Fix it and press **Create Account** on the service |
+| Set-up fails: *"The IPv4 pool of … has no free address left"* or *"… does not have N additional address(es) free"* | The server's IPv4 pool cannot give the server its address, or all the additional addresses ordered | Add a range to the pool on the server, or free addresses; **Setup → Servers → Capacity** shows who holds each one |
 | The customer cannot sign in over SSH with the password | The image refuses password logins and root | Set the [vendor snippet](prepare-proxmox.md#the-cloud-init-snippet) on the server, then reinstall the server |
 | *Addresses: none reported yet* | The guest agent is not running in the server yet | Wait for the first boot to finish; with the vendor snippet the agent is installed on first boot |
 | A new password *"takes effect at the next reboot"* | The guest agent does not run in that server | Reboot it, or install `qemu-guest-agent` in it |

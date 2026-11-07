@@ -54,6 +54,11 @@ themes/
   values, listed in `ThemeService::getTokenGroups()` (`app/Services/ThemeService.php`).
   Each one is printed as a CSS variable, `--theme-<name>` with `_` written as `-`
   (`primary_light` becomes `--theme-primary-light`).
+  Each value must be a single CSS value of at most 200 characters: no `;`,
+  braces, angle brackets, backslashes, comments, `url()` or `expression()`, and
+  no bracket or quote left open. A colour token takes a hex, a colour name or a
+  colour function (`rgb()`, `hsl()`, `oklch()`, `color-mix()`, `var()` and the
+  like). A value that fails the check is left out of the page.
   Tokens you leave out come from the Starter preset (`ThemeService::getPresets()['starter']`),
   so a theme can set only the few it changes; `themes/starter/theme.json` itself
   sets only 8. A theme without `colors` leaves the current colour set as it is.
@@ -104,7 +109,7 @@ sections:
 
 - `@section('title', ...)`: the title shared links show.
 - `@section('meta_description', ...)`: its own description, instead of the
-  shop's one from **Setup → General**.
+  shop's one from **Setup → General Settings → SEO & tracking**.
 - `@section('og_type', 'article')`: an article rather than a website.
 - `@section('seo_own', '1')`: the page writes all of these tags itself (a
   blog with its own image, dates and language versions, for example) and the
@@ -113,8 +118,8 @@ sections:
 A theme that replaces the client layout keeps these two includes in its
 `<head>`.
 
-The shop's social media profiles (**Setup → General → Search engines and
-sharing**) are in `social_profiles()`: network => address, only the ones set,
+The shop's social media profiles (**Setup → General Settings → SEO &
+tracking → Search engines and sharing**) are in `social_profiles()`: network => address, only the ones set,
 for `x`, `facebook`, `instagram`, `linkedin`, `youtube`, `tiktok`, `threads`
 and `medium`. `@include('partials.social-links')` draws them as icon links,
 or a theme draws its own. The home page also names them to search engines

@@ -29,14 +29,14 @@ Times are UTC: PNLCS fixes its time zone to UTC, whatever the server's own time 
 
 | Command | When | What it does |
 |---|---|---|
-| `pnlcs:currency-update` | daily 05:30 | Updates exchange rates against the default currency. Skipped while **Update exchange rates every day** (**Setup → Currencies**) is off; it is on by default. `--force` runs it anyway |
+| `pnlcs:currency-update` | daily 05:30 | Updates exchange rates against the default currency, then the rate of the official rate source chosen on **Setup → General Settings**, if any. Skipped while **Update exchange rates every day** (**Setup → Currencies**) is off; it is on by default. `--force` runs it anyway |
 | `pnlcs:generate-invoices` | daily 06:00 | Raises renewal invoices for services, addons and domains coming due |
 | `pnlcs:mark-overdue` | daily 06:30 | Marks unpaid invoices past their due date as overdue |
 | `pnlcs:auto-charge` | daily 06:45 | Charges stored cards for due invoices; does nothing until **Automatic Payment** is switched on (**Setup → General Settings**) |
 | `pnlcs:auto-charge --rescue` | every 15 minutes | Finishes card charges a crashed run left halfway; collects nothing new, and does nothing while automatic payment is off |
 | `pnlcs:apply-late-fees` | daily 07:30 | Adds late fees to overdue invoices, if late fees are set up |
 | `pnlcs:payment-reminders` | daily 08:00 | Emails reminders for invoices coming due and overdue |
-| `pnlcs:unsuspend-on-payment` | every 30 minutes | Unsuspends services whose overdue invoices have been paid |
+| `pnlcs:unsuspend-on-payment` | every 30 minutes | Unsuspends services suspended for non-payment once nothing is left unpaid; a payment notice or a part payment is not enough |
 | `pnlcs:cc-expiry-alerts` | monthly, on the 1st at 00:00 | Tells customers whose stored card expires this month or next |
 | `pnlcs:detach-payment-methods` | every 5 minutes | Asks the gateway to forget cards customers removed |
 
@@ -45,11 +45,12 @@ Times are UTC: PNLCS fixes its time zone to UTC, whatever the server's own time 
 | Command | When | What it does |
 |---|---|---|
 | `pnlcs:process-cancellations` | daily 02:00 | Carries out cancellation requests that are due |
-| `pnlcs:auto-suspend` | daily 07:00 | Suspends services whose invoice has been overdue longer than **Suspend after (days overdue)** (**Setup → General Settings → Automation**, default 3) |
-| `pnlcs:auto-terminate` | daily 08:00 | Terminates services suspended over an unpaid invoice for longer than **Terminate after (days suspended)** (default 30); does nothing until **Automatically terminate services suspended for non-payment** is ticked on the same card |
+| `pnlcs:auto-suspend` | daily 07:00 | Suspends services whose invoice has been overdue longer than **Suspend after (days overdue)** (**Setup → General Settings → Automation**, default 3, or the product's own days). With **Suspend only the services on the overdue invoice** ticked, only those services; otherwise every active service of the client |
+| `pnlcs:auto-terminate` | daily 08:00 | Terminates services suspended over an unpaid invoice for longer than **Terminate after (days suspended)** (default 30); a service staff suspended for another reason is left alone. Does nothing until **Automatically terminate services suspended for non-payment** is ticked on the same card, except for products that keep their own termination days |
 | `pnlcs:module-queue` | every 5 minutes | Retries server actions that failed (create, suspend, unsuspend, terminate, renew): after 5, 10, 20, then 40 minutes, five attempts in all |
 | `pnlcs:usage-polling` | hourly | Reads disk and bandwidth use from the servers, for usage display and overage billing |
 | `pnlcs:proxmox-tasks` | every minute | Moves on Proxmox reinstalls, restores, snapshot rollbacks and image downloads that are under way ([Sell VPS on Proxmox](../guides/sell-vps-on-proxmox.md)) |
+| `pnlcs:proxmox-capacity` | hourly | Tells staff, once a day per node and resource, when the guests on a Proxmox node have been given more of its memory or disk than the server's **Capacity alert (%)** (80 unless set; 0 never) ([Running VPS](../guides/proxmox/running-vps.md#capacity)) |
 | `pnlcs:panelica-licenses` | every 5 minutes | Finds the servers customers installed with their Panelica license link and buys the license; reads bought licenses back from Panelica once an hour. Does nothing while the Panelica Licenses module is off or no partner account is connected ([Sell Panelica licenses](../guides/sell-panelica-licenses.md)) |
 
 ### Domains and SSL

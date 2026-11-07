@@ -29,8 +29,10 @@ Selling domains is optional: if you only sell hosting, skip this page.
 
 **Setup → Domain Pricing**
 
-Add each extension you sell (`.com`, `.net`, `.org`...) with **Add TLD**.
-Customers can only order extensions that are listed and enabled here.
+Add each extension you sell (`.com`, `.net`, `.org`...) with **Add TLD**, or
+let the HRD or OVHcloud module add them for you
+([below](#prices-from-the-registrar)). Customers can only order extensions
+that are listed and enabled here.
 
 | Field | What it does |
 |---|---|
@@ -39,37 +41,69 @@ Customers can only order extensions that are listed and enabled here.
 | **WHOIS privacy price (per year)** | Empty: privacy is not offered at order. 0: offered free. An amount: sold at that price per year, on the order and on renewals |
 | **Category** | Generic, Local extensions, Country or New TLDs: the filter tabs on the public domain search and pricing pages |
 | **Popular** | Also listed under the *popular* filter |
-| **Grace Period (days)** | Days after expiry before the domain goes into redemption; the domain search shows it as extra time to renew at the normal price |
+| **Grace Period (days)** | Days after expiry before the domain goes into redemption; the domain search shows it as extra time to renew at the normal price. 5 by default |
+| **Redemption Period (days, after grace)** | Days the domain stays in redemption after the grace period. 30 by default |
 | **Min Years**, **Max Years** | How many years a customer may order at once (1 and 10 when left empty) |
-| **Auto Registrar** | The registrar module that registers this extension, by its key in lower case (`domainnameapi`, `enom`, `namecheap`, `hrd`...). Empty: orders for it use **Manual** and you register them by hand |
+| **Auto Registrar** | The registrar module that registers this extension, picked from the registrars you have switched on. **Manual**: you register orders for it by hand |
 | **Sort Order**, **Enabled** | Order in the lists; whether it is sold |
 
-Prices are in your default currency, and the column headings say which that
+Prices are in your default currency, and the form's headings say which that
 is. The public domain pages show them in US
 dollars when a USD currency is set up (**Setup → Currencies**), unless the
 visitor picked a currency of their own.
 
+### The price list
+
+The list shows 50 extensions a page. **Search extensions...** filters it by
+extension, and a click on a column heading (Extension, the prices, Grace,
+Registrar, Status) sorts by it; click again to reverse.
+
+- **Export CSV** downloads the list, with the current search and sort, as a
+  CSV file. Its columns: `extension`, `register_price`, `transfer_price`,
+  `renew_price`, `restore_price`, `privacy_price`, `grace_period`,
+  `redemption_grace_period`, `min_years`, `max_years`, `category`,
+  `auto_registrar`, `enabled`, `is_popular`, `sort_order`.
+- **Import CSV** reads a file in the same layout, first row a header. Each row
+  adds the extension or updates it if it is already listed; an empty cell
+  leaves that field as it is. A row with a price that is not a number is
+  skipped and counted.
+- **Delete**: tick extensions and press **Delete** at the top of the page.
+  The box in the header ticks the whole page; with it ticked, **Delete**
+  removes every extension that matches the search, on all pages, after a
+  confirmation that gives the number.
+
 ### Prices from the registrar
 
-The **HRD** and **OVHcloud** modules can fill the prices in for you. Set a
-**Margin (%)** in the registrar's settings and press **Sync prices** on its
-card (**Setup → Domain Registrars**):
+The **HRD** and **OVHcloud** modules can fill the list in for you, from their
+cards on **Setup → Domain Registrars**:
+
+- **Add TLDs** adds every extension the registrar offers, with that
+  registrar as **Auto Registrar**, a category, the registry's grace and
+  redemption periods and, for HRD, the allowed years. Extensions already in
+  the list are left alone. New ones arrive **disabled** and at price 0:
+  sync the prices, check them, then enable the ones you sell.
+- **Sync prices** fetches the registrar's purchase prices. Set a **Margin
+  (%)** in the registrar's settings first.
+
+How a sync works:
 
 - only the extensions whose **Auto Registrar** is that module are touched;
-- each purchase price gets the margin and is rounded up to a whole unit;
+- each purchase price is converted into your shop currency, gets the margin
+  and is rounded to the cent;
 - a price the registrar does not publish stays as you set it; it does not
   become zero;
 - an extension the registrar does not price at all is counted as *skipped*
   and left alone;
 - the time of the last sync is shown beside the button.
 
-!!! warning "The registrar has to quote in your shop currency"
+!!! warning "The sync needs an exchange rate"
     HRD quotes in złoty, and OVH in the currency of your OVH account. If that
-    is not the currency your shop prices in, the sync refuses and says so
-    rather than writing numbers that are wrong by the exchange rate.
+    is not your shop currency, PNLCS converts with the rate under **Setup →
+    Currencies**, or else a market rate. With no rate at all, the sync refuses
+    and says so rather than writing wrong numbers.
 
 Nothing is automatic: a sync happens when you press the button, so you can
-check what it did (**Utilities → System Logs → Module Log** records every
+check what it did (**Utilities → System Logs → Module Logs** records every
 change) before customers see the new prices.
 
 ## 2. Choose a registrar
@@ -85,8 +119,8 @@ Open it, enter the credentials from your registrar account, and switch it on.
 | **ResellerClub** | Reseller ID, API key, test mode |
 | **OpenProvider** | Username, password, sandbox mode |
 | **Enom** | Username (UID), password, test mode |
-| **HRD** (Poland) | Login, API hash, API password, default nameserver group, PESEL field, CSA field, margin |
-| **OVHcloud** | Application key, application secret, consumer key, API region (EU / CA / US), margin, OVH contact field |
+| **HRD** (Poland) | Login, API hash, API password, default nameserver group, margin, CSA field |
+| **OVHcloud** | Application key, application secret, consumer key, API region (EU / CA / US), subsidiary (`PL` by default; needed for the price sync), margin, OVH contact field |
 | **DomainNameAPI** (Turkey) | Reseller ID, live and test API keys, test mode, default nameservers |
 | **Manual** | Nothing: you register names yourself at any registrar and record them in PNLCS |
 
@@ -96,20 +130,31 @@ Manual is on unless you switch it off; every other registrar is off until you
 switch it on.
 
 Every registrar module registers, transfers, renews, changes nameservers, locks
-and gives the EPP code. **WHOIS privacy**, the **WHOIS contact**, **own
+and gives the EPP code. HRD, OVHcloud and OpenProvider also have a **Test**
+button on their card that checks the connection. **WHOIS privacy**, the **WHOIS contact**, **own
 nameservers (glue)**, **restore from redemption** and checking many names in
 one call are only in **DomainNameAPI** so far; for other registrars those
 buttons are not shown.
 
 ### HRD: PESEL and CSA
 
-HRD registers a domain to a registrant account (its **CSA**, a user id), and a
-private person needs a **PESEL** number (a company uses its NIP, the client's
-tax ID). PNLCS has no PESEL field of its own, so create client
-[custom fields](custom-fields.md) for them and choose them in **PESEL field**
-and **CSA field**. Left on *Auto*, PNLCS uses custom fields named `pesel` and
-`csa` (or `hrd_user_id`). The first domain creates the HRD account and stores
-its CSA in that field, so the client's next domains reuse it.
+HRD registers a domain to a registrant account (its **CSA**, a user id). An
+individual client is registered as a private person with their **PESEL**,
+taken from the client's **National ID** field; a company client uses its NIP,
+the client's tax ID. For the CSA, create a client
+[custom field](custom-fields.md) and choose it in **CSA field**. Left on
+*Auto*, PNLCS uses a custom field named `csa` (or `hrd_user_id`). The first
+domain creates the HRD account and stores its CSA in that field, so the
+client's next domains reuse it. A PESEL custom field chosen in an older
+release is still read while **National ID** is empty.
+
+### OVHcloud: the owner contact
+
+OVHcloud registers each domain under an OVH contact made for the client, from
+their name, email, phone and address, so the address must be complete. The
+contact's id is stored in the client custom field chosen in **OVH contact
+field** (on *Auto*, one named `csa` or `ovh_contact_id`), and the client's
+next domains reuse it.
 
 !!! warning "A paid domain is never marked registered without a registrar"
     If a domain's registrar cannot be loaded (switched off, or no longer
@@ -121,7 +166,12 @@ its CSA in that field, so the client's next domains reuse it.
 - The **domain search** on the public site (`/client/domain-search`) checks
   availability and puts a name in the cart.
 - During hosting checkout, customers can register or transfer a domain in the
-  same order.
+  same order. A domain registered with hosting gets the nameservers of the
+  hosting's server (**Setup → Servers**), or else the default nameservers in
+  **Setup → General Settings → Domains → Domains**.
+- A hosting order for a domain that is already set up on your servers is
+  refused while ordering: the customer is told it cannot be ordered again and
+  to contact you. Only Panelica servers are asked.
 - A transfer asks for the EPP (auth) code from the current registrar.
 - The years they can choose follow **Min Years** and **Max Years**, and WHOIS
   privacy is offered in the cart when the extension has a privacy price.
@@ -140,7 +190,7 @@ A hosting order can also take a name under one of your own domains, such as
 `yourname.example-sites.com`, instead of a domain of its own. This suits trial
 plans and customers who have not chosen a domain yet.
 
-- **Offer it:** in **Setup → General → Domains**, list the domains under
+- **Offer it:** in **Setup → General Settings → Domains → Domains**, list the domains under
   **Free subdomain domains**, one per line. The order form then shows **Free
   subdomain from us**: the customer types the first part and picks the domain.
 - **Point the domains at your server:** a wildcard DNS record
@@ -221,8 +271,9 @@ changes nothing already done. It works for hosting on Panelica servers.
   nameservers, and updates its records. A domain shown as active that the
   registrar does not know raises a notification, at most once a week.
 - A domain past its expiry date moves to **grace** for the extension's grace
-  period, then to **redemption** (30 days for the extensions PNLCS ships with;
-  0 for extensions you add), then to **expired**, unless the registrar reports
-  its own status.
-- **Registrar balance watch** (**Setup → General Settings**) warns you when
-  your prepaid balance at the registrar falls to a floor you set.
+  period, then to **redemption** for the extension's redemption period, then
+  to **expired**, unless the registrar reports its own status.
+- **Registrar balance watch** (**Setup → General Settings → Domains → Registrar balance
+  watch**) warns
+  you when your prepaid balance at DomainNameAPI, HRD or OVHcloud falls to a
+  floor you set.

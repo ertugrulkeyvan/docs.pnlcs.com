@@ -137,12 +137,15 @@ very first sign-in PNLCS records for a login sends nothing.
 
 ## Sign-in settings
 
-These are under **Setup → General Settings**:
+These are under **Setup → General Settings**, on the **Notifications** tab
+(Email and SMS Verification) and the **Security** tab (the other two):
 
 - **Email Verification**: *New customers must confirm their email address* is
   on by default. They can sign in and look around either way, but an
   unconfirmed address is stopped at the checkout. Existing accounts are not
-  affected.
+  affected. The confirmation email carries a **Confirmation code**, valid
+  for 15 minutes (five wrong tries end it), and a link valid for 24 hours.
+  The link only confirms the address; the customer still signs in as usual.
 - **Social Login**: let customers sign in with Google or GitHub. Each needs
   an OAuth client ID and secret; the section shows the redirect address to
   register with the provider.

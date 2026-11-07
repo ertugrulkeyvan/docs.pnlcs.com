@@ -45,7 +45,7 @@ entered by staff or through the API.
 ## MaxMind and FraudLabs Pro
 
 For a second opinion, connect one or both services under **Setup → General
-Settings → Fraud Screening**:
+Settings → Security → Fraud Screening**:
 
 | Setting | |
 |---|---|
@@ -57,12 +57,8 @@ fields show dots once saved; leave them blank to keep the stored key.
 
 What is sent: the order's IP address, the customer's email, the order amount,
 and to MaxMind also the customer's name and two-letter country. An order with
-no usable IP address is not sent. Each request waits at most 10 seconds.
-
-!!! warning "The amount is always labelled USD"
-    PNLCS 1.6.1 sends the order amount in your default currency but names
-    the currency as USD. If your default currency is not USD, the providers
-    misread the amount; their other signals are unaffected.
+no usable IP address is not sent. Each request waits at most 10 seconds. The
+amount is sent with the currency it is in (your default currency).
 
 ## How the score is decided
 
@@ -101,13 +97,21 @@ it if you want the money to go back ([Invoices, Credit and Refunds](invoices.md#
 
 ## Clearing a false alarm
 
-PNLCS 1.6.1 has no admin button to release a held order. You can:
+On the page of an order held as **Fraud** (or a **Cancelled** one), **Set back
+to Pending** releases it (needs the **manage orders** permission; the API's
+[`pendingorder`](../api/orders.md#pendingorder) does the same):
 
-- put it back to **Pending** with the API's
-  [`pendingorder`](../api/orders.md#pendingorder) and then **Accept Order**
-  on its page. The original invoice stays cancelled; if the customer still
-  has to pay, raise a new one ([Create an invoice by hand](invoices.md#create-an-invoice-by-hand));
-- or **Delete Order** and let the customer order again.
+- the order is **Pending** again, and units of stock-controlled products are
+  taken off the shelf again;
+- its cancelled invoice is payable again, with a new due date. Anything that
+  had been paid on it, and was given back as credit when it was cancelled, is
+  taken back from the credit balance; if the customer has spent that credit
+  since, the invoice stays cancelled and you settle it by hand;
+- services that **Mark as Fraud** suspended are unsuspended, on their server
+  too. A service suspended for another reason stays suspended.
+
+Then **Accept Order** on its page as usual. Or **Delete Order** and let the
+customer order again.
 
 To test what screening says about an order without changing it, call
 [`orderfraudcheck`](../api/orders.md#orderfraudcheck).

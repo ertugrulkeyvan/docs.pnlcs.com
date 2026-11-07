@@ -196,6 +196,14 @@ Each action's page lists the errors specific to it.
 Every answer carries `X-RateLimit-Limit` and `X-RateLimit-Remaining`. Over the
 limit the answer is `429` with `Retry-After`.
 
+Signing in with a staff `username` and `password` also allows only 5 attempts
+a minute per user name and IP address, the same as the admin login. A
+successful sign-in resets the count. A refused sign-in always answers
+`Authentication failed`, also when the password was right but the account uses
+two-factor authentication; the real reason is written to the log.
+[validatelogin](system.md#validatelogin) allows 10 attempts a minute per email
+and IP address.
+
 ## Health checks
 
 `GET /api/health` needs no credential and answers only whether PNLCS and its

@@ -46,13 +46,13 @@ To let customers open and answer tickets by email, see
 
 1. **Setup → Ticket Departments**: check the departments and their addresses
    ([below](#departments)).
-2. **Setup → General Settings → Company Email**: the address that gets an
+2. **Setup → General Settings → Company → Company Email**: the address that gets an
    email for every new ticket and every customer reply
    ([Staff alerts](#staff-alerts)).
 3. **Setup → Ticket Statuses**: decide whether answered tickets should close
    by themselves ([Statuses](#statuses-and-auto-close)).
 4. **Setup → Ticket Spam Filter**, and reCAPTCHA under **Setup → General
-   Settings → Google reCAPTCHA protection**, if the contact form is public.
+   Settings → Security → Google reCAPTCHA protection**, if the contact form is public.
 5. Make sure [email sending](configure-email.md) works: customers get their
    ticket replies by email.
 
@@ -65,7 +65,7 @@ A ticket always belongs to one department. **Add Department** asks for:
 | Field | What it does |
 |---|---|
 | **Department Name** | Shown to customers on the ticket form and the contact form. |
-| **Email Address** | The department's mailbox. The form says "for ticket notifications", but in 1.6.1 it is only used by [mail import](support-mail-piping.md): it is the address customers write to, and mail sent *from* it is skipped. No alert goes to it. |
+| **Email Address** | The address customers write to. It is only used by [mail import](support-mail-piping.md): mail sent *from* it is skipped. No alert goes to it; to email staff about new tickets in a department, see [Staff alerts](#staff-alerts). |
 | **Description** | For your own reference. |
 | **Hidden from client ticket form** | Customers cannot pick the department, on the ticket form or the contact form. Staff can still move tickets into it. |
 
@@ -75,13 +75,12 @@ department.
 
 !!! warning "Check the departments a fresh install made"
     The installer creates four departments: **General**, **Technical
-    Support**, **Billing** and **Sales**, with placeholder addresses on
-    `pnlcs.com` (`support@`, `tech@`, `billing@`, `sales@`). Change those
-    addresses to your own, or clear them, and delete the departments you do
-    not need.
+    Support**, **Billing** and **Sales**, without an address. Older installs
+    got placeholder addresses on `pnlcs.com` (`support@`, `tech@`,
+    `billing@`, `sales@`); change those to your own, or clear them. Delete
+    the departments you do not need.
 
-The **Tickets** column on this page shows 0 for every department in 1.6.1,
-whatever the real count.
+The **Tickets** column shows how many tickets each department holds.
 
 ## Statuses and auto-close
 
@@ -128,8 +127,8 @@ came back to should close by themselves.
 ## Ticket escalation
 
 Tickets nobody has answered for a while can be reassigned, moved, raised in
-priority or given an automatic reply. This is set up on the **Ticket
-Escalation Rules** page, which has no menu entry in 1.6.1; see
+priority or given an automatic reply. This is set up under **Setup → Ticket
+Escalation Rules**; see
 [Escalation rules](support-mail-piping.md#escalation-rules).
 
 ## Predefined replies
@@ -199,7 +198,7 @@ one, **reply tickets** to reply, write notes and open tickets, **manage
 tickets** for the options bar and deleting. The setup pages above need
 **manage ticket config**. See [Staff & Roles](staff-and-roles.md).
 
-!!! warning "Attachments in 1.6.1"
+!!! warning "Attachments on the admin side"
     Customers can attach files, but the admin ticket page neither shows nor
     offers them for download, and staff replies cannot carry a file. Until
     that is fixed, ask the customer to paste text into the message, or fetch
@@ -207,14 +206,19 @@ tickets** for the options bar and deleting. The setup pages above need
 
 ### Staff alerts
 
-PNLCS emails the **Company Email** address (**Setup → General Settings**)
-for:
+PNLCS emails the **Company Email** address (**Setup → General Settings →
+Company**) for:
 
 - every new ticket that did not come from staff (client area, contact form,
   email, or the API without a staff user), and
 - every customer reply.
 
-Nothing is sent per department or to the assigned staff member. For alerts in
+A member of staff can also get an email for each new ticket in the
+departments they handle: tick their **Support departments** and **Email new
+tickets in these departments** on **Setup → Admin Accounts**. Nobody is in a
+department until you put them there. The Company Email address is never
+mailed twice for the same ticket. Customer replies still go only to the
+Company Email, and nothing is sent to the assigned staff member. For alerts in
 Slack, Telegram or another system, add rules for `ticket.opened` and
 `ticket.replied` under [Notification channels](notifications.md).
 
@@ -237,10 +241,12 @@ can download them. Attachments that arrive by email follow the
 [mail import limits](support-mail-piping.md#how-it-works).
 
 **Contact Us** at `/client/contact` is open to anyone, signed in or not. It
-opens a ticket with medium priority in the department the visitor chose.
+opens a ticket with medium priority in the department the visitor chose. The
+email confirming a ticket without an account gives the ticket number and the
+department, but does not repeat the visitor's subject or message.
 
-If **reCAPTCHA** is on for tickets (**Setup → General Settings → Google
-reCAPTCHA protection**), the ticket form asks for it too.
+If **reCAPTCHA** is on for tickets (**Setup → General Settings → Security →
+Google reCAPTCHA protection**), the ticket form asks for it too.
 
 ## Announcements
 
@@ -295,8 +301,7 @@ have returns "not found". Each download is counted and recorded in the
    Categories can be renamed under **Categories** → **Edit**; there is no way
    to delete one from this page.
 2. **+ New Article**: **Title**, **Category**, **Content** and **Publish
-   immediately**. Pick a real category: **— Uncategorized —** is refused when
-   you save.
+   immediately**. Every article needs a category, so create one first.
 
 The article list shows each article's views and whether it is **Published**
 or a **Draft**.
@@ -307,8 +312,8 @@ over titles and text. Drafts return "not found" even with a direct link.
 Article text is plain text, like announcements.
 
 To hide the whole knowledge base, untick **Show the knowledge base to
-customers** under **Setup → General Settings**. Its menu links disappear and
-its addresses return "not found".
+customers** under **Setup → General Settings → Company → Legal identity**.
+Its menu links disappear and its addresses return "not found".
 
 ## Translations
 
@@ -340,8 +345,9 @@ the client area), signed in or not. Issues that are not resolved are listed
 first; the last 10 resolved ones are shown with their end date. With nothing
 open, the page says all systems are operational.
 
-Every issue created from this form shows priority **Medium**: the form has no
-priority, start date or affected-server field in 1.6.1.
+**Affected** is optional free text (your server names are suggested);
+customers see it as "Affecting: …". Every issue created from this form shows
+priority **Medium**: the form has no priority or start date field.
 
 The pages in this section need the **manage announcements** permission
 (announcements) or **manage kb** (downloads, knowledge base and network

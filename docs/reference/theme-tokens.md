@@ -26,11 +26,18 @@ is on [Themes and branding](../guides/themes-and-branding.md).
   the preset to *Custom*; a field left empty takes the Starter value.
 - A theme's `theme.json` `colors` sets some or all of them when the theme is
   activated; tokens it leaves out come from Starter.
-- Values are written into CSS as they are. Colour tokens take a hex colour
-  (`#1a4d80`) or any CSS colour (`card_shadow` and `overlay_bg` are `rgba()`
-  in Starter); sizes need their unit (`16px`).
+- Each value must be one CSS value. Colour tokens take a hex colour
+  (`#1a4d80`), a colour name or a colour function such as `rgba()`, `hsl()`
+  or `var()` (`card_shadow` and `overlay_bg` are `rgba()` in Starter); the
+  others take words, numbers, units, quotes, commas and brackets (font
+  stacks, shadows); sizes need their unit (`16px`). Semicolons, braces,
+  angle brackets, backslashes, comments, `url()` and an unclosed quote or
+  bracket are refused: saving shows a message naming the token and saves
+  nothing. A value that fails the check (one stored earlier, or set by a
+  theme's `theme.json`) is left out of the page, so that token falls back to
+  whatever the CSS gives it.
 - **Used by PNLCS**: the 18 tokens the built-in views and the bundled themes
-  read in 1.6.1. The other 38 are printed all the same, for your own theme's
+  read. The other 38 are printed all the same, for your own theme's
   CSS to use; changing them has no visible effect on the built-in pages.
 
 **Starter** is the default preset ("Clean professional blue theme"). The two

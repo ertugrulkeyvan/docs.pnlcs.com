@@ -47,11 +47,12 @@ nothing.
 | Command | What it does | Options |
 |---|---|---|
 | `pnlcs:process-cancellations` | Carries out cancellations due at the end of the billing period | none |
-| `pnlcs:auto-suspend` | Suspends services with overdue invoices | `--dry-run` |
+| `pnlcs:auto-suspend` | Suspends services with overdue invoices, after the general or the product's own days | `--dry-run` |
 | `pnlcs:auto-terminate` | Terminates services that have stayed suspended over an unpaid invoice | `--dry-run` |
 | `pnlcs:module-queue` | Retries server actions that failed (create, suspend, unsuspend, terminate, renew) | `--id=` retries one queue entry now |
 | `pnlcs:usage-polling` | Reads disk and bandwidth use from the servers into the active services | none |
 | `pnlcs:proxmox-tasks` | Moves on Proxmox reinstalls, restores and rollbacks that are under way | none |
+| `pnlcs:proxmox-capacity` | Warns staff when a Proxmox node has given out more of its memory or disk than the server's capacity alert line | none |
 | `pnlcs:panelica-licenses` | Finds servers installed with a Panelica license link, buys their licenses and reads bought ones back | `--service=` checks one service now |
 
 ## Domains and SSL

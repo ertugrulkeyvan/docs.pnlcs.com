@@ -58,10 +58,10 @@ permission.
 
 | Permission | Opens |
 |---|---|
-| `list_clients` | The client list (`/admin/clients`) and its CSV export; the billing identity table and its CSV. The **Clients** dashboard widget. API: client reads, `getemails`, `getuserpermissions` |
+| `list_clients` | The client list (`/admin/clients`) and its CSV export; the billing identity table and its CSV. The **Clients** dashboard widget. API: client reads, `getuserpermissions` |
 | `view_clients` | A client's page (`/admin/clients/{id}`), and downloading that client's personal data from it. Client results in the search. API: `validatelogin` |
-| `create_clients` | **Add New Client**, and its dashboard shortcut. API: client calls starting with `add` or `create` |
-| `edit_clients` | Editing a client; admin notes; adding a service or domain to a client by hand (and listing a server's accounts to pick one); **Login as Client** and ending it; **Setup → Client Groups**. API: other client writes, `updateadminnotes`, `createssotoken`, `createclientinvite`, `updateuserpermissions`, `resetpassword` |
+| `create_clients` | **Add New Client**, and its dashboard shortcut. API: client calls starting with `add` or `create`, except `addclientnote`, `addcontact` and `adduser` |
+| `edit_clients` | Editing a client; admin notes; adding a service or domain to a client by hand (and listing a server's accounts to pick one; creating the account on the server, or linking one already there, also needs `manage_services`); **Login as Client** and ending it; **Setup → Client Groups**. API: other client writes, `addclientnote`, `addcontact`, `adduser`, `updateadminnotes`, `createssotoken`, `createclientinvite`, `updateuserpermissions`, `resetpassword` |
 | `delete_clients` | Deleting a client. API: client calls starting with `delete` |
 
 ## Orders
@@ -70,7 +70,7 @@ permission.
 |---|---|
 | `list_orders` | The order list (`/admin/orders`). The **Orders** dashboard widget. API: order reads |
 | `view_orders` | An order's page. Order results in the search |
-| `manage_orders` | **New Order**; accepting, cancelling, marking as fraud and deleting orders; bulk order actions; changing the domain on an order's service. The order list's action buttons and the pending-orders count on the dashboard. API: every order call that is not a read |
+| `manage_orders` | **New Order**; accepting, cancelling, marking as fraud and deleting orders; putting a held or cancelled order back to pending; bulk order actions; changing the domain on an order's service. The order list's action buttons and the pending-orders count on the dashboard. API: every order call that is not a read |
 
 ## Invoices
 
@@ -78,30 +78,30 @@ permission.
 |---|---|
 | `list_invoices` | The invoice list (`/admin/invoices`) and its CSV export. API: invoice reads |
 | `view_invoices` | An invoice's page and its PDF. Invoice results in the search |
-| `create_invoices` | **Create Invoice**, and invoicing selected items in bulk (`/admin/bulk/invoice`). The dashboard shortcut. API: invoice calls starting with `add` or `create` |
-| `manage_invoices` | On an invoice: mark paid, **Charge now**, release a charge held for review, cancel, refund, send, remind, and add, change or remove lines. Adding credit to a client (and the link on the client's page). **Payment Notifications** (approving or rejecting customers' transfer receipts). **Billable Items**. Bulk invoice actions. The unpaid-invoice and charge-review counts on the dashboard. API: other invoice writes and all invoice deletes |
+| `create_invoices` | **Create Invoice**, and invoicing selected items in bulk (`/admin/bulk/invoice`). The dashboard shortcut. API: invoice calls starting with `add` or `create`, except `addinvoicepayment`, `addtransaction` and `addcredit` |
+| `manage_invoices` | On an invoice: mark paid, **Charge now**, release a charge held for review, cancel, refund, send, remind, and add, change or remove lines. Adding credit to a client (and the link on the client's page). **Payment Notifications** (approving or rejecting customers' transfer receipts). **Billable Items**. Bulk invoice actions. The unpaid-invoice and charge-review counts on the dashboard. API: other invoice writes and all invoice deletes, and `addinvoicepayment`, `addtransaction` and `addcredit` |
 
 ## Products
 
 | Permission | Opens |
 |---|---|
 | `list_products` | **Products/Services** (`/admin/products`), the package list and the Proxmox catalogue view. API: `getproducts` |
-| `manage_products` | Creating, editing and deleting products and product groups; product custom fields; the invoice product catalogue; Proxmox options on a product; the Docker app catalogue; **Product Addons**, **Product Bundles** and configurable options; **Manage extensions** (`/admin/config/addons/modules`: switching extensions on and off and their settings). With the modules on: the **KSeF Status** pages and the **Panelica Licenses** page. Dashboard shortcuts to products |
+| `manage_products` | Creating, copying, editing and deleting products, and creating, editing, hiding and deleting product groups; product custom fields; the invoice product catalogue; Proxmox options on a product; the Docker app catalogue; **Product Addons**, **Product Bundles** and configurable options; **Manage extensions** (`/admin/config/addons/modules`: switching extensions on and off and their settings). With the modules on: the **KSeF Status** pages and the **Panelica Licenses** page (connecting or disconnecting the partner account and changing the install link there also need `manage_servers`). Dashboard shortcuts to products |
 
 ## Services
 
 | Permission | Opens |
 |---|---|
 | `list_services` | The service list (`/admin/services`) and the SSL certificate list (`/admin/ssl-orders`). The **Services** dashboard widget. API: service reads, `getmodulequeue` |
-| `view_services` | A service's page; an SSL order's page and its certificate download. Service results in the search |
-| `manage_services` | Server actions on a service (create, suspend, unsuspend, terminate and the module's own buttons); VPS power, password, reinstall, snapshots and backups, and their status and graphs; addons on a service; next due date, custom fields, status and the rest of the service form; deleting a service; bulk service changes; importing SSL orders and acting on them; attaching a Panelica license. API: every service call that is not a read |
+| `view_services` | A service's page; an SSL order's page. Service results in the search |
+| `manage_services` | Server actions on a service (create, suspend, unsuspend, terminate and the module's own buttons); VPS power, password, reinstall, snapshots and backups, and their status and graphs; addons on a service; next due date, custom fields, status and the rest of the service form; deleting a service; bulk service changes; downloading an SSL certificate (it carries the private key), importing SSL orders and acting on them; attaching a Panelica license. API: every service call that is not a read |
 
 ## Domains
 
 | Permission | Opens |
 |---|---|
-| `list_domains` | The domain list (`/admin/domains`) and the log of domain searches. The **Domains** dashboard widget. API: domain reads |
-| `manage_domains` | A domain's page and everything on it: sync, register, renew, nameservers, lock, auto-renew, EPP code, ID protection, contacts, glue records, changing registrar and moving the domain to another client. Domain results in the search. API: every domain call that is not a read, except `createorupdatetld` (that needs `manage_servers`) |
+| `list_domains` | The domain list (`/admin/domains`) and the log of domain searches. The **Domains** dashboard widget. API: domain reads, except `domainrequestepp` and `domaingetwhoisinfo` |
+| `manage_domains` | A domain's page and everything on it: sync, register, renew, nameservers, lock, auto-renew, EPP code, ID protection, contacts, glue records, changing registrar and moving the domain to another client. Domain results in the search. API: every domain call that is not a read, except `createorupdatetld` (that needs `manage_servers`), and `domainrequestepp` and `domaingetwhoisinfo` |
 
 ## Tickets
 
@@ -109,8 +109,8 @@ permission.
 |---|---|
 | `list_tickets` | The ticket list (`/admin/tickets`). The **Support** dashboard widget and the open-tickets count. API: ticket reads |
 | `view_tickets` | A ticket's page. Ticket results in the search |
-| `reply_tickets` | Opening a ticket for a client, replying, and adding or deleting staff notes on a ticket. API: ticket calls with `reply` or `openticket` in the name |
-| `manage_tickets` | Changing a ticket's status, department, priority and assigned staff (the options panel); deleting tickets, one at a time or in bulk. API: other ticket writes and deletes |
+| `reply_tickets` | Opening a ticket for a client, replying, and adding or deleting staff notes on a ticket. API: ticket calls with `reply` or `openticket` in the name, except `updateticketreply` and `deleteticketreply` |
+| `manage_tickets` | Changing a ticket's status, department, priority and assigned staff (the options panel); deleting tickets, one at a time or in bulk. API: other ticket writes and deletes, `updateticketreply` and `deleteticketreply` included |
 
 ## Configuration
 
@@ -120,9 +120,9 @@ permission.
 | `manage_roles` | **Admin Roles**: creating, editing and deleting roles. Staff can only grant permissions they hold themselves |
 | `manage_currencies` | **Currencies**: adding, editing, deleting, choosing the default, the automatic rate setting and updating the rates by hand |
 | `manage_tax` | **Tax Rules** |
-| `manage_servers` | **Servers** (with their test and the Proxmox image list), **Server Groups**, **Live Servers** and signing in to a server's panel from there, **Domain Pricing**, and **SSL Modules** (their settings and connection test). API: `getservers`, `createorupdatetld` |
+| `manage_servers` | **Servers** (with their test, the Proxmox image list and the Proxmox **Capacity** page), **Server Groups**, **Live Servers** and signing in to a server's panel from there, **Domain Pricing** (with its CSV export and import and bulk delete), **SSL Modules** (their settings and connection test), and the Panelica partner account and install link on the **Panelica Licenses** page. API: `getservers`, `createorupdatetld` |
 | `manage_gateways` | **Payment Gateways** and their settings |
-| `manage_registrars` | **Domain Registrars**: settings, connection test and the balance check. The **Registrar balance** dashboard widget. API: `getregistrars` |
+| `manage_registrars` | **Domain Registrars**: settings, connection test, the balance check, syncing prices and adding the registrar's TLDs to Domain Pricing. The **Registrar balance** dashboard widget. API: `getregistrars` |
 | `manage_promotions` | **Promotions** (promo codes). API: `getpromotions` |
 | `manage_email_templates` | **Email Templates** (editing and resetting) and **Mass Email** to clients. API: `getemailtemplates`, `sendemail`, `sendadminemail` |
 | `manage_ticket_config` | **Ticket Departments**, **Ticket Statuses** (and the auto-close setting), **Predefined Replies**, ticket escalation rules and the **Ticket Spam Filter** |
@@ -136,8 +136,8 @@ permission.
 | Permission | Opens |
 |---|---|
 | `view_reports` | **Reports** (each report and its export) and **Transactions**. The **Billing** dashboard widget |
-| `manage_settings` | **General Settings** (and its test email), **Log Retention**, **Appearance** (themes, logo, favicon, colours, homepage sections, white-label, dark mode), **Custom Fields**, **Modules** (switching server, registrar and other modules on and off), **Notification Channels**, **Automation Status**, **Languages** and the translation editor, and **Import WHMCS**. Settings pages in the search. API: `SystemApiController` writes not named elsewhere |
-| `view_activity_log` | **Activity Log** and **System Logs** (with the gateway, module and email logs). The **Recent Activity** dashboard widget. API: `getactivitylog`, `logactivity` |
+| `manage_settings` | **General Settings** (with its test email and the invoice language templates), **Log Retention**, **Appearance** (themes, logo, favicon, colours, homepage sections, white-label, dark mode), **Custom Fields**, **Modules** (switching server, registrar and other modules on and off), **Notification Channels**, **Automation Status**, **Languages** and the translation editor, and **Import WHMCS**. Settings pages in the search. API: `SystemApiController` writes not named elsewhere |
+| `view_activity_log` | **Activity Log** and **System Logs** (with the gateway, module and email logs). The **Recent Activity** dashboard widget. API: `getactivitylog`, `logactivity`, `getemails` |
 | `view_system` | **System Database** and **PHP Info**. The **System Health** and **Automation** dashboard widgets. API: `SystemApiController` reads not named elsewhere |
 | `manage_updates` | **Setup → Updates**: checking for, preparing and applying PNLCS updates, choosing the channel, deciding conflicts. Replaces the application's own code, so keep it to people you would trust with the server |
 

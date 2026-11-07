@@ -40,12 +40,12 @@ sending, accepting and converting them needs **manage quotes**.
 | **Date** | Defaults to today. |
 | **Valid Until** | The last day the customer can accept. Defaults to 30 days from today. |
 | **Line Items** | Each line has a description, quantity, unit price, discount (an amount taken off that line) and a **Taxable** box. |
-| **Admin Notes** | For staff. Copied onto the invoice when the quote is accepted (see the warning below). |
+| **Admin Notes** | For staff only. Not copied onto the invoice. |
 | **Customer Notes** | Shown on the quote's admin page only. A reason the customer gives when declining is saved here and replaces what you wrote. |
 | **Proposal** | Longer text the customer reads on the quote. |
 
 Tax is worked out at the customer's own rate, the way their invoices will
-be (see [Tax Rules](tax-rules.md)).
+be, and follows **Prices include tax** (see [Tax Rules](tax-rules.md)).
 
 A new quote is a **Draft**. Customers don't see drafts.
 
@@ -86,10 +86,8 @@ Staff can convert after the Valid Until date.
 - It is an invoice only. No order or service is created: to set up hosting
   the customer has bought, create an order for it as well.
 
-!!! warning "Admin Notes are printed on the invoice"
-    The quote's **Admin Notes** become the invoice's notes, and those appear
-    on the invoice PDF the customer downloads. Don't put anything private in
-    Admin Notes.
+- The invoice's notes say `Quote #` and the quote's number. The quote's
+  **Admin Notes** stay on the quote.
 
 ### Statuses
 
@@ -139,6 +137,9 @@ view and **manage projects** to create or change.
 - **Status**: Pending, In Progress, Completed or Cancelled
 - **Start Date** and **Due Date**
 
+The staff member who creates a project is recorded as its owner, shown under
+**Assigned** in the extension's own list.
+
 On a project's page:
 
 - **Add Task**: a task with optional notes and due date. Tick tasks off as
@@ -154,7 +155,7 @@ Projects are only for staff. Clients don't see them in the client area.
     The extension's description mentions assigning staff, time tracking and
     invoicing from project hours, and its settings list *Default Task Limit
     per Project*, *Allow Clients to View Projects* and *Auto-create Invoice
-    on Project Completion*. None of these is implemented in 1.6.1: the
+    on Project Completion*. None of these is implemented yet: the
     settings are saved but have no effect. To bill a project, raise an
     invoice or a [quote](#quotes) by hand.
 
@@ -171,5 +172,5 @@ With the extension active, it is under **Extensions → Staff Board**.
 
 You don't post on the board itself: write a note on a client's **Notes** tab
 and it appears there. The settings *Posts Per Page* and *Allow Markdown in
-Posts* have no effect in 1.6.1: the board always shows 20 notes, as plain
+Posts* have no effect yet: the board always shows 20 notes, as plain
 text.

@@ -35,6 +35,8 @@ modules, translations, themes and documentation.
   pull request is not refused over the format alone.
 - A new text goes in `lang/en/` and in `tr`, `de`, `pl` and `zh`, or the pull
   request says which of these it could not write ([Translations](translations.md)).
+- Nothing in a change writes to the operator's space: `.env`, `storage/`, and
+  their own themes, modules and hooks.
 - Your commits keep your name: merged work is credited to you in the history
   and the changelog.
 
@@ -57,3 +59,5 @@ The full guide, with the development setup and conventions, is
 Do not open a public issue. Write to
 [security@panelica.com](mailto:security@panelica.com); see the
 [security policy](https://github.com/Panelica/pnlcs/blob/main/SECURITY.md).
+Researchers who report an issue can be listed in its hall of fame; say so in
+the report.

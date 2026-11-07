@@ -62,7 +62,7 @@ above the sections always shows what one order gets.
 |-------|---------|
 | **Network bridge** | The bridge servers are plugged into, listed from the node |
 | **IPv4 address** | *DHCP on the bridge*, or *one from the server's IPv4 pool* (each server gets its own fixed address) |
-| **IPv6 address** | None, or SLAAC. Applied to LXC containers only; a KVM server ignores it, so set IPv6 up inside the system |
+| **IPv6 address** | None, or *SLAAC (automatic)*. A container gets it directly, a KVM server through cloud-init (so not one installed from an ISO) |
 | **DNS servers** | Given to the server through cloud-init, e.g. `1.1.1.1 8.8.8.8` |
 | **VLAN tag** | Puts the network card on a VLAN (`0` = none) |
 | **Speed limit (MB/s)** | Caps the network card (`0` = none) |
@@ -103,7 +103,13 @@ module reads, the part after is what the customer sees.
 With **IPv4 address** set to the server's pool, the product can also sell
 additional addresses: tick **Additional IPv4 addresses** above and give each
 choice (`0`, `1`, `2`…) its monthly price, or make an `extra_ipv4` option
-yourself. A *quantity* option lets the customer type the number.
+yourself. A *quantity* option lets the customer type the number. A server
+takes at most 16.
+
+On a product that takes its address by DHCP, **Create order options**
+refuses any choice above `0`: "Additional IPv4 addresses come from the
+server's IPv4 pool. Set IPv4 address to "One from the server's IPv4 pool"
+first, or offer only "No additional address"."
 
 - The addresses come from the same pool as the server's own, and go back to
   it when the service ends. A pool that cannot give them all refuses the
@@ -117,7 +123,7 @@ yourself. A *quantity* option lets the customer type the number.
   (*Raise options*), charged for the rest of the billing cycle. A container gets
   them at once; a virtual machine when it is next restarted from the panel.
   An address that staff take away removes its card.
-- Which address belongs to which service: **Configuration → Servers →
+- Which address belongs to which service: **Setup → Servers →
   Capacity**, under *IPv4 pool*. The service page lists them too, and the
   admin service search finds a service by any of them.
 

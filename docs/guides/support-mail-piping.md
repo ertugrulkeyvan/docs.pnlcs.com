@@ -83,9 +83,8 @@ list then shows, per department, whether import is on and when it last ran.
 
 ## Escalation rules
 
-Tickets nobody has answered can be escalated automatically. The **Ticket
-Escalation Rules** page has no menu entry in PNLCS 1.6.1; open
-`/admin/config/ticket-escalation` on your PNLCS address. **Add Rule**:
+Tickets nobody has answered can be escalated automatically. Open **Setup →
+Ticket Escalation Rules** and press **Add Rule**:
 
 - **Time Threshold (minutes)**: how long since the last reply.
 - **Applies To**: departments, statuses and priorities. An empty list matches
@@ -96,7 +95,8 @@ Escalation Rules** page has no menu entry in PNLCS 1.6.1; open
 
 Rules run every 15 minutes. Each escalation adds a note to the ticket, and a
 ticket is escalated only once until it gets a new reply. **Send notification
-on escalation** is saved but sends nothing in 1.6.1.
+on escalation** raises the `ticket.escalated` event, which goes wherever your
+[notification rules](notifications.md) send it.
 
 ## Tickets without an account, and deleting tickets
 
@@ -114,6 +114,6 @@ behind them, so they are also where spam collects.
   cannot be undone, and it needs the **manage tickets** permission.
 
 To keep spam out in the first place, switch on reCAPTCHA for the contact form
-and the ticket form (**Setup → General Settings → Google reCAPTCHA
+and the ticket form (**Setup → General Settings → Security → Google reCAPTCHA
 protection**) and fill in the **Ticket Spam Filter** (**Setup → Ticket Spam
 Filter**).

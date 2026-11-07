@@ -26,7 +26,9 @@ suspended to terminated.
     isn't running, none of this happens. See
     [Scheduled Commands](../reference/scheduled-commands.md).
 
-The settings named below are on **Setup → General Settings**.
+The settings named below are on **Setup → General Settings**: the Invoices,
+Automatic Payment and Late Fees cards on the **Invoicing** tab, the Automation
+card on the **Automation** tab.
 
 ## Recurring billing
 
@@ -87,7 +89,8 @@ If an invoice isn't paid:
    services suspended for non-payment** ticked, a service that has been
    suspended for **Terminate after (days suspended)** (default 30) while the
    customer still has an overdue invoice is **terminated** (the account and
-   its data are deleted). `php artisan pnlcs:auto-terminate --dry-run` lists
+   its data are deleted). A service staff suspended by hand is left alone;
+   only a suspension made by auto-suspend counts. `php artisan pnlcs:auto-terminate --dry-run` lists
    what it would terminate.
 
 **A product can keep its own periods.** **Suspend after (days overdue)** and
@@ -112,7 +115,8 @@ refused.
 
 You can add a **late fee** to overdue invoices (Late Fees card). **Charge**:
 *Do not charge late fees* (the default), *A fixed amount*, or *A percentage of
-the invoice* (of its subtotal), with the **Amount** and **Days overdue before
+the invoice* (of what its lines add up to, after discounts and before any
+credit), with the **Amount** and **Days overdue before
 charging** (default 3). The fee is added once per invoice, as an untaxed line.
 
 ## Auto-renew and automatic payment

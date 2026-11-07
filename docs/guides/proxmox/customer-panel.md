@@ -30,6 +30,10 @@ panel. The admin's service page shows the same panel
 - **IP addresses** (click to copy), **operating system**, **login** and
   **password** (show / copy).
 
+The customer's list of services shows each server's address under its name,
+and the service page's server details show the server's own address in place
+of the name of the Proxmox server it runs on.
+
 ## Graphs
 
 CPU, memory, network in/out and disk read/write, for the last **hour, day,
@@ -45,15 +49,15 @@ rather than dropping to zero.
 | | What happens |
 |---|---|
 | **Snapshots** | Take a snapshot by name, roll back to it, delete it — up to the number the product allows. Rolling back starts the server again if it was running |
-| **Backups** | *Back up now* makes a full copy on the server's backup storage; *Restore* replaces the server with it and removes its snapshots; *Delete*. Up to the number the product allows, and one backup at a time |
+| **Backups** | *Back up now* makes a full copy on the server's backup storage; *Restore* replaces the server with it and removes its snapshots; *Delete*. Up to the number the product allows, and one backup at a time. Only backups taken for this service are listed, not older ones left under the same VM number by a server that was terminated |
 | **Reset the root password** | Takes effect at once through the guest agent; without the agent, at the next boot. (Not offered for containers.) |
 | **Reinstall** | Erases the server and installs a system from the product's list. The VM number, the MAC address and the IP address stay the same; a new password is set (typed, or generated and shown once). The **SSH public keys** box shows the keys the server has now: up to 10, one per line; change them, or empty the box to install without keys |
 
-A reinstall and a restore ask the customer to type a word first: the
-service's hostname (the **Server hostname** given at order), or `vps-` and
-the service number when there is none. The dialog shows the word to type.
-Rolling back or deleting a snapshot, and deleting a backup, ask for a plain
-confirmation.
+A reinstall, a restore and a snapshot rollback ask the customer to type a
+word first: the service's hostname (the **Server hostname** given at order),
+or `vps-` and the service number when there is none. The dialog shows the
+word to type, and the server refuses the action without it. Deleting a
+snapshot or a backup asks for a plain confirmation.
 
 ![Typed confirmation](../../screenshots/client-vps-confirm.png)
 

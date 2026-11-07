@@ -25,10 +25,14 @@ Servers**.
    host name only: a pasted `https://`, port or path is stripped when you save.
 4. Optional: the server's **IP Address**. When you give one, PNLCS checks on
    save that the hostname resolves to it and warns you if it does not resolve
-   or points somewhere else; calls then go to the IP address.
+   or points somewhere else; calls then go to the IP address. A private IP
+   address beside a hostname that resolves to a public one is taken as a
+   server behind NAT, not a mistake: PNLCS calls the server at the IP
+   address, and customers' links (webmail, phpMyAdmin, file manager) use the
+   hostname, so the hostname has to reach the panel from outside.
 5. **Max Accounts** (default 500, `0` = unlimited) caps how many active and
-   suspended services a server takes when PNLCS picks it from a
-   [server group](#server-groups).
+   suspended services PNLCS puts on a server when it picks one, with or
+   without a [server group](#server-groups).
 6. Optional: the server's **Nameservers**. Customers who
    [set a domain up on their hosting](sell-domains.md#set-up-on-my-hosting)
    are pointed at them.
@@ -47,7 +51,8 @@ cancelled or fraud) cannot be deleted.
     - **API Key:** the `pk_live_...` key, and **API Secret:** the `sk_live_...`
       secret. Create them in the Panelica panel under **Settings → API Keys**;
       the secret is shown only once there.
-    - **Verify the TLS certificate:** off by default, because a panel reached
+    - **Check the panel's TLS certificate (only if it has a trusted one):**
+      off by default, because a panel reached
       by IP address or carrying its own self-signed certificate would stop
       answering the moment it were on. Turn it on once the panel answers on a
       host name with a certificate a browser trusts: every call PNLCS makes to
@@ -67,22 +72,21 @@ cancelled or fraud) cannot be deleted.
 
 === "cPanel / WHM"
     - **Port:** 2087. **Username:** the WHM account, usually `root`.
-    - **API token:** create one under **WHM → Development → Manage API
-      Tokens** and paste it into the field labelled **Access Hash (legacy)**.
-      PNLCS signs in with it as `whm <username>:<token>`. An active server is
-      refused without it: a token in the **API Token** box above it is not
-      enough.
+    - **API Token:** create one under **WHM → Development → Manage API
+      Tokens** and paste it into the **API Token** field. PNLCS signs in with
+      it as `whm <username>:<token>`. The **Password** is not needed. An
+      active server is refused without the token.
 
 === "Plesk"
     - **Port:** 8443. **Username:** the Plesk administrator, usually `admin`.
-    - **API key:** paste a Plesk API key into the **Access Hash** field,
-      although the form says Plesk does not use it. An active server is
-      refused without it; the password alone is not accepted.
+    - **API Key:** paste a Plesk API key (secret key) into the **API Key**
+      field. An active server is refused without it; the **Admin Password**
+      alone is not accepted.
 
 === "DirectAdmin"
     - **Port:** 2222. **Username:** the admin account.
-    - **Password / Login Key:** its password or a login key. A login key in
-      **Access Hash** is used instead of the password when both are set.
+    - **Password / Login Key:** its password or a login key. A **Login Key**
+      is used instead of the password when both are set.
 
 === "aaPanel"
     - **Port:** the panel's HTTPS port (the form suggests 8888; recent
@@ -112,13 +116,16 @@ cancelled or fraud) cannot be deleted.
     - Node, resource pool, VM id range, IPv4 addresses, backup storage and
       cloud-init snippet are set on the same form. The **Images** button next
       to the server installs official cloud images and container templates on
-      it, which the product form then offers. See
+      it, which the product form then offers. The **Capacity** button shows
+      what each node has and what the guests on it have been given (see
+      [Running VPS](proxmox/running-vps.md#capacity)). See
       [Sell VPS on Proxmox VE](sell-vps-on-proxmox.md).
 
 === "Vultr"
-    - Your Vultr API key in **API Key**. Enter `api.vultr.com` as the
-      hostname and 443 as the port: the module always talks to Vultr's API,
-      but **Test** first checks that the hostname answers on that port.
+    - Your Vultr API key in **API Key**. The hostname is required by the
+      form; enter `api.vultr.com` (port 443). The module always talks to
+      Vultr's API, and **Test** only asks the API with your key, whatever
+      host and port the record has.
       See [Vultr cloud servers](../modules/vultr.md).
 
 !!! tip "Always test the connection"
@@ -146,7 +153,9 @@ A server does nothing until a product uses it. On the product
 (**Setup → Products/Services**), set its **Server Module**, optionally a
 **Server group**, and choose when accounts are created (**Auto Setup**). A
 product never names a single server: with *Any server of that type*, PNLCS
-uses the first active server with that module, without checking Max Accounts.
+uses the oldest active server with that module that is still under its Max
+Accounts. When all of them are full, provisioning fails and lands in the
+module queue, as with a full group.
 Each service then stays on the server it was created on. See
 [Your First Sale](../getting-started/your-first-sale.md).
 

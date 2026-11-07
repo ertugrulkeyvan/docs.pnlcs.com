@@ -15,7 +15,7 @@ messages and ticket replies all go out by email.
 
 ## Set up sending
 
-**Setup → General Settings → Mail Configuration**
+**Setup → General Settings → Notifications → Mail Configuration**
 
 | Field | What to enter |
 |---|---|

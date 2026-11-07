@@ -41,8 +41,9 @@ roles from the admin area.
 
 Someone who is not a full administrator can only create or edit a role, or
 give a role to an account, when every permission in it is one they hold
-themselves, and never **Full administrator**. They also cannot edit an account
-(its password included) whose role they could not have granted. Otherwise
+themselves, and never **Full administrator**. They also cannot edit or
+delete an account (its password included) whose role they could not have
+granted, or delete such a role. Otherwise
 PNLCS answers "That role carries rights you do not hold yourself."
 
 ### The dashboard follows the role
@@ -61,7 +62,12 @@ the to-do list are shown to everyone.
 1. Enter their first and last name, email and username, and choose a password
    (at least 6 characters).
 2. Assign a **role**.
-3. Save, and give them the username and password yourself: PNLCS does not email
+3. Optionally tick the **Support departments** they handle and **Email new
+   tickets in these departments**: they then get an email for each new
+   ticket a client opens in one of those departments. The company email is
+   told about every new ticket as before. See
+   [Staff alerts](support.md#staff-alerts).
+4. Save, and give them the username and password yourself: PNLCS does not email
    them. They sign in at `https://example.com/admin/login` and can change the
    password under **My Account**.
 
@@ -84,7 +90,8 @@ delete your own account.
 - Give each person the **least access** their job needs.
 - Ask everyone to turn on **two-factor authentication** under **My Account**.
   PNLCS then shows 8 backup codes once; each works one time in place of the
-  app's code, so they belong in a password manager.
+  app's code, so they belong in a password manager. After five wrong codes
+  the account has to wait 15 minutes before trying again.
 - Review roles now and then, and delete accounts as soon as people leave.
 
 Staff actions are recorded in the **Activity Log** (**Utilities → Activity

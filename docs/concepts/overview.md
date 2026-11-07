@@ -92,7 +92,7 @@ Mollie, Razorpay, Tpay, iyzico, or bank transfer. See [Payment Gateways](../guid
 ### Registrar
 
 A **registrar module** registers and renews **domains**: Namecheap,
-ResellerClub, OpenProvider, Enom, HRD, DomainNameAPI, or Manual if you
+ResellerClub, OpenProvider, Enom, HRD, OVH, DomainNameAPI, or Manual if you
 register names yourself. See [Sell Domains](../guides/sell-domains.md).
 
 ## Admin vs Client — two sides

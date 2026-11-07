@@ -58,9 +58,9 @@ document root at `pnlcs/public` — nothing above it should be web-served.
 ### Invoices/emails never send, but nothing errors
 
 Four causes, in order of likelihood:
-1. **Mail is not configured.** Until a **Mail Type** (PHP Mail or SMTP) is
-   saved under **Setup → General Settings → Mail Configuration**, `.env`
-   decides, and `.env.example` ships `MAIL_MAILER=log`: nothing leaves the
+1. **Mail is not configured.** While **Mail Type** under **Setup → General
+   Settings → Notifications → Mail Configuration** is *Server default (.env)*,
+   `.env` decides, and `.env.example` ships `MAIL_MAILER=log`: nothing leaves the
    server. The card then says *Nothing is delivered - messages are written to
    the log file.*
 2. **The cron line is missing.** With `QUEUE_CONNECTION=database`, queued mail
@@ -140,8 +140,9 @@ from your profile, or reinstall without seeding by hand.
 
 Customers get no invoices, welcome emails or ticket replies.
 
-1. **Is sending configured?** **Setup → General Settings → Mail
-   Configuration**. Until a **Mail Type** is saved, `.env` decides, and a
+1. **Is sending configured?** **Setup → General Settings → Notifications →
+   Mail Configuration**. While **Mail Type** is *Server default (.env)*,
+   `.env` decides, and a
    fresh `.env` writes mail to the log instead of sending it
    ([Configure Email](../guides/configure-email.md)).
 2. **Is sending switched on?** With **Enable Email Sending** off, the log
@@ -163,8 +164,9 @@ An invoice is paid, but no hosting account was created: the service stays
 1. **Does the product have a server module, and is there a server for it?**
    A product with **Server Module** set to none never provisions. With no
    **Server group** on the product, the first active server of that module's
-   type is used; with a group, only an active server in that group, and a full
-   or empty group makes provisioning fail.
+   type that is below its **Max Accounts** is used; with a group, only an
+   active server in that group. When every server is full, or the group is
+   empty, provisioning fails.
 2. **What is its Auto Setup?** With *Only when an admin accepts the order*,
    you accept each order yourself (**Orders → Pending**). With *As soon as the
    first payment is received*, paying starts it.

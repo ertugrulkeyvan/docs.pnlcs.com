@@ -279,11 +279,15 @@ A module can offer more than its interface requires:
 | `emailMergeFields(Service)` (servers), `name => value` | add `{name}` fields to the service's emails; the built-in fields win a clash |
 | `accountOnServer(Service): ?bool` (servers) | ask staff what happens to the account before they close a service record (mark it Terminated or Cancelled, or delete it) while the account is still on the server: `true` it is there, `false` it is gone, `null` the module cannot tell. Without it, an active or suspended service is taken to have its account ([guide](../guides/connect-a-server.md#ending-a-service)) |
 | `domainHostedOn(Server, string $domain): ?bool` (servers) | refuse an order, while the customer orders, for a domain that is already set up on the servers the order would go to; `null` (could not ask) lets the order through |
+| `packageChangeProblems(Service, Product): array` (servers), returning `problems` and `warnings` (lists of sentences) | refuse a move to that package on the customer's **Upgrade / Downgrade** page and through the API while `problems` is not empty, and show `warnings` there; a module that throws stops nobody |
 | `needsServerRecord(): bool` (servers), returning `false` | for a module that sells through an account kept elsewhere: it is not offered on **Setup → Servers**, and the product form asks `listPackages(null)` for its plans (an exception's message is shown as the reason when it cannot list them) |
 | `App\Contracts\ChecksAvailabilityInBulk` (registrars: `checkAvailabilityBulk`) | ask about the searched name and its suggested endings in one call; names the registry did not answer for fall back to WHOIS |
 | `App\Contracts\ManagesChildNameservers` (registrars: `getChildNameservers`, `saveChildNameserver`, `deleteChildNameserver`) | show the glue record (child nameserver) form on the domain page |
 | `App\Contracts\ManagesDomainContacts` (registrars: `getContact`, `saveContact`) | show the WHOIS contact form on the domain page |
 | `App\Contracts\ManagesWhoisPrivacy` (registrars: `setPrivacy`) | let the customer and staff switch WHOIS privacy on and off; without it the setting is shown but cannot be changed |
+| `testConnection()` (registrars), returning `success` and `message` | show a **Test** button for the registrar on **Setup → Domain Registrars** |
+| `syncPrices()` (registrars), returning `success` and the counts `updated`, `unchanged`, `skipped` | show **Sync prices**, which overwrites the prices of the extensions whose auto registrar is this one |
+| `importTlds()` (registrars), returning `success` and the counts `added`, `skipped` | show **Add TLDs**, which adds every extension the registrar offers to the price list and leaves existing ones alone |
 | `App\Contracts\RestorableRegistrar` (registrars: `restore`) | restore a domain out of redemption once the restore invoice is paid; without it staff get a to-do to do it by hand |
 
 `customFunctions()` and `clientFunctions()` are given the service, so a module
@@ -360,7 +364,7 @@ taken by a third-party manifest.
 |---|---|
 | Gateways | `banktransfer`, `stripe`, `paypal`, `authorize` (Authorize.Net), `mollie`, `razorpay`, `tpay`, `iyzico` |
 | Servers | `custom`, `panelica`, `cpanel`, `plesk`, `directadmin`, `proxmox`, `hestiacp`, `aapanel`, `vultr`, `panelicalicense` |
-| Registrars | `namecheap`, `resellerclub`, `openprovider`, `enom`, `manual`, `hrd`, `domainnameapi` |
+| Registrars | `namecheap`, `resellerclub`, `openprovider`, `enom`, `manual`, `hrd`, `ovh`, `domainnameapi` |
 | SSL | `gogetssl` |
 | Addons | Company Lookup, KSeF, Project Management, Staff Board (`modules/Addons/`) |
 | Reports | 27 reports in `modules/Reports/` |

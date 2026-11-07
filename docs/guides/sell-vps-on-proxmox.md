@@ -57,7 +57,8 @@ suspending, upgrading, traffic) and
 - **A storage for disks** (`local-lvm`, ZFS, Ceph…) and **a network bridge**
   the servers go on (usually `vmbr0`).
 - **A way to give addresses**: DHCP on the bridge, or a range of public IPv4
-  addresses PNLCS hands out one per server.
+  addresses PNLCS hands out one per server, plus any additional addresses
+  the product sells.
 - **The PNLCS scheduler** running every minute
   ([cron runner](../install/native.md#13-schedule-the-cron-runner)): it
   finishes long jobs such as reinstalls and image downloads.

@@ -70,7 +70,7 @@ Credentials and options stay on each type's own page:
 |---|---|
 | Servers | Panelica, Panelica Licenses (sells Panelica panel licenses, [guide](sell-panelica-licenses.md)), cPanel/WHM, Plesk, DirectAdmin, HestiaCP, aaPanel ([guide](../modules/aapanel.md)), Proxmox VE, Vultr, Custom |
 | Payment gateways | Stripe, PayPal, Authorize.Net, Mollie, Razorpay, Tpay, iyzico, Bank Transfer |
-| Registrars | Namecheap, ResellerClub, OpenProvider, Enom, HRD, DomainNameAPI, Manual |
+| Registrars | Namecheap, ResellerClub, OpenProvider, Enom, HRD, DomainNameAPI, OVH, Manual |
 | SSL | GoGetSSL |
 | Addons | Company Lookup (PL): fills in a Polish company's details from its NIP; KSeF (e-Invoices): sends paid invoices to Poland's national e-invoicing system; Project Management: projects, tasks and time for client services; Staff Board: an internal message board for staff |
 | Reports | 27 reports on the **Reports** page: income, invoices, clients, services, domains, SSL, tickets, affiliates, promotions and tax |

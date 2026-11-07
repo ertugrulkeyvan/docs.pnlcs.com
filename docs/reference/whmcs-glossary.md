@@ -41,10 +41,10 @@ what PNLCS does not have. For moving your data, see
 
 | WHMCS | PNLCS |
 |---|---|
-| Clients → View/Search Clients, Add New Client, Products/Services, Domains | **Clients** menu, same entries, plus **Billing identity** and **SSL Certificates** |
+| Clients → View/Search Clients, Add New Client, Products/Services, Domains | **Clients** menu, same entries, plus **Billing identity**, **Mass Email** and **SSL Certificates** |
 | Clients → Manage Affiliates | **Billing → Affiliates** ([Affiliates](../guides/affiliates.md)) |
 | Clients → Cancellation Requests | No list in the admin area. Requests are carried out by the daily run ([Scheduled commands](scheduled-commands.md)); the API's `getcancelledpackages` lists them |
-| Clients → Mass Mail Tool | **Mass Email**, a page with no menu entry: open `/admin/bulk/mass-email`. Picks clients by product, server, group, status or domain extension |
+| Clients → Mass Mail Tool | **Clients → Mass Email**. Picks clients by product, server, group, status or domain extension |
 | Orders → List All Orders, Pending, Active, Fraud, Cancelled | **Orders** menu, same entries |
 | Orders → Add New Order | **Add New → New Order** |
 | Billing → Invoices, Transactions List, Billable Items, Quotes | **Billing** menu: **Invoices**, **Transactions**, **Billable Items**, **Quotes** |
@@ -72,21 +72,21 @@ what PNLCS does not have. For moving your data, see
 
 | WHMCS | PNLCS |
 |---|---|
-| General Settings | **Setup → General Settings**, one page of cards ([General Settings](general-settings.md)) |
-| Automation Settings | The **Automation**, **Automatic Payment** and **Late Fees** cards on **General Settings**. Run times are fixed ([Scheduled commands](scheduled-commands.md)) |
-| Fraud Protection | **General Settings → Fraud Screening** (MaxMind, FraudLabs Pro; [guide](../guides/fraud-screening.md)) |
-| Sign-In Integrations | **General Settings → Social Login** (Google, GitHub) |
+| General Settings | **Setup → General Settings**, cards under tabs ([General Settings](general-settings.md)) |
+| Automation Settings | On **General Settings**: the **Automation** card (**Automation** tab), and the **Automatic Payment**, **Invoices** and **Late Fees** cards (**Invoicing** tab). Run times are fixed ([Scheduled commands](scheduled-commands.md)) |
+| Fraud Protection | **General Settings → Security → Fraud Screening** (MaxMind, FraudLabs Pro; [guide](../guides/fraud-screening.md)) |
+| Sign-In Integrations | **General Settings → Security → Social Login** (Google, GitHub) |
 | Staff Management → Administrator Users, Administrator Roles | **Setup → Admin Accounts**, **Admin Roles** ([Staff and roles](../guides/staff-and-roles.md)) |
 | Staff Management → Manage API Credentials | **Setup → API Credentials** |
 | Payments → Currencies, Payment Gateways, Promotions | **Setup → Currencies**, **Payment Gateways**, **Promotions** |
 | Payments → Tax Configuration | **Setup → Tax Rules** ([Tax rules](../guides/tax-rules.md)) |
 | Products/Services → Products/Services | **Setup → Products/Services**; product groups from the sidebar |
-| Products/Services → Configurable Options | **Configurable Options**, with no menu entry: reached from a Proxmox product, or at `/admin/config/config-options` ([guide](../guides/promotions-and-addons.md)) |
+| Products/Services → Configurable Options | **Setup → Configurable Options** ([guide](../guides/promotions-and-addons.md)) |
 | Products/Services → Product Addons, Product Bundles | **Setup → Product Addons**, **Product Bundles** |
 | Products/Services → Domain Pricing, Domain Registrars, Servers | **Setup → Domain Pricing**, **Domain Registrars**, **Servers**, **Server Groups** |
 | Support → Support Departments | **Setup → Ticket Departments**, where email import is also set up ([Support mail piping](../guides/support-mail-piping.md)) |
 | Support → Ticket Statuses | **Setup → Ticket Statuses** |
-| Support → Escalation Rules | **Ticket Escalation**, with no menu entry ([details](../guides/support-mail-piping.md#escalation-rules)) |
+| Support → Escalation Rules | **Setup → Ticket Escalation Rules** ([details](../guides/support-mail-piping.md#escalation-rules)) |
 | Support → Spam Control | **Setup → Ticket Spam Filter** |
 | Email Templates | **Setup → Email Templates** |
 | Addon Modules | **Extensions** page in the settings sidebar ([Modules](../guides/modules.md#extensions)) |
@@ -106,7 +106,7 @@ what PNLCS does not have. For moving your data, see
 | `cron.php` | One cron line running `php artisan schedule:run` every minute ([Scheduled commands](scheduled-commands.md)) |
 | Email piping (`pipe.php`) or POP3 import | Mailbox import only: PNLCS reads each department's mailbox over IMAP or POP3 every 5 minutes ([Support mail piping](../guides/support-mail-piping.md)) |
 | `configuration.php` | The `.env` file in the install folder (database, `APP_URL`) |
-| Custom admin folder | None. The admin area is always at `/admin`; the **Admin Login URL Prefix** setting is saved but not used |
+| Custom admin folder | None. The admin area is always at `/admin` |
 | Client area templates (Smarty `.tpl`) | Themes with a `theme.json`, chosen under **Setup → Appearance** ([Themes](../developer/themes.md)) |
 | Provisioning (server), registrar and gateway modules | Server, registrar, gateway and SSL modules: a class implementing PNLCS's interface plus a `pnlcs.json` manifest ([Writing a module](../developer/modules.md)). WHMCS module files do not load in PNLCS |
 | Module functions `CreateAccount`, `SuspendAccount`, `UnsuspendAccount`, `TerminateAccount`, `ChangePassword`, `ChangePackage` | Server module methods `create`, `suspend`, `unsuspend`, `terminate`, `changePassword`, `changePackage` |

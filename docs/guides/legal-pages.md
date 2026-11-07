@@ -42,7 +42,7 @@ before they approve a shop.
 | `/legal/domain` | Domain Registration Agreement |
 
 Four Turkish statutory forms are added when **Setup → General Settings →
-Localization → Country** is Turkey, or when **Publish the Turkish statutory
+Company → Localization → Default Country** is Turkey, or when **Publish the Turkish statutory
 forms** is ticked there (for a seller elsewhere who sells to consumers in
 Turkey): the KVKK notice (`kvkk`), the Distance Sales Agreement
 (`distance-sales`), the Pre-Contractual Information Form (`pre-information`)
@@ -63,13 +63,14 @@ theme or homepage content.
 ## What the documents fill in from your settings
 
 You do not edit company details into the text. The documents read them from
-**Setup → General Settings**, the same fields the invoice PDF uses, so the two
-always agree:
+**Setup → General Settings** (the **Company** tab), the same fields the
+invoice PDF uses, so the two always agree:
 
-- **Company Information**: name, address, city, phone, email, tax ID.
+- **Company Information**: name, address, postcode, city, state / region,
+  phone, email, tax ID.
 - **Legal identity**: **Registered company name** (when the company behind
   the brand has another name, the documents name it "… trading as …"),
-  **Tax office**, **Postcode**, **State / region**, **Trade registry no**,
+  **Tax office**, **Trade registry no**,
   **MERSIS no**, **Abuse contact email** and **Data protection contact
   email** (both fall back to the company email).
 - The currency prices are shown in, the currency invoices are billed in and
@@ -84,14 +85,14 @@ left empty. Fill them in before you launch.
 
 ## Your own terms instead
 
-**Setup → General Settings → Terms and Privacy** has **Terms of Service
+**Setup → General Settings → Company → Terms and Privacy** has **Terms of Service
 address** and **Privacy Policy address**. The sign-up form links its
 agreement box to them; left empty, it names the two documents without a link.
 They are empty on a new installation, so to point sign-up at the built-in
 pages, enter `https://example.com/legal/terms` and
 `https://example.com/legal/privacy` (with your own domain).
 
-!!! note "The checkout box in 1.6.1"
+!!! note "The checkout box"
     The agreement box at checkout does not use these addresses: its two links
     lead nowhere. Customers can still reach the documents from `/legal`.
 
@@ -103,7 +104,7 @@ changed.
 
 ## Versions and what is recorded
 
-The effective date belongs to the PNLCS release: **30 August 2026** in 1.6.1.
+The effective date belongs to the PNLCS release: **30 August 2026** (unchanged since 1.6.1).
 It changes when an update changes the documents, not when you change one in a
 theme.
 
@@ -132,12 +133,11 @@ When you send a mass email, tick **This is a marketing message**: it then goes
 only to customers who agreed, each with an **Unsubscribe** link that works
 without signing in. Leave it unticked for service notices, which go to
 everyone you selected. Invoices, renewal and support emails never depend on
-consent. In 1.6.1 the **Mass Email & Bulk Actions** page has no menu entry; it
-is at `/admin/bulk/mass-email`.
+consent. The page is **Clients → Mass Email** (`/admin/bulk/mass-email`).
 
 ## Cookie consent
 
-**Setup → General Settings → Tracking and cookie consent**: once you enter a
+**Setup → General Settings → SEO & tracking → Tracking and cookie consent**: once you enter a
 **Google Tag Manager container**, and while **Ask visitors before ads and
 analytics cookies (recommended)** is ticked (the default), visitors see a
 cookie banner and Google's tags run with storage denied until they accept.

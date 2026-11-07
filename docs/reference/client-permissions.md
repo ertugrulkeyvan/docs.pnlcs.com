@@ -34,14 +34,14 @@ The label is what the owner sees on the client area's **Users** page.
 
 | Key | Label | Opens |
 |---|---|---|
-| `profile` | Profile | **My Profile**: the account's name, address and billing details, and saving them |
+| `profile` | Profile | **My Profile**: the account's address and billing details, and saving them. The name and email address at the top are the login's own; saving them changes the account's name and address only when the owner saves |
 | `contacts` | Contacts | **Contacts**: listing, adding, editing and deleting the account's contacts |
 | `products` | View services | The service list and a service's page; usage figures; a VPS's status, graphs and its lists of snapshots and backups; the SSL certificate list and a certificate's page |
 | `manageproducts` | Manage services | Every other service page: the module's buttons; VPS power, password, reinstall, and taking or restoring snapshots and backups; cancellation and upgrade requests, configurable option upgrades; auto-renew, renewing and changing the billing cycle; adding and cancelling addons; the hosting tools (email accounts, FTP, subdomains, cron jobs, DNS, backups, databases, the file manager, Laravel, Node.js and Python apps, Docker containers). For SSL: configuring a certificate, approver emails, downloading it and resending validation |
 | `productsso` | Open control panels | A service's **Login to Control Panel** button (one-click sign-in to the hosting panel), and the links that go through it: downloading a hosting backup and opening a container's terminal |
 | `domains` | View domains | The domain list and a domain's page |
 | `managedomains` | Manage domains | Every other domain page: transfer in, renewing (one or several), nameservers, linking hosting, lock, auto-renew, ID protection, domain contacts, glue records, restore, the EPP code, offering a domain to another account; and accepting, declining or withdrawing such an offer |
-| `invoices` | Invoices and payments | Invoices (list, page, PDF), paying several at once, paying with credit, telling you about a bank payment; stored payment methods and cards, the default card and automatic charging; adding funds to the account |
+| `invoices` | Invoices and payments | Invoices (list, page, PDF), paying several at once, paying with credit, paying an invoice with a card already stored, telling you about a bank payment; stored payment methods and cards, the default card and automatic charging; adding funds to the account |
 | `quotes` | Quotes | Quotes: list, page, accepting and declining |
 | `tickets` | Support tickets | Support tickets: list, opening one, replying, closing, rating, and attachments |
 | `affiliates` | Affiliates | The affiliate programme: joining, the referral code, withdrawals and moving commission to account credit |

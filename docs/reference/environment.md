@@ -13,7 +13,7 @@ sources:
 
 Every variable PNLCS reads from `.env`: each `env()` call in `config/`,
 together with what `.env.example` ships. That is 124 variables read in
-`config/` and 4 more that only `.env.example` names.
+`config/` and 3 more that only `.env.example` names.
 
 Most settings live in the admin area, not here. `.env` holds what PNLCS needs
 before it can reach its database, plus the framework's drivers.
@@ -169,11 +169,12 @@ Used only when a session, cache or queue setting above names `redis`.
 
 ## Mail
 
-Once a mail type is saved under **Setup → General Settings** (SMTP or PHP
-mail), the panel's settings replace `MAIL_MAILER` and the SMTP values here,
-and the panel's sender address and name replace `MAIL_FROM_*`. Until then
+When **Mail Type** under **Setup → General Settings** is **SMTP** or
+**PHP Mail**, the panel's settings replace `MAIL_MAILER` and the SMTP values
+here. While it is **Server default (.env)** (what a fresh install has),
 `.env` decides, and `.env.example` ships `MAIL_MAILER=log`: mail is written to
-the log, not sent. See [Configure email](../guides/configure-email.md).
+the log, not sent. A sender address and name filled in on the panel replace
+`MAIL_FROM_*` either way. See [Configure email](../guides/configure-email.md).
 
 | Variable | Default | .env.example | What it does |
 |---|---|---|---|
@@ -182,14 +183,13 @@ the log, not sent. See [Configure email](../guides/configure-email.md).
 | `MAIL_PORT` | `2525` | `587` | SMTP port |
 | `MAIL_USERNAME` | — | `null` | SMTP user |
 | `MAIL_PASSWORD` | — | `null` | SMTP password |
-| `MAIL_SCHEME` | — | `null` | `smtps` for TLS from the first byte (port 465); empty for SMTP with STARTTLS |
+| `MAIL_SCHEME` | — | `null` | `smtps` for TLS from the first byte (port 465); empty for SMTP with STARTTLS (port 587). There is no `MAIL_ENCRYPTION` |
 | `MAIL_URL` | — | — | The whole SMTP connection as one URL |
 | `MAIL_EHLO_DOMAIN` | the host of `APP_URL` | — | The name PNLCS gives itself to the SMTP server |
 | `MAIL_SENDMAIL_PATH` | `/usr/sbin/sendmail -bs -i` | — | The sendmail command, for `MAIL_MAILER=sendmail` (also what **PHP mail** in the panel uses) |
 | `MAIL_LOG_CHANNEL` | — | — | Log channel the `log` mailer writes to |
 | `MAIL_FROM_ADDRESS` | `hello@example.com` | `noreply@your-domain.com` | Sender address |
 | `MAIL_FROM_NAME` | `APP_NAME` | `${APP_NAME}` | Sender name |
-| `MAIL_ENCRYPTION` | — | `tls` | Not read: `config/mail.php` has no setting for it. Use `MAIL_SCHEME` |
 | `POSTMARK_API_KEY` | — | — | API key for `MAIL_MAILER=postmark` |
 | `RESEND_API_KEY` | — | — | API key for `MAIL_MAILER=resend` |
 

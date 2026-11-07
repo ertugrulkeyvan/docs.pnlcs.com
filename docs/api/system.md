@@ -1396,6 +1396,7 @@ Validate client login credentials.
 | Status | When |
 |---|---|
 | 401 | The address and password do not match a client login. |
+| 429 | More than 10 attempts in a minute for this email from this IP address. A correct password does not reset the count. |
 
 **Example**
 

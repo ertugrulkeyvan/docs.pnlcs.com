@@ -51,15 +51,17 @@ Press **Add Promo Code** and fill in:
 | **New customers only** | Only for customers who have never ordered. |
 | **Existing customers only** | Only for customers who have ordered before. |
 | **Max Uses** | How many times the code can be claimed in total. `0` = unlimited. |
+| **Start Date** | Optional. The code does not work before this day. |
 | **Expiry Date** | Optional. The code still works on its expiry date and stops the day after. |
-
-The Add form has no **Recurring** box: to make a code apply to renewals too,
-create it, then press **Edit** on it (see below).
+| **Applies to renewals as well** | See [First payment or renewals too](#first-payment-or-renewals-too). |
+| **Billing cycles discounted** | With renewals ticked: on how many invoices per service the code is taken off, the order's own invoice included. `0` = no limit. |
+| **Billing periods** | Tick periods (Monthly, Annually and so on) to limit the code to them. A product ordered on another period is charged in full, and a code whose basket has no line on a ticked period is refused. None ticked: every period. |
 
 ### Edit a code
 
 **Edit** opens a shorter form: **Code**, **Type**, **Value**, **Max Uses**,
-**Expires** and **Applies to renewals as well**. The product lists and the
+**Start Date**, **Expires**, **Applies to renewals as well**, **Billing
+cycles discounted** and **Billing periods**. The product lists and the
 customer rules can't be changed after creation. To change them, delete the
 code and create it again.
 
@@ -74,10 +76,11 @@ on.
 
 With **Applies to renewals as well** ticked, PNLCS takes the same discount
 off every renewal invoice of the services bought with that order, for as
-long as the code exists. Renewals don't count as uses, and the code's
-expiry date and **Max Uses** don't stop them: they only limit new orders. If
-the code is limited to certain products, renewals of other products are not
-discounted. Deleting the code ends the renewal discount.
+long as the code exists, or until **Billing cycles discounted** is reached.
+Renewals don't count as uses, and the code's expiry date and **Max Uses**
+don't stop them: they only limit new orders. If the code is limited to
+certain products or billing periods, renewals of other products or periods
+are not discounted. Deleting the code ends the renewal discount.
 
 ### How customers use a code
 
@@ -106,22 +109,13 @@ In the cart and on the invoice, things happen in this order:
 3. The promo code. A percentage is taken off what's left, or only off the
    covered lines if the code is limited to certain products. A fixed amount
    never takes more than those lines are worth.
-4. Tax, on what is left of the taxable part.
+4. Tax, on what is left of the taxable part. With
+   [prices that include tax](tax-rules.md), the code comes off the price the
+   customer was shown.
 
 On the invoice the code appears as its own line, **Promo code CODE**, with a
-negative amount. The invoice notes also record `Promo applied: CODE`, and
+negative amount: one line per VAT rate of the lines it covers. The invoice notes also record `Promo applied: CODE`, and
 the code is saved on the order (**Promo Code** on the order page).
-
-!!! warning "Known problems in 1.6.1"
-    Test a code with a real order before you announce it. In PNLCS 1.6.1:
-
-    - A **Fixed Amount** code shows its discount in the cart, but the discount
-      isn't added to the order's invoice. Only **Percentage** codes reach the
-      invoice.
-    - Codes with **Once per customer** or **New customers only** pass in the
-      cart but are dropped when the order is placed, because the new order
-      already counts as the customer's order. The invoice then carries no
-      discount.
 
 ### Promotions report
 
@@ -153,11 +147,9 @@ Press **Add Addon**:
 
 The edit form adds **Retired**: like hidden, for an addon you no longer sell.
 
-!!! note "A zero price means free"
-    The hint under **Pricing** says that a cycle left at zero is not
-    offered. That isn't what happens: at zero, the addon is offered **for
-    free** on that cycle. If you don't want it on a cycle, use a product with
-    the matching cycles, or hide the addon.
+!!! note "Zero is free, -1 is not offered"
+    A cycle at `0` sells the addon **for free** on that cycle. Enter `-1` to
+    not offer the addon on that cycle.
 
 ### How addons are sold and billed
 
@@ -183,9 +175,8 @@ Configurable options are choices made while ordering a product that change
 its price, for example memory size or number of IPs. Unlike an addon, an
 option belongs to the service itself.
 
-The **Configurable Options** page has no menu entry. Open
-`https://example.com/admin/config/config-options`, or press **Change prices
-and choices** on a Proxmox product (needs **manage products**).
+**Setup → Configurable Options**, or press **Change prices and choices** on a
+Proxmox product (needs **manage products**).
 
 1. **Add Group**: a group, for example *RAM Options*, with an optional
    description.
@@ -208,7 +199,6 @@ with a **Discount Type** (percentage or fixed amount), a **Discount Value**
 and an **Active** switch.
 
 !!! warning "Bundles don't do anything yet"
-    In PNLCS 1.6.1 nothing in the cart or the invoices reads bundles: a
+    Nothing in the cart or the invoices reads bundles yet: a
     customer who orders the products of a bundle pays full price. For a
-    discount on a set of products, use a promo code with **Requires all of**
-    (but read the [known problems](#how-the-discount-is-calculated) first).
+    discount on a set of products, use a promo code with **Requires all of**.

@@ -34,11 +34,14 @@ gateway, fill in its keys, save and enable it.
 | **Razorpay** | Key ID, Key Secret, Webhook Secret, Test Mode | `/gateway/razorpay/webhook` |
 | **Tpay** (Poland) | Open API Client ID, Open API Client Secret, Security Code, Sandbox Mode | `/gateway/tpay/webhook` |
 | **iyzico** (Turkey) | API key, Secret key, Sandbox, Instalments offered, Payment group, Let the customer store their card | none: the result comes back with the customer from iyzico's page |
-| **Bank Transfer** | Account holder, up to three banks (shown to customers or not, bank name, IBAN or account number, sort code / routing, SWIFT/BIC), an additional note | none: you confirm payments by hand |
+| **Bank Transfer** | Account holder, up to three banks (shown to customers or not, bank name, currency, IBAN or account number, sort code / routing, SWIFT/BIC), an additional note | none: you confirm payments by hand |
 
 A gateway is offered at checkout only once every required field has a value
 and it is enabled. An enabled gateway that is missing one says **Not offered**
 on its card, and the card names the fields to fill in.
+
+An order of free products only, with nothing to pay, does not ask for a
+payment method: checkout says "This order is free: there is nothing to pay."
 
 ## Webhooks
 
@@ -115,8 +118,8 @@ the invoice's.
    checkout.
 2. The customer is asked to write the invoice's **payment reference** on the
    transfer: a short code such as `INV34` (the prefix and the invoice's
-   number). Change the prefix under **Setup → General Settings → Billing
-   currency → Payment reference prefix** (default `INV`, up to 8 characters).
+   number). Change the prefix under **Setup → General Settings → Invoicing →
+   Billing currency → Payment reference prefix** (default `INV`, up to 8 characters).
 3. After paying, a customer can send a **payment notification** from the
    invoice, with a receipt if they like. The invoice shows **Payment Pending**
    until you decide.
@@ -135,7 +138,7 @@ charge it for renewals. Card numbers never pass through PNLCS: the customer
 enters them on the gateway's own form.
 
 Nothing is charged until you switch it on under **Setup → General Settings →
-Automatic Payment**:
+Invoicing → Automatic Payment**:
 
 | Setting | Default |
 |---|---|
@@ -163,11 +166,17 @@ asks the cardholder to confirm, the invoice page offers that step. Add Funds
 invoices and payments for several invoices are paid with the form, not a
 stored card.
 
+Staff who use **Login as Client** see the customer's cards but cannot add
+one, switch automatic payment on or off, or pay with a stored card for the
+customer: those are the cardholder's own decisions. To charge a stored card
+yourself, use **Charge card now** on the invoice in the admin area, which
+keeps to the customer's choice about automatic payment.
+
 ## Gateway Logs
 
 **Utilities → System Logs → Gateway Logs** lists what a gateway recorded,
-filterable by gateway and date, kept for 90 days by default. In PNLCS 1.6.1
-only **Tpay** (transactions, refunds, refused webhooks) and **iyzico** write
+filterable by gateway and date, kept for 90 days by default. Only
+**Tpay** (transactions, refunds, refused webhooks) and **iyzico** write
 there; the other gateways write to the application log file instead.
 
 ## Refunds

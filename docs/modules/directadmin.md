@@ -31,21 +31,15 @@ The module never creates packages, opens ports or changes DirectAdmin settings.
 
 1. In **Setup → Servers**, add a server of type **DirectAdmin**. Port: 2222.
 2. **Username**: the admin or reseller account.
-3. Either the account's password in the **Password / Login Key** field, or a login key in the **Access Hash** field. The module signs in with HTTP Basic authentication: the username, and the Access Hash when it is filled in, otherwise the password. Credentials are stored encrypted. A server saved as active needs one of the two; without either it is refused with "A DIRECTADMIN server needs either an API key or a password before it can be used."
+3. Either the account's password in the **Password** field, or a login key in the **Login Key** field. The module signs in with HTTP Basic authentication: the username, and the login key when it is filled in, otherwise the password. Credentials are stored encrypted. A server saved as active needs one of the two; without either it is refused with "A DIRECTADMIN server needs either an API key or a password before it can be used."
 
-    !!! note
-        The form says Access Hash is "Not used by DirectAdmin". It is used: a login key there takes precedence over the password.
-
-4. Save and press **Test**. PNLCS opens a TCP connection to the port, then requests `CMD_API_SHOW_ALL_USERS`.
-
-    !!! warning "A passing test does not prove the credentials"
-        The test passes on any successful HTTP answer. DirectAdmin answers wrong credentials with its login page, which can also be a successful answer, so Test can pass with a bad password. Check that the product form lists the server's packages: that call does detect the login page.
+4. Save and press **Test**. PNLCS opens a TCP connection to the port, then requests `CMD_API_SHOW_ALL_USERS`. The test fails when DirectAdmin answers with its login page, which is how it answers a wrong username, password or login key, with "Reached <host>, but DIRECTADMIN refused the credentials. Check the API key."
 
 ## Product settings
 
 On the product, set **Server Module** to DirectAdmin. The **Plan on the server** list is read from the first active DirectAdmin server with `CMD_API_PACKAGES_USER`, sorted by name. The package name is stored on the product.
 
-Choose a package. A product that has never had a package saved creates accounts on the package named `Default`; with **Use the server default** selected and saved, the module sends an empty package name, which DirectAdmin is likely to refuse.
+Choose a package. With **Use the server default**, accounts are created on the package named `Default`.
 
 In a server group, give the package the same name on every server.
 
@@ -75,7 +69,7 @@ The username and password are saved on the service, and the username in its modu
 
 | Operation | DirectAdmin command | Notes |
 |---|---|---|
-| Test connection | `CMD_API_SHOW_ALL_USERS` | See the warning above |
+| Test connection | `CMD_API_SHOW_ALL_USERS` | Fails on the login page |
 | List packages | `CMD_API_PACKAGES_USER` | For the product form |
 | Create | `CMD_API_ACCOUNT_USER` | See above |
 | Suspend | `CMD_API_SELECT_USERS` with `suspend=Suspend` | |
@@ -105,7 +99,7 @@ The service page shows the server name, the DirectAdmin username, and the server
 
 | Message | Cause |
 |---|---|
-| `No server assigned to this service.` | No active DirectAdmin server, or none with room in the product's server group |
+| `No server assigned to this service.` | No active DirectAdmin server, or none below its **Max Accounts** (in the product's server group, when it has one) |
 | `Failed to create DirectAdmin account: <message>` | DirectAdmin refused, for example a username or domain already in use or an unknown package |
 | `DirectAdmin authentication failed (login page returned)` | DirectAdmin answered with its login page: wrong username, password or login key, or a login key without the command |
 | `Missing server or DirectAdmin username.` | The service has no stored username |

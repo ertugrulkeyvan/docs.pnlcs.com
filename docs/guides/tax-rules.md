@@ -11,7 +11,23 @@ sources:
 # Tax Rules
 
 If you charge VAT, GST or sales tax, set the rates under **Setup → Tax
-Rules**.
+Rules** (the page is headed **Tax Configuration**).
+
+## Charge tax, and prices that include it
+
+Two switches sit at the top of the page. **Save Changes** under them saves
+both.
+
+- **Charge tax** (on by default). Off: no tax is added to any order, invoice
+  or quote, whatever the rules say. The rules are kept, so you can switch it
+  back on later.
+- **Prices include tax** (off by default). Off: tax is added on top of your
+  prices. On: the price a customer sees is what they pay, and the invoice
+  shows the tax contained in it (price × rate / (100 + rate)). Cart, invoice
+  and quote all follow it.
+
+An invoice keeps the way it was taxed when it was issued: changing a switch
+later does not change invoices you already have.
 
 ## Add rates
 
@@ -42,14 +58,16 @@ the first of these groups that exists:
 3. the **All countries** group, if your install has one. Only its default
    rate counts.
 
-No match, no tax. The tax is added on top of the price and shown on the
-invoice as its own line.
+No match, no tax. The tax is shown on the invoice as its own line: added on
+top of the price, or, with **Prices include tax**, the part of the price it
+accounts for.
 
 ## Invoices you build by hand
 
-On a new invoice (**Add New → New Invoice**), each line has its own tax rate.
+On a new invoice (**Add New → New Invoice**), each line has its own tax rule.
 PNLCS offers the rates of the customer's group with the default first; a line
-at 0% or with no rate is untaxed.
+at 0% or with no rate is untaxed. Editing a line later also offers the
+customer's tax rules, not a free percentage.
 
 The items under **Setup → Products/Services → Products/Services** (goods and
 services you bill on invoices) carry their own price, unit and tax: pick one of
@@ -59,17 +77,15 @@ to the tax rule does not change the item until you save it again.
 
 ## Customers who pay no tax
 
-A customer marked **Tax Exempt** gets no tax on the invoices PNLCS raises
-(orders and renewals), whatever the rules say. On an invoice you build by hand,
-the rate you pick on each line is applied even to an exempt customer, so pick
-0% there. The flag is shown on the client's profile (**Clients → the
-client**), but PNLCS 1.6.1 has no field in the admin area or the API to change
-it.
+A customer marked **Tax Exempt** gets no tax, whatever the rules say: not on
+the invoices PNLCS raises (orders and renewals), and not on an invoice you
+build or edit by hand, where a line's rate above 0% is set to 0%. Tick **Tax
+Exempt** on the client's form (**Clients → the client → Edit Client**).
 
 ## Good to know
 
-- Prices are entered **before tax**: the rate is added to them. There is no
-  setting to enter prices with tax already included.
+- Prices are entered **before tax** unless you switch on **Prices include
+  tax** (above).
 - Every hosting product is taxable; there is no per-product switch on the
   product screen.
 

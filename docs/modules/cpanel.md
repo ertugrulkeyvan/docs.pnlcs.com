@@ -31,10 +31,9 @@ The module never creates packages, opens ports or changes WHM settings.
 
 1. In **Setup → Servers**, add a server of type **cPanel/WHM**. Port: 2087.
 2. **Username**: the WHM user, usually `root`. Left empty, `root` is used.
-3. Paste the API token into the field labelled **Access Hash (legacy)**. The module signs every call with the header `Authorization: whm <username>:<token>`. Server credentials are stored encrypted.
+3. Paste the API token into the **API Token** field. The module signs every call with the header `Authorization: whm <username>:<token>`. The **Password** field is not needed. Server credentials are stored encrypted.
 
-    !!! warning "The token goes in Access Hash"
-        The form labels the password field **API Token**, but the module reads the token only from **Access Hash**. A server saved as active without an Access Hash is refused with "A CPANEL server signs in with an API key. Fill in the API key field - the password is not used for this module." When the Access Hash is empty the module falls back to HTTP Basic authentication with the username and the password field; that only applies to a server saved inactive.
+    A server saved as active without an API token is refused with "A CPANEL server signs in with its API Token. Fill in the API Token field - the password is not used for this module." When the API Token is empty the module falls back to HTTP Basic authentication with the username and the password field; that only applies to a server saved inactive.
 
 4. Save and press **Test**. PNLCS first opens a TCP connection to the port, then calls WHM's `version` function. The test passes only when WHM answers with `result = 1`. If the port is open but WHM refuses, you see "Reached <host>, but CPANEL refused the credentials. Check the API key."
 
@@ -105,7 +104,7 @@ The service page shows the server name, the cPanel username, and the server's ho
 
 | Message | Cause |
 |---|---|
-| `No cPanel/WHM server configured.` | No active cPanel server, or none with room in the product's server group |
+| `No cPanel/WHM server configured.` | No active cPanel server, or none below its **Max Accounts** (in the product's server group, when it has one) |
 | `Service is missing client or domain.` | The service has no domain |
 | `cPanel account creation failed: <WHM reason>` | WHM refused `createacct`; its reason follows |
 | `WHM API HTTP error <status>` | WHM answered with an HTTP error, for example 401 or 403 for a wrong or under-privileged token |

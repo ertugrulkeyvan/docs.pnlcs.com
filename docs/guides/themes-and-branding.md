@@ -27,7 +27,9 @@ it; you can switch any time.
 
 - **Upload Theme** installs a theme from a ZIP file (up to 20 MB) that
   contains a `theme.json`. Uploading a theme that is already installed
-  replaces it; a built-in theme cannot be replaced this way.
+  replaces it; a built-in theme cannot be replaced this way. A theme runs
+  its own code on your server, so only a **Full administrator** sees the
+  upload.
 - The download button on a theme's card (**Download ZIP**) downloads it, to
   keep a copy or to start your own theme from it.
 - The bin button deletes an uploaded theme. Built-in themes and the active theme
@@ -40,7 +42,8 @@ it; you can switch any time.
   the admin panel, on the public site and client area, and on invoice PDFs.
 - On the **Color Presets** tab, apply a preset (Starter, Nightforge or
   Lumina) or change individual color tokens; changing a token sets the preset
-  to *Custom*.
+  to *Custom*. A token takes one CSS value: no semicolons, braces, comments
+  or `url()`. A value that is not one is not used on the site.
 
 ## Homepage builder
 
@@ -68,8 +71,8 @@ switch on the welcome page and in the client area. It applies to every theme.
 
 ## About page and knowledge base
 
-Two related switches are in **Setup → General Settings**, in the **Legal
-identity** card:
+Two related switches are in **Setup → General Settings → Company**, in the
+**Legal identity** card:
 
 - **About us**: the text of the public About page (plain text, paragraphs
   separated by a blank line).

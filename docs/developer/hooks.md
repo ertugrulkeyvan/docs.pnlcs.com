@@ -34,8 +34,7 @@ case-insensitive.
       WHMCS arrays of ids and fields.
     - Only the points listed on this page fire. There is no `InvoiceRefunded` (use `RefundIssued`),
       `AcceptQuote` (use `QuoteAccepted`), `TicketUserReply` or `TicketAdminReply` (use
-      `TicketReplied` and its `isStaffReply`), and no `AfterModuleChangePassword` (PNLCS fires
-      `AfterModulePassword`).
+      `TicketReplied` and its `isStaffReply`).
 
 ## Registering a hook
 
@@ -108,7 +107,7 @@ properties are the parameters, and every name in the first column fires.
 | `AfterModuleUnsuspend` | service | unsuspend succeeded |
 | `PreModuleTerminate` | service | before terminate |
 | `AfterModuleTerminate` | service | terminate succeeded |
-| `AfterModulePassword` (also `AfterModuleChangePassword`) | service | password change succeeded, VPS root password included |
+| `AfterModulePassword` / `AfterModuleChangePassword` | service | password change succeeded, VPS root password included |
 | `AfterModuleChangePackage` | service, newProduct | package change succeeded |
 | `ModuleActionFailed` | service, action, error | a module action failed and was queued for retry (the Panelica License module also fires it with action `license`) |
 

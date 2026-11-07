@@ -47,10 +47,11 @@ customers to another currency on their profiles first.
 
 ## The default currency
 
-**Make default** on a currency's row makes it the books currency. It changes
-nothing else: prices are not converted and rates are not recalculated. Press
-**Update rates now** straight afterwards, so every rate is against the new
-default.
+**Make default** on a currency's row makes it the books currency. Every
+other currency's rate is restated against the new default (divided by its
+old rate), and the stored TCMB bulletin details are cleared until the next
+rate update takes the bulletin again. Prices are not converted. Pressing
+**Update rates now** afterwards replaces the restated rates with fresh ones.
 
 !!! warning "Choose the default currency before you sell"
     Each invoice remembers the currency its amounts were in, so old invoices
@@ -95,7 +96,7 @@ The command is `pnlcs:currency-update` ([Scheduled Commands](../reference/schedu
 
 For a shop whose default currency is USD and that has TRY, the lira rate can
 come from the Central Bank of the Republic of Turkey instead, so customers can
-check it. Under **Setup → General Settings → Billing currency**:
+check it. Under **Setup → General Settings → Invoicing → Billing currency**:
 
 - **Official rate source**: *None (commercial rate)* (the default) or
   *TCMB (Central Bank of Turkey)*.
@@ -106,18 +107,25 @@ publishes on business days, so on a weekend it is Friday's) and remembers its
 date and bulletin number for the invoice note. If TCMB cannot be reached, the
 commercial rate stays for that day. Other base currencies are not affected.
 
+Other official sources (a central bank's own feed, for example) can be added
+next to TCMB as **Official rate providers (JSON)** on the same card; see
+[Official Exchange Rates](official-exchange-rates.md).
+
 ## Which currency an invoice is billed in
 
 Amounts on an invoice are always in the default currency. An invoice can also
 carry a **billing currency**: the currency the customer pays in, with the rate
 fixed on the day the invoice was created. Reprinting it later shows the same
-figure.
+figure. The one exception is an unpaid **Add Funds** invoice with nothing paid
+on it: it takes the day's rate again when the customer opens it or starts a
+payment, so old balance cannot be bought at an old rate.
 
 PNLCS picks the billing currency in this order:
 
 1. **The customer's own currency**, when **Let customers choose their
    currency** is on and their account has a currency other than the default.
-2. **Bill customers in** (**Setup → General Settings → Billing currency**),
+2. **Bill customers in** (**Setup → General Settings → Invoicing → Billing
+   currency**),
    when it is set to a currency other than the default. The default choice is
    *Shop currency only*.
 3. Otherwise none: the invoice is in the default currency only.

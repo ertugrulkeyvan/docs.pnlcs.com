@@ -229,7 +229,9 @@ advertise apps or pay for the lookup.
 - **Install** on the card itself; the install box opens right underneath it,
   and the button says *Installing…* while images download
 - Their running apps, each on a card with **Start / Stop / Restart / Remove**,
-  **Open app** (the address it answers on), **Connection details** (the
+  **Open app** (on the customer's domain when one is pointed at the app,
+  otherwise the server's own address and port, shown next to the button),
+  **Connection details** (the
   logins the app was created with, masked, with **Copy** and **Email me these
   details**), its components and ports, and a **Terminal** in the browser
   (**Open shell**, or **As root**)
@@ -291,8 +293,10 @@ Knowledge Base** to match your own wording, plans or support policy.
 ## Troubleshooting
 
 **The catalogue is empty**
-: The server is not reachable, its API key lacks `docker:*`, or the customer's
-  plan has `Max Containers = 0`.
+: The server's API key lacks `docker:*`, or the customer's plan has `Max
+  Containers = 0`. When the server did not answer, the customer is told "The
+  app catalogue could not be loaded right now" instead, and their running
+  apps keep their buttons.
 
 **An app installs and then stops**
 : Almost always memory. Check the app's real requirements against the plan,

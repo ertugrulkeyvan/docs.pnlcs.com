@@ -31,10 +31,9 @@ The module never creates service plans, opens ports or changes Plesk settings.
 
 1. In **Setup → Servers**, add a server of type **Plesk**. Port: 8443.
 2. **Username**: the Plesk administrator, usually `admin`.
-3. Paste the API key into the **Access Hash** field. The module sends it in the `X-API-Key` header. Server credentials are stored encrypted.
+3. Paste the API key into the **API Key** field. The module sends it in the `X-API-Key` header to the REST API, and in the `KEY` header to the XML API that lists plans. The **Admin Password** field is not needed. Server credentials are stored encrypted.
 
-    !!! warning "The key goes in Access Hash"
-        The form calls the password field **Password / API Key** and says Access Hash is "Not used by Plesk". The opposite is true: a key in the password field is sent as a password. A server saved as active without an Access Hash is refused with "A PLESK server signs in with an API key. Fill in the API key field - the password is not used for this module." Without a key the module falls back to HTTP Basic authentication with the username (default `admin`) and password; that only applies to a server saved inactive.
+    A server saved as active without an API key is refused with "A PLESK server signs in with its API Key. Fill in the API Key field - the password is not used for this module." Without a key the module falls back to HTTP Basic authentication with the username (default `admin`) and password; that only applies to a server saved inactive.
 
 4. Save and press **Test**. PNLCS first opens a TCP connection to the port, then calls `GET /api/v2/server`. Any successful HTTP answer passes. If the port is open but Plesk refuses, you see "Reached <host>, but PLESK refused the credentials. Check the API key."
 
@@ -101,7 +100,7 @@ The service page shows the server name, the Plesk login, and the server's hostna
 
 | Message | Cause |
 |---|---|
-| `No server assigned to this service.` | No active Plesk server, or none with room in the product's server group |
+| `No server assigned to this service.` | No active Plesk server, or none below its **Max Accounts** (in the product's server group, when it has one) |
 | `Service is missing client or domain.` | The service has no domain |
 | `Failed to create Plesk client: <message>` | Plesk refused the customer, for example a login already in use |
 | `Failed to create Plesk subscription: <message>` | Plesk refused the subscription, for example a domain that already exists or an unknown plan name; the customer was removed again |
