@@ -35,6 +35,8 @@ pnlcs.com gibi bu da bizim repoda: **içerik bizde** (kullanıcı kararı, 2026-
 2026-10-22: bütün sayfalar PNLCS 1.6.1'e (cf89b175) göre kontrol edildi, ~30 yeni sayfa yazıldı (93 sayfa).
 `AUDIT.md`'de açık madde yok; `data/upstream.json` `checked` = cf89b175. Her sayfada `sources:` var (20 sayfa hariç).
 
+2026-11-07: issue #5'teki 73 eskimiş sayfa PNLCS 05260461'e göre kontrol edildi (58 düzeltildi), `checked` = 05260461 (ac9a87f). Not: API sayfaları upstream'de üretiliyor (`pnlcs:api-docs`); elle eklenen satırlar (api/index giriş sınırı, system validatelogin 429, invoices taslak→unpaid, tickets kapanış hook'u, clients silinmiş e-posta) upstream'e de girmezse eşitlemede çakışabilir.
+
 ## Önizleme
 
 ```bash
