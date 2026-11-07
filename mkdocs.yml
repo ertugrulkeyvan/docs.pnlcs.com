@@ -118,6 +118,7 @@ nav:
           - Updating: install/updating.md
           - Backups: install/backups.md
           - Security checklist: install/security.md
+          - What is sent: hub/what-is-sent.md
   - Learn:
       - Getting started:
           - First login: getting-started/first-login.md
