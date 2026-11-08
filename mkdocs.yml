@@ -76,7 +76,7 @@ extra_javascript:
 
 extra:
   site_home: https://pnlcs.com/
-  demo: https://hosting.panelica.com/
+  demo: https://demo.pnlcs.com/
   docs_repo: https://github.com/ertugrulkeyvan/docs.pnlcs.com
 
 plugins:

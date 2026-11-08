@@ -25,5 +25,6 @@ After installation:
   [Security checklist](security.md) keep it healthy.
 
 !!! tip "Just looking?"
-    The [live demo](https://hosting.panelica.com/) is a real installation you
-    can click around without installing anything.
+    The [live demo](https://demo.pnlcs.com/) is a real installation you
+    can click around without installing anything, as a customer or as staff.
+    It resets every hour.
