@@ -1,7 +1,9 @@
 # docs.pnlcs.com yenileme notları
 
-pnlcs.com gibi bu da bizim repoda: **içerik bizde** (kullanıcı kararı, 2026-10-06). Panelica ekibi `main`'den çeker;
-`main`'e push = yayın, push'tan önce sor. Commit, PR ve dosyalarda yapay zekâ aracı adı ya da imza satırı olmaz.
+pnlcs.com gibi bu da bizim repoda: **içerik bizde** (kullanıcı kararı, 2026-10-06). Site bizim sunucumuzdan yayınlanıyor:
+`main`'e her push Publish ile build alıp sunucuya yükler, yani push = yayın. Küçük düzeltmeler (yazım, küçük içerik,
+workflow ayarı) sormadan `main`'e gider (kullanıcı, 2026-10-22); büyük değişiklik, yeni bölüm, güvenlik metni ve DNS için
+önce sor. Commit, PR ve dosyalarda yapay zekâ aracı adı ya da imza satırı olmaz.
 
 ## Kararlar (2026-10-06)
 
