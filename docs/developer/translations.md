@@ -14,7 +14,9 @@ PNLCS ships in 30 languages. English, Turkish, Polish, Chinese and German are
 complete, and the test suite keeps them complete. The other 25 are community
 languages: they are translated as people contribute, and any text a community
 language does not have yet is shown in English - never as a raw key, and never
-as a broken page. Every language you improve reaches every PNLCS install.
+as a broken page. Italian has been translated in full by a contributor; it
+stays a community language, so the tests do not hold new texts to it. Every
+language you improve reaches every PNLCS install.
 
 ## Where the texts live
 

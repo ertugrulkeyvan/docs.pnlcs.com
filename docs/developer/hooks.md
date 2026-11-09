@@ -75,7 +75,7 @@ properties are the parameters, and every name in the first column fires.
 | Hook | Params | When |
 |---|---|---|
 | `InvoiceCreated` / `InvoiceCreation` (event) | invoice | new invoice generated (also the VAT invoice issued from a paid proforma) |
-| `InvoicePaid` (event) | invoice, transactionId | invoice fully settled (any payment source); fires again, without the event, for the VAT invoice issued from a paid proforma |
+| `InvoicePaid` (event) | invoice, transactionId | invoice fully settled (any payment source); fires again, without the event, for the VAT invoice issued from a paid proforma (an Add Funds proforma issues none) |
 | `InvoicePartiallyPaid` | invoice, amount, balance | partial payment recorded |
 | `InvoiceCancelled` (event) | invoice | an invoice was cancelled (admin, bulk action or API) |
 | `RefundIssued` | invoice, amount, gateway, refund_id | a refund was issued |

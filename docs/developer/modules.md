@@ -93,6 +93,11 @@ implements `App\Contracts\TokenizableGatewayInterface` (`beginVaulting`,
 `confirmVaulting`, `detachStoredMethod`, `chargeStoredMethod`); the Stripe,
 iyzico and PayPal modules are complete examples.
 
+An invoice's `total` is its full value, whatever credit was spent on it. A
+module that needs what is still owed reads `Invoice::amountDue()`. Invoice
+lines of type `Setup` carry a product's one-time setup fee, with the service
+id in `rel_id` like a `Hosting` line.
+
 Actions return an array with at least `success` (bool) and `message`
 (string) — for example `['success' => true, 'message' => 'Account created']`.
 
@@ -269,7 +274,7 @@ A module can offer more than its interface requires:
 | Implement | And PNLCS will |
 |---|---|
 | `App\Contracts\TokenizableGatewayInterface` (gateways) | store cards at the gateway and charge them for renewals |
-| `App\Contracts\SyncsDomainData` (registrars: `syncDomain`) | read each domain's expiry, status and nameservers in the nightly domain sync |
+| `App\Contracts\SyncsDomainData` (registrars: `syncDomain`) | read each domain's expiry, status and nameservers in the nightly domain sync. It may also return `registration_date`, which fills a domain that has none, and `id_protection`, the WHOIS privacy state |
 | `App\Contracts\HostsAccountDomains` (servers: `accountDomains`, `createAccountDomain`) | offer customers **Set up on my hosting** for their domains ([guide](../guides/sell-domains.md#set-up-on-my-hosting)) |
 | a `customFunctions()` method (servers) returning `method name => label` | run those methods on a service through the API ([modulecustom](../api/services.md#modulecustom)), and show them as buttons on the staff service page |
 | `clientFunctions()` (servers), `method name => label` | show those buttons to the customer on their service page; only these can be run from the client area |
@@ -285,6 +290,7 @@ A module can offer more than its interface requires:
 | `App\Contracts\ManagesChildNameservers` (registrars: `getChildNameservers`, `saveChildNameserver`, `deleteChildNameserver`) | show the glue record (child nameserver) form on the domain page |
 | `App\Contracts\ManagesDomainContacts` (registrars: `getContact`, `saveContact`) | show the WHOIS contact form on the domain page |
 | `App\Contracts\ManagesWhoisPrivacy` (registrars: `setPrivacy`) | let the customer and staff switch WHOIS privacy on and off; without it the setting is shown but cannot be changed |
+| `App\Contracts\CannotManageTransferLock` (registrars; a marker with no methods) | say the registry has no transfer lock to change: the Lock/Unlock control is hidden for the module's domains. Without it the control is shown |
 | `testConnection()` (registrars), returning `success` and `message` | show a **Test** button for the registrar on **Setup → Domain Registrars** |
 | `syncPrices()` (registrars), returning `success` and the counts `updated`, `unchanged`, `skipped` | show **Sync prices**, which overwrites the prices of the extensions whose auto registrar is this one |
 | `importTlds()` (registrars), returning `success` and the counts `added`, `skipped` | show **Add TLDs**, which adds every extension the registrar offers to the price list and leaves existing ones alone |

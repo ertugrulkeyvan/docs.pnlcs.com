@@ -61,10 +61,11 @@ rate update takes the bulletin again. Prices are not converted. Pressing
 
 ## Prices in other currencies
 
-A product's **Pricing** box has one block per currency. The shop, the cart,
-and the invoices all use the block of the **default currency** (or the first
-block that has prices, if the default one has none). The other blocks are
-only used once their currency becomes the default.
+A product's **Pricing** box holds one set of prices, in the **default
+currency**. The shop, the cart and the invoices all use it. Prices saved for
+another currency by an older version are kept but not shown: they are used
+only if that currency becomes the default, or if the default currency has no
+prices at all.
 
 A price shown in another currency is always the default-currency price
 multiplied by that currency's rate, rounded to two decimals. Domain prices
@@ -100,16 +101,29 @@ check it. Under **Setup → General Settings → Invoicing → Billing currency*
 
 - **Official rate source**: *None (commercial rate)* (the default) or
   *TCMB (Central Bank of Turkey)*.
-- **TCMB rate**: *forex selling rate* (the default) or *forex buying rate*.
+- **Official rate kind**: *forex selling rate* (the default) or *forex buying
+  rate*. It applies to TCMB only.
 
 Each update then takes the USD rate from the latest TCMB bulletin (the bank
 publishes on business days, so on a weekend it is Friday's) and remembers its
 date and bulletin number for the invoice note. If TCMB cannot be reached, the
 commercial rate stays for that day. Other base currencies are not affected.
 
+### Official Polish rates (NBP)
+
+For a shop whose default currency is PLN, choose *NBP (National Bank of
+Poland)* as the **Official rate source**. Each update then takes the mid rate
+of every currency in NBP's table A from the bank, and the commercial sources
+only fill in the currencies NBP does not publish. When customers are billed in
+one of the table A currencies, the update remembers the table's date and
+number for the invoice note.
+
+If NBP cannot be reached, or the default currency is not PLN, the commercial
+rates stay.
+
 Other official sources (a central bank's own feed, for example) can be added
-next to TCMB as **Official rate providers (JSON)** on the same card; see
-[Official Exchange Rates](official-exchange-rates.md).
+next to TCMB and NBP as **Official rate providers (JSON)** on the same card;
+see [Official Exchange Rates](official-exchange-rates.md).
 
 ## Which currency an invoice is billed in
 
@@ -157,6 +171,8 @@ currency code) and a note under the totals:
   41.8500.*
 - with the TCMB rate: *Converted at the forex selling rate published by TCMB
   on 21.10.2026: 1 USD = 41.8500 TRY (bulletin 2026/201)*
+- with the NBP rate, the same note names NBP, the *reference rate*, the
+  table's date and its number.
 
 The rate is printed with four decimals.
 

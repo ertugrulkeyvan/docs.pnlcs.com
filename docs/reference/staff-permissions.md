@@ -61,7 +61,7 @@ permission.
 | `list_clients` | The client list (`/admin/clients`) and its CSV export; the billing identity table and its CSV. The **Clients** dashboard widget. API: client reads, `getuserpermissions` |
 | `view_clients` | A client's page (`/admin/clients/{id}`), and downloading that client's personal data from it. Client results in the search. API: `validatelogin` |
 | `create_clients` | **Add New Client**, and its dashboard shortcut. API: client calls starting with `add` or `create`, except `addclientnote`, `addcontact` and `adduser` |
-| `edit_clients` | Editing a client; admin notes; adding a service or domain to a client by hand (and listing a server's accounts to pick one; creating the account on the server, or linking one already there, also needs `manage_services`); **Login as Client** and ending it; **Setup → Client Groups**. API: other client writes, `addclientnote`, `addcontact`, `adduser`, `updateadminnotes`, `createssotoken`, `createclientinvite`, `updateuserpermissions`, `resetpassword` |
+| `edit_clients` | Editing a client; admin notes; adding a service or domain to a client by hand (and listing a server's accounts to pick one; creating the account on the server, or linking one already there, also needs `manage_services`); **Login as Client** and ending it; **Send card link**; **Setup → Client Groups**. API: other client writes, `addclientnote`, `addcontact`, `adduser`, `updateadminnotes`, `createssotoken`, `createclientinvite`, `updateuserpermissions`, `resetpassword` |
 | `delete_clients` | Deleting a client. API: client calls starting with `delete` |
 
 ## Orders
@@ -101,7 +101,7 @@ permission.
 | Permission | Opens |
 |---|---|
 | `list_domains` | The domain list (`/admin/domains`) and the log of domain searches. The **Domains** dashboard widget. API: domain reads, except `domainrequestepp` and `domaingetwhoisinfo` |
-| `manage_domains` | A domain's page and everything on it: sync, register, renew, nameservers, lock, auto-renew, EPP code, ID protection, contacts, glue records, changing registrar and moving the domain to another client. Domain results in the search. API: every domain call that is not a read, except `createorupdatetld` (that needs `manage_servers`), and `domainrequestepp` and `domaingetwhoisinfo` |
+| `manage_domains` | A domain's page and everything on it: sync, register, renew, nameservers, lock, auto-renew, EPP code, ID protection, contacts, glue records, changing registrar, moving the domain to another client, correcting its billing amounts and deleting it. Domain results in the search. API: every domain call that is not a read, except `createorupdatetld` (that needs `manage_servers`), and `domainrequestepp` and `domaingetwhoisinfo` |
 
 ## Tickets
 

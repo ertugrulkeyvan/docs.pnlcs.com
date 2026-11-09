@@ -16,8 +16,10 @@ of the commercial rate feed, and the invoice prints where it came from: the
 publisher, the kind of rate, the publisher's own date and, where there is one,
 the bulletin number. An auditor can then check the number against the source.
 
-PNLCS ships one official source, **TCMB** (Central Bank of the Republic of
-Turkey), for lira invoices from a US dollar shop. You can add others.
+PNLCS ships two official sources: **TCMB** (Central Bank of the Republic of
+Turkey), for lira invoices from a US dollar shop, and **NBP** (National Bank
+of Poland), for a shop that keeps its books in złoty
+([Currencies](currencies.md#official-polish-rates-nbp)). You can add others.
 
 ## Adding a provider
 
@@ -46,7 +48,7 @@ time, and it sets the rate of one currency.
 
 | Field | Required | Meaning |
 |---|---|---|
-| `key` | yes | Your name for the entry: lowercase letters, digits, `-` or `_`, up to 32. Not `tcmb`. |
+| `key` | yes | Your name for the entry: lowercase letters, digits, `-` or `_`, up to 32. Not `tcmb` or `nbp`. |
 | `name` | yes | The source printed on the invoice. Name the publisher, not a website. |
 | `url` | yes | An `https` URL that answers with JSON. |
 | `base` | yes | The currency the rate is against. Must be your shop's default currency, or the entry is skipped. |

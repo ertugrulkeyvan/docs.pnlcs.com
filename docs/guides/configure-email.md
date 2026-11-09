@@ -53,8 +53,8 @@ like) usually reaches the inbox more reliably than a self-hosted SMTP server.
 PNLCS ships ready-made templates: sign-up and email verification, invoice
 created, payment confirmation, reminders and overdue notices, order
 confirmation, service welcome, suspension and termination, domain renewal,
-SSL certificates, ticket replies, failed automatic payments, sign-in from a new
-device, confirmation codes and more. Manage them under **Setup → Email
+SSL certificates, ticket replies, failed automatic payments, a request to add
+a card, sign-in from a new device, confirmation codes and more. Manage them under **Setup → Email
 Templates**:
 
 - Each language has its own set; pick the language at the top of the page.

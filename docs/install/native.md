@@ -298,7 +298,7 @@ output shows.
 
 The wizard's seeding provides what an installation starts with: four
 starter currencies (USD, EUR, GBP, TRY), VAT rules for European countries,
-ticket departments and statuses, 32 email templates, 30 languages, domain
+ticket departments and statuses, 33 email templates, 30 languages, domain
 pricing and default homepage sections. The knowledge base articles arrive
 with the migrations in this step, and the interface texts ship in `lang/`,
 so neither depends on the seeder.

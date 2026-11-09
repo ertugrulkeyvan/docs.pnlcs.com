@@ -216,7 +216,10 @@ many apps to show are all editable there.
 
 The section ships **disabled**, and reading the catalogue only happens when it
 is switched on, so an install with no Panelica server attached does not
-advertise apps or pay for the lookup.
+advertise apps or pay for the lookup. The front page keeps the panel's
+catalogue for five minutes (a failed read for one), so a new app on the panel
+can take that long to appear. Your own choices (featured, order, selling
+lines, not for sale) show at once.
 
 ## What the customer sees
 

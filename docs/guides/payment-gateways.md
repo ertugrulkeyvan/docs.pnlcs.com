@@ -172,6 +172,13 @@ customer: those are the cardholder's own decisions. To charge a stored card
 yourself, use **Charge card now** on the invoice in the admin area, which
 keeps to the customer's choice about automatic payment.
 
+To ask a customer for a card, press **Send card link** on the client's page,
+next to **Stored cards** and the number they have. The customer is emailed a
+link to their own **Add a card** page (the **Card Setup Request** template)
+and enters the card themselves. The button needs the permission to edit
+clients. It is shown only while automatic payment is on and a gateway can
+store cards.
+
 ## Gateway Logs
 
 **Utilities → System Logs → Gateway Logs** lists what a gateway recorded,

@@ -31,9 +31,16 @@ A **product** is an entry on your price list. It defines:
   is received*, *As soon as the order is placed*, or *Only when an admin
   accepts the order*
 - A **payment type** (*Recurring*, *One Time* or *Free*) and **pricing** per
-  currency and billing cycle (monthly, quarterly, semi-annually, annually,
-  biennially, triennially; `-1` turns a cycle off). A *Free* product with no
-  cycle priced is sold monthly at no charge, and is never invoiced again
+  billing cycle (monthly, quarterly, semi-annually, annually, biennially,
+  triennially; `-1` turns a cycle off), in your shop currency. A *Free*
+  product with no cycle priced is sold monthly at no charge, and is never
+  invoiced again
+- An optional one-time **setup fee** per billing cycle. It is shown in the
+  basket and at checkout and is a line of its own on the first invoice, taxed
+  as the product is. Renewals do not repeat it
+- A **description**, written in Markdown with a small toolbar, with a tab for
+  each active language. A visitor reads it in their own language, or the
+  default text where there is no translation
 - Whether customers may move to another package (**Customers can move to
   another package**, on by default) and which ones (**Upgrade packages**;
   none ticked allows any package of the same module)
@@ -84,7 +91,7 @@ line items, tax, credit applied and a status:
 | **Overdue** | Past its due date and not fully paid; the daily run marks unpaid and partially paid invoices overdue the day after their due date |
 | **Collections** | Set only by hand (through the API); PNLCS never sets it. Still counts as owed, but gets no reminders and is never charged automatically |
 | **Cancelled** | Voided; anything already paid on it goes back to the client's credit |
-| **Refunded** | Everything paid on it was returned (a partial refund puts it back to *Partially Paid*) |
+| **Refunded** | Everything paid on it was returned (after a partial refund a paid invoice stays *Paid*) |
 
 Tax on an invoice follows **Setup → Tax Rules**: **Charge tax** off adds no
 tax at all (the rules are kept), and **Prices include tax** makes the price

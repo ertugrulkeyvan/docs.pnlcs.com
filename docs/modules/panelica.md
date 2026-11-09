@@ -77,7 +77,9 @@ On **Setup → Products/Services**, set **Server Module** to **Panelica**. Two p
 a new account is created on. Left on **Use the server default**, no plan is sent and the panel applies its own
 default, unless managed mode is on.
 
-The **Panelica Resources** card holds the rest:
+The **Panelica Resources** card holds the rest. It is shown for a Panelica
+product and for one with no module, never for another panel's module or an
+SSL certificate, and the shop lists these limits only for those products:
 
 | Setting | Effect |
 |---|---|

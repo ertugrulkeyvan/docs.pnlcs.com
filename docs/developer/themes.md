@@ -79,6 +79,17 @@ improvements and fixes that updates bring to the original. Colours and the
 homepage sections builder (**Setup → Appearance**) cover most changes without
 copying a view.
 
+A view that prints a product's description uses the product's own methods,
+never the raw `description` column, which holds Markdown in the default
+language only:
+
+- `$product->descriptionHtml()`, printed with `{!! !!}`: the description in
+  the visitor's language as safe HTML;
+- `$product->descriptionText()`: the same as plain text, for a short excerpt;
+- `$product->hasDescription()`: whether there is one to show.
+
+Load `translations` with the products where you list them.
+
 ## Assets
 
 Files in `assets/` are served at `/themes/<slug>/assets/`, for example

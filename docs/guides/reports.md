@@ -62,13 +62,13 @@ column names as its first row. The totals row is not included.
 | **Disk Usage Summary** | Service | — | Disk used, limit and usage % per active service from the last usage poll, fullest first (up to 100). |
 | **Domain Renewal Reminders** | Domain | — | Active domains expiring in the next 90 days, with registrar, days left and renewal amount. |
 | **Domains Overview** | Domain | — | Number of domains and recurring revenue per status and registrar. |
-| **Income by Product** | Financial | Dates | Revenue and number of invoices per product, from invoices paid in the period. Only hosting and overage lines are credited to a product; domain, addon and upgrade lines are not. |
+| **Income by Product** | Financial | Dates | Revenue and number of invoices per product, from invoices paid in the period. Only hosting, setup fee and overage lines are credited to a product; domain, addon and upgrade lines are not. Add Funds top-ups and payments for several invoices are left out: the invoices their money pays are counted instead. |
 | **Income Forecast** | Financial | — | Renewals due and projected income per month for the next 12 months, from active services. |
 | **Income Summary** | Financial | Dates | Income, fees and refunds per month from transactions in the period. |
 | **New Customers** | Client | Dates | New client accounts per month. |
 | **Product Suspensions** | Service | — | Suspended services with the suspension reason. |
 | **Promotions Usage** | Promotion | — | Each promo code with type, value, uses, limit, status (*Active*, *Expired*, *Maxed*), whether it recurs, and its dates. See [Promotions](promotions-and-addons.md#promo-codes). |
-| **Sales Tax Liability** | Financial | Dates | Subtotal, tax, second tax and total per month from invoices paid in the period. See [Tax Rules](tax-rules.md). |
+| **Sales Tax Liability** | Financial | Dates | Subtotal, tax, second tax and total per month from invoices paid in the period, without Add Funds top-ups and payments for several invoices. See [Tax Rules](tax-rules.md). |
 | **Server Revenue Forecast** | Service | — | Active services and their monthly revenue per server (longer cycles divided into months). |
 | **SSL Certificate Monitoring** | Domain | — | SSL certificate orders with status, expiry date and days left, soonest first. |
 | **Support Ticket Replies** | Support | Dates | Number of ticket replies per staff member in the period (customer replies as *Client*). |

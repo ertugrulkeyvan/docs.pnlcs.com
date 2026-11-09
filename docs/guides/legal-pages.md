@@ -74,7 +74,7 @@ invoice PDF uses, so the two always agree:
   **MERSIS no**, **Abuse contact email** and **Data protection contact
   email** (both fall back to the company email).
 - The currency prices are shown in, the currency invoices are billed in and
-  whether the TCMB rate is used ([Currencies](currencies.md)).
+  whether the TCMB or NBP rate is used ([Currencies](currencies.md)).
 - The VAT rate stated for customers in Turkey: the default rate of your tax
   rule for TR, if any ([Tax Rules](tax-rules.md)). With none, the documents
   name no rate.

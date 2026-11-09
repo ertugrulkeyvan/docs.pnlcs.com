@@ -12,8 +12,8 @@ sources:
 # Languages & Translations
 
 PNLCS ships in **30 languages**. English, Turkish, Polish, Chinese and German
-are complete; the others cover most of the interface and fall back to English
-where a text is missing.
+are complete, and Italian is fully translated too; the others cover most of
+the interface and fall back to English where a text is missing.
 
 ## Switch languages on
 

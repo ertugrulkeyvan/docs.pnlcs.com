@@ -29,7 +29,7 @@ Times are UTC: PNLCS fixes its time zone to UTC, whatever the server's own time 
 
 | Command | When | What it does |
 |---|---|---|
-| `pnlcs:currency-update` | daily 05:30 | Updates exchange rates against the default currency, then the rate of the official rate source chosen on **Setup → General Settings**, if any. Skipped while **Update exchange rates every day** (**Setup → Currencies**) is off; it is on by default. `--force` runs it anyway |
+| `pnlcs:currency-update` | daily 05:30 | Updates exchange rates against the default currency, then the rate of the official rate source chosen on **Setup → General Settings**, if any (with NBP and a PLN shop, NBP's table sets the rates first). Skipped while **Update exchange rates every day** (**Setup → Currencies**) is off; it is on by default. `--force` runs it anyway |
 | `pnlcs:generate-invoices` | daily 06:00 | Raises renewal invoices for services, addons and domains coming due |
 | `pnlcs:mark-overdue` | daily 06:30 | Marks unpaid invoices past their due date as overdue |
 | `pnlcs:auto-charge` | daily 06:45 | Charges stored cards for due invoices; does nothing until **Automatic Payment** is switched on (**Setup → General Settings**) |
@@ -57,7 +57,7 @@ Times are UTC: PNLCS fixes its time zone to UTC, whatever the server's own time 
 
 | Command | When | What it does |
 |---|---|---|
-| `pnlcs:domain-sync` | daily 03:00 | Reads expiry, status, lock and nameservers from the registrars |
+| `pnlcs:domain-sync` | daily 03:00 | Reads expiry, status, lock and nameservers from the registrars, and fills a missing registration date from the registrar or RDAP |
 | `pnlcs:registrar-balance` | 08:00 and 20:00 | Warns when the prepaid balance at the watched registrar falls to the floor |
 | `pnlcs:ssl-expiry-check` | daily 09:00 | Warns about certificates about to expire |
 | `pnlcs:domain-renewal-reminders` | daily 09:15 | Emails customers whose domains are about to expire |

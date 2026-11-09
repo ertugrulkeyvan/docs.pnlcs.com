@@ -233,6 +233,7 @@ the log, not sent. A sender address and name filled in on the panel replace
 |---|---|---|---|
 | `PNLCS_UPDATE_INDEX_URL` | `https://api.github.com/repos/Panelica/pnlcs/releases?per_page=30` | — | Where the updater looks for releases ([Updating](../install/updating.md)) |
 | `PNLCS_UPDATE_PUBLIC_KEY` | the PNLCS release key | — | Base64 of a PEM public key that replaces the release key. For testing the updater only: a package not signed with this key is refused |
+| `RDAP_BASE` | `https://rdap.org` | — | The RDAP service asked for a domain's registration date when PNLCS has none ([Renewals and syncing](../guides/sell-domains.md#renewals-and-syncing)) |
 | `OPENAI_BASE_URL` | `https://api.openai.com/v1` | — | Address of the service behind **Translate with AI**, for an OpenAI-compatible endpoint other than OpenAI's. The key and model are set on **Setup → Languages** |
 
 ## Other

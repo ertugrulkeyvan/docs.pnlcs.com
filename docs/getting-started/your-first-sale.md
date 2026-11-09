@@ -44,7 +44,9 @@ ready-made line for invoices you create by hand.
     - *As soon as the first payment is received* (most common)
     - *As soon as the order is placed*, before payment
     - *Only when an admin accepts the order*
-- **Pricing**: a price per currency and billing cycle. `-1` disables a cycle.
+- **Pricing**: a price per billing cycle, in your shop currency. `-1`
+  disables a cycle. The second row holds an optional one-time setup fee for
+  each cycle, charged on the first invoice only.
 
 Press **Create Product**. PNLCS opens the product's edit page, where the rest
 of its settings live, for example **Free domain with this product**: the first

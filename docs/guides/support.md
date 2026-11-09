@@ -185,7 +185,8 @@ one of their services. The customer gets it by email.
 On a ticket page:
 
 - **Add reply** sends your answer to the customer by email and sets the
-  ticket to **Answered**.
+  ticket to **Answered**. In the client area the customer sees your first
+  name beside the reply, never your sign-in username.
 - **Add internal note**: only staff see notes; they are never emailed. A note
   can be deleted only by the person who wrote it.
 - The options bar changes **Status**, **Priority** (Low, Medium, High),

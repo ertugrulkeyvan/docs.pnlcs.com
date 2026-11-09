@@ -39,6 +39,8 @@ workflow ayarı) sormadan `main`'e gider (kullanıcı, 2026-10-22); büyük değ
 
 2026-11-07: issue #5'teki 73 eskimiş sayfa PNLCS 05260461'e göre kontrol edildi (58 düzeltildi), `checked` = 05260461 (ac9a87f). Not: API sayfaları upstream'de üretiliyor (`pnlcs:api-docs`); elle eklenen satırlar (api/index giriş sınırı, system validatelogin 429, invoices taslak→unpaid, tickets kapanış hook'u, clients silinmiş e-posta) upstream'e de girmezse eşitlemede çakışabilir.
 
+2026-11-10: issue #10'daki 51 eskimiş sayfa PNLCS b365a2fa'ya göre kontrol edildi (25 sayfa düzeltildi: kredi ödeme sayılır, kısmi iade, Add Funds proforma, kurulum ücreti, tek fiyat, Markdown açıklama ve çevirileri, NBP, alan adı ekranı, RDAP, kart bağlantısı), `checked` = b365a2fa.
+
 ## Önizleme
 
 ```bash

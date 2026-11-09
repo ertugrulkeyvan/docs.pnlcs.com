@@ -48,9 +48,8 @@ that are listed and enabled here.
 | **Sort Order**, **Enabled** | Order in the lists; whether it is sold |
 
 Prices are in your default currency, and the form's headings say which that
-is. The public domain pages show them in US
-dollars when a USD currency is set up (**Setup → Currencies**), unless the
-visitor picked a currency of their own.
+is. The public domain pages show them in the same currency, or in the one the
+visitor picked ([Currencies](currencies.md#letting-customers-choose)).
 
 ### The price list
 
@@ -129,12 +128,18 @@ yet: billing works exactly the same, and the registration step is yours.
 Manual is on unless you switch it off; every other registrar is off until you
 switch it on.
 
-Every registrar module registers, transfers, renews, changes nameservers, locks
-and gives the EPP code. HRD, OVHcloud and OpenProvider also have a **Test**
-button on their card that checks the connection. **WHOIS privacy**, the **WHOIS contact**, **own
-nameservers (glue)**, **restore from redemption** and checking many names in
-one call are only in **DomainNameAPI** so far; for other registrars those
-buttons are not shown.
+Every registrar module registers, transfers, renews, changes nameservers and
+gives the EPP code. HRD, OVHcloud and OpenProvider also have a **Test**
+button on their card that checks the connection.
+
+- **Registrar lock**: every registrar except **HRD** and **Manual**, which
+  have no lock to change; their domains show no Lock/Unlock button.
+- **WHOIS privacy**: **DomainNameAPI**, **HRD** and **OVHcloud**.
+- The **WHOIS contact**, **own nameservers (glue)**, **restore from
+  redemption** and checking many names in one call: only **DomainNameAPI** so
+  far.
+
+For other registrars those buttons are not shown.
 
 ### HRD: PESEL and CSA
 
@@ -211,8 +216,9 @@ In the client area, on each domain's page:
 - see registration and expiry dates;
 - **change the nameservers** (sent to the registrar);
 - turn **auto-renew** on or off;
-- turn the **registrar lock** on or off, and get the **EPP code** to move the
-  domain away (both ask the customer to confirm it is them first);
+- turn the **registrar lock** on or off (where the registrar has one), and
+  get the **EPP code** to move the domain away (both ask the customer to
+  confirm it is them first);
 - **Renew now**: raises the renewal invoice straight away. On **My Domains**,
   **Renew selected** puts several domains (up to 100) on one invoice; a domain
   already on an unpaid invoice is left there;
@@ -231,7 +237,8 @@ In the client area, on each domain's page:
 - **set the domain up on their hosting** (below).
 
 Privacy, contacts and glue need an active domain and a registrar that offers
-them (see [Choose a registrar](#2-choose-a-registrar)).
+them (see [Choose a registrar](#2-choose-a-registrar)). For HRD and OVHcloud
+the nightly sync also reads the privacy state back from the registrar.
 
 ### Restore from redemption
 
@@ -249,7 +256,10 @@ domain back from the registrar), **Renew** (at the registrar, now),
 **Retry registration** for a paid domain that did not register, changing the
 registrar, and **Move to another client** (by client ID or email; it moves at
 once, with its renewals, and is refused while the domain is on an unpaid
-invoice). **Utilities → WHOIS Lookup** looks up any domain.
+invoice). The **Billing** card lets you correct the **First Payment** and the
+**Recurring Amount**. **Delete** removes the domain from PNLCS only: it stays
+registered at the registrar, and its invoices are kept.
+**Utilities → WHOIS Lookup** looks up any domain.
 
 ### Set up on my hosting
 
@@ -270,6 +280,12 @@ changes nothing already done. It works for hosting on Panelica servers.
 - Every night PNLCS asks the registrar for each domain's expiry, status and
   nameservers, and updates its records. A domain shown as active that the
   registrar does not know raises a notification, at most once a week.
+- A domain with no registration date (an imported one, for example) gets it
+  from the registrar, or else from RDAP, the registries' public lookup. The
+  nightly sync and the **Sync** button both do this, and a date already
+  stored is never changed. **Max RDAP lookups per sync run** (**Setup →
+  General Settings → Domains → Domains**, default 100; 0 turns RDAP off)
+  caps how many the nightly sync looks up.
 - A domain past its expiry date moves to **grace** for the extension's grace
   period, then to **redemption** for the extension's redemption period, then
   to **expired**, unless the registrar reports its own status.

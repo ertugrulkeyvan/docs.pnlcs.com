@@ -114,11 +114,11 @@ first morning. Run `php artisan pnlcs:auto-charge --dry-run` first.
 | Field | Default | What it does |
 |---|---|---|
 | **Bill customers in** | Shop currency only | A second currency each invoice is also stated in, at a rate frozen when the invoice is raised |
-| **Official rate source** | None (commercial rate) | **TCMB (Central Bank of Turkey)**, or one of the providers you add below, names the official rate on the invoice |
-| **TCMB rate** | forex selling rate | Or forex buying rate |
+| **Official rate source** | None (commercial rate) | **TCMB (Central Bank of Turkey)**, **NBP (National Bank of Poland)**, or one of the providers you add below, names the official rate on the invoice. NBP is used only when the shop currency is PLN |
+| **Official rate kind** | forex selling rate | Or forex buying rate. TCMB only; NBP publishes one mid rate |
 | **Payment reference prefix** | `INV` | Up to 8 characters; the code customers write on a bank transfer, such as `INV34` |
 | **Auto-approve orders from** | empty | Comma-separated test addresses whose orders are marked paid and provisioned without payment. Leave empty in production |
-| **Official rate providers (JSON)** | empty | Your own official rate sources next to TCMB, as a JSON list. Checked on save; a list that cannot be read is refused. An entry is used only once it is chosen as the official rate source |
+| **Official rate providers (JSON)** | empty | Your own official rate sources next to TCMB and NBP, as a JSON list. Checked on save; a list that cannot be read is refused. An entry is used only once it is chosen as the official rate source |
 | **Official rate API key** | empty | Sent as a bearer token to providers marked `"auth": true`. Secret; kept when left empty |
 
 ➡️ [Currencies and exchange rates](../guides/currencies.md), [Official exchange rates](../guides/official-exchange-rates.md), and [Payment gateways](../guides/payment-gateways.md) for the per-gateway **Charge in the invoice's billing currency** option
@@ -179,8 +179,9 @@ Checked at 08:00 and 20:00 ([Scheduled commands](scheduled-commands.md)).
 | **Default Nameservers** (NS1 to NS5) | empty | Nameservers for a domain registered without any of its own and without hosting ordered with it (that hosting's server nameservers come first). The HRD and OVH registrar modules also use them; without any, the registrar module's own settings apply |
 | **Free subdomain domains** | empty | One domain per line; hosting orders can then take a name under them. Empty: not offered |
 | **Names nobody may take** | built-in list | First labels refused for free subdomains, separated by commas or lines. Empty uses a built-in list of 47 (`www`, `mail`, `admin`, `api`, `billing` and others); the card shows it |
+| **Max RDAP lookups per sync run** | 100 | How many domains without a registration date the daily sync looks up in RDAP in one run. 0 turns it off |
 
-➡️ [Free subdomains](../guides/sell-domains.md#free-subdomains)
+➡️ [Free subdomains](../guides/sell-domains.md#free-subdomains) · [Renewals and syncing](../guides/sell-domains.md#renewals-and-syncing)
 
 ## Notifications
 

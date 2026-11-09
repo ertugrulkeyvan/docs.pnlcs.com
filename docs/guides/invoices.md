@@ -58,7 +58,7 @@ customer marked tax exempt, a line with a rate above 0% is written at 0%
 whatever you pick ([Tax Rules](tax-rules.md#invoices-you-build-by-hand)).
 
 Once saved, the invoice gets the next number, any credit balance the customer
-has is taken off it, and it is emailed to them (**Invoice Created**). A
+has is put towards it, and it is emailed to them (**Invoice Created**). A
 customer with a group discount gets the discount as a line of its own, one
 per tax rate on the invoice.
 
@@ -136,8 +136,10 @@ The part of the invoice that was paid from the customer's credit balance goes
 back to the balance first; only the rest goes back as money. Refunding an
 **Add Funds** invoice takes the added credit off the balance again (as much
 of it as is left), and affiliate commission on the refunded amount is taken
-back. The invoice becomes **Refunded**, or **Partially Paid** if part of the
-payment stays.
+back. The invoice becomes **Refunded** once nothing is left paid on it. After
+a partial refund a **Paid** invoice stays Paid, so the customer is not asked
+again for money they already handed over; a Partially Paid one stays
+Partially Paid.
 
 A refund does not touch the services the invoice paid for: cancel them
 yourself if they should end.
@@ -165,12 +167,21 @@ description.
 
 - **New invoices** take the balance automatically, up to their total; an
   invoice the balance covers in full is marked paid at once.
+- At **checkout**, a signed-in customer with a balance sees it as **Account
+  balance** with the **Amount to pay** under it. When the balance covers the
+  whole order there is no payment method to choose: the order is paid from
+  the balance.
 - For an **invoice that already exists**, the customer presses **Use my
   account credit** on the invoice in the client area. Staff use **Paid** with
   **Credit** as the gateway ([Record a payment](#record-a-payment));
   integrations use the API's [`applycredit`](../api/clients.md#applycredit).
 
 Add Funds invoices never take credit, which would move it in a circle.
+
+Credit is a payment, not a discount. The invoice's **Total** stays its full
+value, the credit spent on it is shown on a line of its own, and **Amount
+due** is what is left: an invoice of 120 paid from the balance reads 120 with
+120 credited, on the page and on the PDF.
 
 ### Add Funds
 
@@ -180,6 +191,10 @@ payment method. PNLCS raises an untaxed invoice for it, due the same day, with
 no group discount. When it is paid, the amount is added to the balance. When
 customers are billed in another currency, they enter the amount in that
 currency ([Currencies](currencies.md#rounding)).
+
+A top-up is a payment on account, not a sale. Tax is charged later, on the
+invoices the credit pays. With the [proforma scheme](#proformas-and-vat-invoices)
+on, an Add Funds invoice is a proforma, and paying it issues no VAT invoice.
 
 ## Proformas and VAT invoices
 
@@ -195,7 +210,8 @@ Settings → Invoicing → Invoices**:
   proforma (**Refers to proforma**). Its notes add *For proforma no.:* and the
   proforma's number. It is emailed to the customer.
 - **Hide paid proformas** (on by default) leaves paid proformas out of the
-  invoice lists, for you and for the customer, so each sale shows once.
+  invoice lists, for you and for the customer, so each sale shows once. A
+  paid proforma with no VAT invoice (an Add Funds top-up) stays listed.
 
 ## Numbering
 
