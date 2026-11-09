@@ -1,6 +1,6 @@
 {
   "checked": "b365a2fa",
-  "commit": "05260461",
+  "commit": "b365a2fa",
   "files": {
     "api/affiliates.md": "2026-09-24",
     "api/all-endpoints.md": "2026-09-24",
@@ -17,7 +17,7 @@
     "api/ssl.md": "2026-09-24",
     "api/system.md": "2026-10-31",
     "api/tickets.md": "2026-10-31",
-    "concepts/billing-lifecycle.md": "2026-07-11",
+    "concepts/billing-lifecycle.md": "2026-11-07",
     "concepts/overview.md": "2026-09-24",
     "concepts/products-services-orders-invoices.md": "2026-07-11",
     "concepts/servers-and-modules.md": "2026-09-24",
