@@ -57,7 +57,7 @@ The full guide, with the development setup and conventions, is
 ## Security issues
 
 Do not open a public issue. Write to
-[security@panelica.com](mailto:security@panelica.com); see the
+[security@pnlcs.com](mailto:security@pnlcs.com); see the
 [security policy](https://github.com/Panelica/pnlcs/blob/main/SECURITY.md).
 Researchers who report an issue can be listed in its hall of fame; say so in
 the report.
