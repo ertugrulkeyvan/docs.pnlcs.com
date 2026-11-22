@@ -41,6 +41,8 @@ workflow ayarı) sormadan `main`'e gider (kullanıcı, 2026-10-22); büyük değ
 
 2026-11-10: issue #10'daki 51 eskimiş sayfa PNLCS b365a2fa'ya göre kontrol edildi (25 sayfa düzeltildi: kredi ödeme sayılır, kısmi iade, Add Funds proforma, kurulum ücreti, tek fiyat, Markdown açıklama ve çevirileri, NBP, alan adı ekranı, RDAP, kart bağlantısı), `checked` = b365a2fa.
 
+2026-11-22: issue #12'deki 52 eskimiş sayfa PNLCS dc99c6b5'e (1.30.0) göre kontrol edildi (27 sayfa düzeltildi: hesap eşitleme ve Plesk bayileri, e-posta kopyası, 1-12 aylık dönemler, Panelica lisans sayfası, vergisiz belge notu, fatura numarası genişliği, promosyon sınırı ve ücretsiz kurulum, EPP'siz transfer, ülkeye göre para birimi). PR #11 ile gelen `guides/plesk-existing-accounts.md` kodla düzeltilip menüye eklendi; `sell-panelica-licenses.md`'ye `sources:` eklendi. `checked` = dc99c6b5 (0084540).
+
 ## Önizleme
 
 ```bash
