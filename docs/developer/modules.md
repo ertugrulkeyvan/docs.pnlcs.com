@@ -11,6 +11,8 @@ sources:
   - app/Providers/AppServiceProvider.php
   - app/Http/Controllers/GatewayWebhookController.php
   - app/Services/Updates/Preflight.php
+  - app/Services/ServerAccountSync.php
+  - app/Support/RegistrantContact.php
   - modules/
 ---
 
@@ -87,6 +89,14 @@ paid. A refusal is logged, raised as `ModuleActionFailed` (action `renew`) and
 queued: the retry queue (`pnlcs:module-queue`) tries it again, so make
 `renew()` safe to repeat for the same paid period (key it by the service's due
 date, as the Panelica license module does).
+
+A registrar module sends the registrant details the customer gave, never
+placeholders. `App\Support\RegistrantContact::missing($contact)` returns the
+required keys that are empty (`firstname`, `lastname`, `email`, `phone`,
+`address`, `city`, `country`); the Enom, Namecheap, OpenProvider and
+ResellerClub modules refuse the
+registration with `RegistrantContact::message($missing)`, which names them, so
+staff can complete the client's profile and register again.
 
 A gateway that can store a card and charge it later (automatic payment) also
 implements `App\Contracts\TokenizableGatewayInterface` (`beginVaulting`,
@@ -283,6 +293,9 @@ A module can offer more than its interface requires:
 | `isProvisioned(Service): bool` (servers) | decide whether the staff page offers **Create** (otherwise: an active service with a username has nothing to create) |
 | `emailMergeFields(Service)` (servers), `name => value` | add `{name}` fields to the service's emails; the built-in fields win a clash |
 | `accountOnServer(Service): ?bool` (servers) | ask staff what happens to the account before they close a service record (mark it Terminated or Cancelled, or delete it) while the account is still on the server: `true` it is there, `false` it is gone, `null` the module cannot tell. Without it, an active or suspended service is taken to have its account ([guide](../guides/connect-a-server.md#ending-a-service)) |
+| `listAccounts(Server)` (servers), a list of `id`, `username`, `email`, `status` | offer the server's existing accounts under **Link to an existing account** when staff add a service by hand, and show **Sync accounts** for the server, which imports them as services ([guide](../guides/connect-a-server.md#bring-in-accounts-already-on-the-server)). Without `linkAccount()`, a linked service stores the id as `module_data['panelica_user_id']` |
+| `listAccountDetails(Server)` (servers), each account with `id`, `domain`, `owner`, `email`, `status`, `plan`, `created` (`YYYY-MM-DD`), optionally `kind` (`reseller`) and `package` | give the sync page each account's plan and creation date, from which it suggests the product (the one sold with that plan) and the next due date |
+| `linkAccount(Service, string $id)` and `linkedPanelAccount(Service): ?string` (servers) | link a service to an account in the module's own way (answer with `success` and `message`; on import a refusal leaves no service behind), and say which account a service manages, so one account is never linked to two live services |
 | `domainHostedOn(Server, string $domain): ?bool` (servers) | refuse an order, while the customer orders, for a domain that is already set up on the servers the order would go to; `null` (could not ask) lets the order through |
 | `packageChangeProblems(Service, Product): array` (servers), returning `problems` and `warnings` (lists of sentences) | refuse a move to that package on the customer's **Upgrade / Downgrade** page and through the API while `problems` is not empty, and show `warnings` there; a module that throws stops nobody |
 | `needsServerRecord(): bool` (servers), returning `false` | for a module that sells through an account kept elsewhere: it is not offered on **Setup → Servers**, and the product form asks `listPackages(null)` for its plans (an exception's message is shown as the reason when it cannot list them) |

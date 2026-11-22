@@ -12,6 +12,7 @@ sources:
   - resources/views/admin/layouts/app.blade.php
   - modules/Ksef/routes.php
   - modules/Servers/PanelicaLicense/routes.php
+  - app/Http/Controllers/Admin/ServerSyncController.php
 ---
 
 # Staff Permissions
@@ -61,7 +62,7 @@ permission.
 | `list_clients` | The client list (`/admin/clients`) and its CSV export; the billing identity table and its CSV. The **Clients** dashboard widget. API: client reads, `getuserpermissions` |
 | `view_clients` | A client's page (`/admin/clients/{id}`), and downloading that client's personal data from it. Client results in the search. API: `validatelogin` |
 | `create_clients` | **Add New Client**, and its dashboard shortcut. API: client calls starting with `add` or `create`, except `addclientnote`, `addcontact` and `adduser` |
-| `edit_clients` | Editing a client; admin notes; adding a service or domain to a client by hand (and listing a server's accounts to pick one; creating the account on the server, or linking one already there, also needs `manage_services`); **Login as Client** and ending it; **Send card link**; **Setup → Client Groups**. API: other client writes, `addclientnote`, `addcontact`, `adduser`, `updateadminnotes`, `createssotoken`, `createclientinvite`, `updateuserpermissions`, `resetpassword` |
+| `edit_clients` | Editing a client; admin notes; adding a service or domain to a client by hand (and listing a server's accounts to pick one; creating the account on the server, or linking one already there, also needs `manage_services`); **Login as Client** and ending it; **Send card link**; **Mark as verified** (confirming a client's email address for them); **Setup → Client Groups**. API: other client writes, `addclientnote`, `addcontact`, `adduser`, `updateadminnotes`, `createssotoken`, `createclientinvite`, `updateuserpermissions`, `resetpassword` |
 | `delete_clients` | Deleting a client. API: client calls starting with `delete` |
 
 ## Orders
@@ -94,7 +95,7 @@ permission.
 |---|---|
 | `list_services` | The service list (`/admin/services`) and the SSL certificate list (`/admin/ssl-orders`). The **Services** dashboard widget. API: service reads, `getmodulequeue` |
 | `view_services` | A service's page; an SSL order's page. Service results in the search |
-| `manage_services` | Server actions on a service (create, suspend, unsuspend, terminate and the module's own buttons); VPS power, password, reinstall, snapshots and backups, and their status and graphs; addons on a service; next due date, custom fields, status and the rest of the service form; deleting a service; bulk service changes; downloading an SSL certificate (it carries the private key), importing SSL orders and acting on them; attaching a Panelica license. API: every service call that is not a read |
+| `manage_services` | Server actions on a service (create, suspend, unsuspend, terminate and the module's own buttons); VPS power, password, reinstall, snapshots and backups, and their status and graphs; addons on a service; next due date, custom fields, status and the rest of the service form; deleting a service; bulk service changes; downloading an SSL certificate (it carries the private key), importing SSL orders and acting on them; attaching a Panelica license, **Free the bound server** and **End the key for good**. API: every service call that is not a read |
 
 ## Domains
 
@@ -120,7 +121,7 @@ permission.
 | `manage_roles` | **Admin Roles**: creating, editing and deleting roles. Staff can only grant permissions they hold themselves |
 | `manage_currencies` | **Currencies**: adding, editing, deleting, choosing the default, the automatic rate setting and updating the rates by hand |
 | `manage_tax` | **Tax Rules** |
-| `manage_servers` | **Servers** (with their test, the Proxmox image list and the Proxmox **Capacity** page), **Server Groups**, **Live Servers** and signing in to a server's panel from there, **Domain Pricing** (with its CSV export and import and bulk delete), **SSL Modules** (their settings and connection test), and the Panelica partner account and install link on the **Panelica Licenses** page. API: `getservers`, `createorupdatetld` |
+| `manage_servers` | **Servers** (with their test, the Proxmox image list, the Proxmox **Capacity** page and **Sync accounts**; importing accounts there as services also needs `edit_clients` and `manage_services`), **Server Groups**, **Live Servers** and signing in to a server's panel from there, **Domain Pricing** (with its CSV export and import and bulk delete), **SSL Modules** (their settings and connection test), and the Panelica partner account and install link on the **Panelica Licenses** page. API: `getservers`, `createorupdatetld` |
 | `manage_gateways` | **Payment Gateways** and their settings |
 | `manage_registrars` | **Domain Registrars**: settings, connection test, the balance check, syncing prices and adding the registrar's TLDs to Domain Pricing. The **Registrar balance** dashboard widget. API: `getregistrars` |
 | `manage_promotions` | **Promotions** (promo codes). API: `getpromotions` |

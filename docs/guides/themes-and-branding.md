@@ -37,13 +37,17 @@ it; you can switch any time.
 
 ## Logo, favicon and colors
 
-- On the **Themes** tab, upload your **logo** (PNG, JPG, SVG or WebP, up to
-  2 MB) and **favicon** (PNG, ICO or SVG, up to 512 KB). The logo is shown in
+- On the **Themes** tab, upload your **logo** (PNG, JPG or WebP, up to
+  2 MB) and **favicon** (PNG or ICO, up to 512 KB). SVG is not accepted for
+  either. The logo is shown in
   the admin panel, on the public site and client area, and on invoice PDFs.
 - On the **Color Presets** tab, apply a preset (Starter, Nightforge or
   Lumina) or change individual color tokens; changing a token sets the preset
   to *Custom*. A token takes one CSS value: no semicolons, braces, comments
   or `url()`. A value that is not one is not used on the site.
+- The sign-in pages carry the same branding: the company name, logo,
+  favicon and theme colors are on the staff login and two-factor pages and on
+  the customer login, register, password reset, two-factor and invite pages.
 
 ## Homepage builder
 

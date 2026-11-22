@@ -7,6 +7,7 @@ sources:
   - app/Console/Commands/ModuleQueueProcessCommand.php
   - app/Http/Controllers/Admin/LiveServerController.php
   - app/Services/DomainHosting.php
+  - app/Services/ServerAccountSync.php
   - modules/Servers/
   - resources/views/admin/config/servers.blade.php
   - resources/views/admin/config/modules.blade.php
@@ -29,6 +30,11 @@ server, for example, has its **Node** (empty = the least busy node), a
 keeps customer machines apart from your own. See
 [Connect a Server](../guides/connect-a-server.md#credentials-by-type).
 
+Accounts that already run on a Panelica or Plesk server can be brought into
+billing without creating anything: **Sync accounts** on the server list imports
+them as services linked to their accounts. See
+[Connect a Server](../guides/connect-a-server.md#bring-in-accounts-already-on-the-server).
+
 ## Module
 
 A **module** is the code that knows how to talk to a particular control panel or
@@ -39,7 +45,7 @@ provider's API. PNLCS ships with these server modules:
 | **Panelica** | Accounts on a Panelica hosting panel |
 | **Panelica Licenses** | Panelica licenses, sold with a Panelica partner account ([guide](../guides/sell-panelica-licenses.md)) |
 | **cPanel/WHM** | WHM/cPanel accounts |
-| **Plesk** | Plesk subscriptions |
+| **Plesk** | Plesk subscriptions, or reseller accounts ([guide](../guides/plesk-existing-accounts.md#reseller-accounts)) |
 | **DirectAdmin** | DirectAdmin users |
 | **HestiaCP** | HestiaCP users |
 | **aaPanel** | Sub aaPanel accounts (needs aaPanel Pro) |

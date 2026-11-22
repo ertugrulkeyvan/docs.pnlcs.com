@@ -7,6 +7,9 @@ sources:
   - app/Services/CartService.php
   - resources/views/admin/clients/show.blade.php
   - app/Http/Controllers/Admin/ClientController.php
+  - app/Http/Controllers/Admin/ServerSyncController.php
+  - app/Services/ServerAccountSync.php
+  - resources/views/admin/config/server-sync.blade.php
   - lang/en/whmcs_import.php
   - app/Console/Commands/DbBackupCommand.php
   - app/Console/Commands/CurrencyUpdateCommand.php
@@ -42,10 +45,17 @@ listed, no domain is free.
 ## How do I bring an existing customer/account into PNLCS?
 
 Open the client → **Services** tab → **Add Service**. Leave the options empty
-for a billing-only record; on a Panelica or Proxmox server, use **Link to an
-existing account** to attach the account or virtual server that already runs
+for a billing-only record; on a Panelica, Plesk or Proxmox server, use **Link to an
+existing account** to attach the account, subscription or virtual server that already runs
 there (PNLCS then bills *and* manages it); or tick **Create the account on the
 server now** to provision a brand-new one.
+
+To bring in many accounts at once, use **Sync accounts** next to a Panelica or
+Plesk server under **Setup → Servers**. It lists every account on the server
+next to the service that bills it; tick the ones not linked yet, check the
+client, product, cycle, amount and next due date, and press **Import
+selected** (up to 100 at a time). Each becomes a service linked to its
+account. Nothing changes on the server.
 
 ## How does PNLCS know which server account belongs to which service?
 

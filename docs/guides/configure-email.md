@@ -6,6 +6,8 @@ sources:
   - resources/views/admin/config/email-templates.blade.php
   - database/seeders/EmailTemplateSeeder.php
   - app/Http/Controllers/Admin/LogController.php
+  - app/Listeners/ApplyEmailTemplate.php
+  - app/Rules/EmailList.php
 ---
 
 # Configure Email
@@ -23,6 +25,7 @@ messages and ticket replies all go out by email.
 | **Mail Type** | **SMTP** (recommended), or **PHP Mail** to hand mail to the server's own `sendmail`. The line under it shows the transport in use now. |
 | **System Email Address** | The sender address, for example `noreply@example.com`. |
 | **Email From Name** | The sender name customers see, for example your company name. |
+| **Send a copy of every email to** | Optional. Every email PNLCS sends is blind-copied here, so you keep a record of what customers receive. Separate several addresses with commas; an address that is not valid is refused on save. Emails that carry a password, a sign-in link or a verification code are never copied. |
 | **SMTP Host** | Your mail provider's SMTP server. |
 | **SMTP Port** | `587` for STARTTLS (the default), `465` for SSL. |
 | **SMTP Encryption** | **TLS (STARTTLS)** for port 587, **SSL** for 465, **None** only for a relay on a trusted network. |
@@ -60,6 +63,11 @@ Templates**:
 - Each language has its own set; pick the language at the top of the page.
 - **Edit** a template to change its subject and text, or tick **Disabled** to
   stop that email.
+- **Send a copy to** on a template blind-copies that one email to the
+  addresses you enter (comma-separated), on top of the shop-wide copy
+  address above. An address in both gets one copy, and an address the email
+  is already going to gets none. The emails that are never copied stay
+  uncopied here too.
 - Until you change the text, the email goes out in the built-in design. Once
   you change it, your text is sent instead; **Use the built-in email** goes
   back to the built-in one and keeps your text for later.

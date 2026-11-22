@@ -8,6 +8,8 @@ sources:
   - resources/views/admin/clients/show.blade.php
   - modules/Servers/Panelica/PanelicaModule.php
   - modules/Servers/Proxmox/ProxmoxModule.php
+  - modules/Servers/Plesk/PleskModule.php
+  - app/Services/ServerAccountSync.php
 ---
 
 # Migrate from WHMCS
@@ -51,11 +53,16 @@ servers — PNLCS just needs to manage them going forward.
 Import them ([below](#import-from-the-whmcs-database)), or create them by hand:
 for each customer, create a **client** in PNLCS and add their existing
 **services**: on the client, **Services → Add Service**, with the right product,
-next due date and price. On a Panelica or Proxmox server, **Link to an existing
-account** lists what is already on it (the panel's accounts, or the virtual
-machines); pick the customer's, and PNLCS manages it from then on (suspend,
-terminate, password). Leave it empty for a billing-only record. New renewal
-invoices then bill from PNLCS.
+next due date and price. On a Panelica, Plesk or Proxmox server, **Link to an
+existing account** lists what is already on it (the panel's accounts, the Plesk
+subscriptions, or the virtual machines); pick the customer's, and PNLCS manages
+it from then on (suspend, terminate, password). Leave it empty for a
+billing-only record. New renewal invoices then bill from PNLCS.
+
+For many accounts at once, **Sync accounts** in the server list (Panelica and
+Plesk) lists every account on the server and imports the ones no service bills
+yet, up to 100 at a time, each linked to its account
+([Connect a Server](connect-a-server.md#bring-in-accounts-already-on-the-server)).
 
 Two common patterns:
 

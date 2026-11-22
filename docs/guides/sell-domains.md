@@ -12,6 +12,9 @@ sources:
   - app/Services/DomainAvailability.php
   - app/Services/DomainRegistrarActions.php
   - app/Services/DomainRestoreService.php
+  - app/Services/DomainSyncChanges.php
+  - app/Support/RegistrantContact.php
+  - app/Http/Controllers/Client/CartController.php
   - app/Services/DomainMove.php
   - app/Services/DomainHosting.php
   - app/Console/Commands/DomainSyncCommand.php
@@ -41,6 +44,7 @@ that are listed and enabled here.
 | **WHOIS privacy price (per year)** | Empty: privacy is not offered at order. 0: offered free. An amount: sold at that price per year, on the order and on renewals |
 | **Category** | Generic, Local extensions, Country or New TLDs: the filter tabs on the public domain search and pricing pages |
 | **Popular** | Also listed under the *popular* filter |
+| **Transfer needs an EPP/auth code** | Ticked by default. Untick it for an extension whose registry moves a name without a code (a `.uk` transfer, for example, is approved with the gaining registrar's tag instead): its transfers are then ordered and sent to the registrar without one |
 | **Grace Period (days)** | Days after expiry before the domain goes into redemption; the domain search shows it as extra time to renew at the normal price. 5 by default |
 | **Redemption Period (days, after grace)** | Days the domain stays in redemption after the grace period. 30 by default |
 | **Min Years**, **Max Years** | How many years a customer may order at once (1 and 10 when left empty) |
@@ -161,6 +165,14 @@ contact's id is stored in the client custom field chosen in **OVH contact
 field** (on *Auto*, one named `csa` or `ovh_contact_id`), and the client's
 next domains reuse it.
 
+!!! warning "Registrant details must be complete"
+    The registrant is the client: first and last name, email, phone,
+    address, city and country. If any of these is empty on the client's
+    profile, Enom, Namecheap, OpenProvider and ResellerClub refuse the
+    registration before anything is sent, and the message names what is
+    missing. Complete the profile and use **Retry registration** on the
+    domain. ResellerClub also refuses a registration with no nameservers.
+
 !!! warning "A paid domain is never marked registered without a registrar"
     If a domain's registrar cannot be loaded (switched off, or no longer
     installed), a paid order leaves the domain **pending** and you get a
@@ -177,7 +189,12 @@ next domains reuse it.
 - A hosting order for a domain that is already set up on your servers is
   refused while ordering: the customer is told it cannot be ordered again and
   to contact you. Only Panelica servers are asked.
-- A transfer asks for the EPP (auth) code from the current registrar.
+- A transfer asks for the EPP (auth) code from the current registrar, unless
+  the extension has **Transfer needs an EPP/auth code** unticked. An
+  extension that is not in the price list always asks for it.
+- A paid transfer shows as **pending** while the registrar reports it as
+  pending (DomainNameAPI, Enom, HRD, Namecheap and ResellerClub do), and the
+  nightly sync moves it on once the transfer completes.
 - The years they can choose follow **Min Years** and **Max Years**, and WHOIS
   privacy is offered in the cart when the extension has a privacy price.
 
@@ -280,6 +297,10 @@ changes nothing already done. It works for hosting on Panelica servers.
 - Every night PNLCS asks the registrar for each domain's expiry, status and
   nameservers, and updates its records. A domain shown as active that the
   registrar does not know raises a notification, at most once a week.
+- When the registrar reports a different expiry date, the next due date moves
+  with it only if it was the same as the old expiry date (as an order sets
+  it). A due date set apart from the expiry stays where it is. The **Sync**
+  button on a domain follows the same rule.
 - A domain with no registration date (an imported one, for example) gets it
   from the registrar, or else from RDAP, the registries' public lookup. The
   nightly sync and the **Sync** button both do this, and a date already

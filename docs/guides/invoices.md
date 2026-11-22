@@ -12,6 +12,7 @@ sources:
   - app/Services/InvoicePdfService.php
   - app/Listeners/SendNotificationListener.php
   - app/Support/formatting.php
+  - app/Support/TaxNotice.php
   - resources/views/admin/invoices/create.blade.php
   - resources/views/admin/invoices/show.blade.php
   - resources/views/admin/clients/credit.blade.php
@@ -144,6 +145,11 @@ Partially Paid.
 A refund does not touch the services the invoice paid for: cancel them
 yourself if they should end.
 
+The invoice's **Payment History** lists each refund as a negative amount next
+to the payments. The descriptions PNLCS writes on payment, refund and credit
+records are in the customer's language (or your default language when they
+have none set), whoever was signed in when they were made.
+
 ## Credit balance
 
 Each customer has a **credit balance**, in your default currency, shown on
@@ -225,7 +231,10 @@ Settings → Invoicing → Invoices**:
 | **Default Payment Method for New Clients** | |
 
 The scheme takes `{year}`, `{yy}`, `{month}`, `{day}` and `{num}`; `{num}` is
-six digits with leading zeros. The number continues from the highest one
+six digits with leading zeros. To use another width, write it after a colon:
+`{num:4}` gives `0042` (any width from 1 to 9). The width only pads: a number
+that has more digits is written in full, and changing the width continues the
+same series. This works in the proforma scheme too. The number continues from the highest one
 already issued, so changing the scheme does not restart the count. With
 **Reset numbering each year**, only this year's invoices count, so each
 January starts again at 1. The card shows the **Last invoice** and a
@@ -250,12 +259,15 @@ client area, and it comes with the invoice email. It shows:
   total;
 - the amount in the billing currency and the rate, when there is one
   ([Currencies](currencies.md#on-the-invoice-pdf));
+- on an invoice that carries no tax, your **Notice on documents without tax**
+  ([Tax Rules](tax-rules.md#a-notice-on-documents-without-tax));
 - the invoice's notes.
 
 That is the built-in design. To use your own, upload an HTML template per
 language under **Language templates** (**Setup → General Settings →
 Invoicing → Invoices**); see
-[General Settings](../reference/general-settings.md).
+[General Settings](../reference/general-settings.md). The tax notice goes in
+a template as `{tax_notice}`.
 
 ## Late fees
 

@@ -51,6 +51,19 @@ The suite runs against a MySQL database of its own. Copy
 php artisan test
 ```
 
+On a machine with several cores the suite runs faster in parallel. The
+installer's tests share `storage/installed.lock`, so they run in a second,
+serial pass:
+
+```bash
+php artisan test --parallel --exclude-group=serial
+php artisan test --group=serial
+```
+
+Each parallel process uses its own copy of the test database
+(`pnlcs_test_test_1`, `_2`, …), so the database user must be allowed to create
+databases.
+
 The full guide, with the development setup and conventions, is
 [CONTRIBUTING.md](https://github.com/Panelica/pnlcs/blob/main/CONTRIBUTING.md).
 

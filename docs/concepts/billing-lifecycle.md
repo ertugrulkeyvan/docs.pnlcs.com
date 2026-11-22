@@ -2,6 +2,7 @@
 sources:
   - routes/console.php
   - app/Services/InvoiceGenerationService.php
+  - app/Services/BillingCycleHelper.php
   - app/Console/Commands/PaymentReminderCommand.php
   - app/Console/Commands/SuspensionCommand.php
   - app/Console/Commands/TerminationCommand.php
@@ -60,8 +61,16 @@ No renewal invoice is raised for a service whose customer turned auto-renew
 off, or that has a cancellation request waiting. Paying the renewal invoice
 moves the service's next due date on by one billing cycle.
 
+A renewal is paid in advance. The service's line on the renewal invoice names
+the period it pays for: from the current due date to the date the payment
+moves it to. A monthly service due on 27 November reads
+`2026/11/27 - 2026/12/27`.
+
 Supported cycles: monthly, quarterly, semi-annually, annually, biennially,
-triennially.
+triennially, and a term of any length from 1 to 12 months (for example seven
+months) on products whose module sets such terms, such as
+[Panelica licenses](../guides/sell-panelica-licenses.md).
+A term renews for the same length.
 
 ## Payment reminders
 

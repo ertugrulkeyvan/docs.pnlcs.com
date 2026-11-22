@@ -11,6 +11,7 @@ sources:
   - app/Enums/
   - app/Http/Controllers/Admin/SettingController.php
   - app/Services/Mail/ImapMailboxClient.php
+  - app/Http/Controllers/Admin/ServerSyncController.php
 ---
 
 # WHMCS to PNLCS
@@ -73,6 +74,7 @@ what PNLCS does not have. For moving your data, see
 | WHMCS | PNLCS |
 |---|---|
 | General Settings | **Setup → General Settings**, cards under tabs ([General Settings](general-settings.md)) |
+| General Settings → Mail → BCC Messages | **General Settings → Notifications → Mail Configuration → Send a copy of every email to**; per template, **Send a copy to** under **Setup → Email Templates**. Emails that carry a password, a sign-in link or a verification code are never copied |
 | Automation Settings | On **General Settings**: the **Automation** card (**Automation** tab), and the **Automatic Payment**, **Invoices** and **Late Fees** cards (**Invoicing** tab). Run times are fixed ([Scheduled commands](scheduled-commands.md)) |
 | Fraud Protection | **General Settings → Security → Fraud Screening** (MaxMind, FraudLabs Pro; [guide](../guides/fraud-screening.md)) |
 | Sign-In Integrations | **General Settings → Security → Social Login** (Google, GitHub) |
@@ -84,6 +86,7 @@ what PNLCS does not have. For moving your data, see
 | Products/Services → Configurable Options | **Setup → Configurable Options** ([guide](../guides/promotions-and-addons.md)) |
 | Products/Services → Product Addons, Product Bundles | **Setup → Product Addons**, **Product Bundles** |
 | Products/Services → Domain Pricing, Domain Registrars, Servers | **Setup → Domain Pricing**, **Domain Registrars**, **Servers**, **Server Groups** |
+| Server Sync Tool, importing existing accounts | **Sync accounts** on a server in **Setup → Servers** (Panelica and Plesk; [Connect a Server](../guides/connect-a-server.md#bring-in-accounts-already-on-the-server)) |
 | Support → Support Departments | **Setup → Ticket Departments**, where email import is also set up ([Support mail piping](../guides/support-mail-piping.md)) |
 | Support → Ticket Statuses | **Setup → Ticket Statuses** |
 | Support → Escalation Rules | **Setup → Ticket Escalation Rules** ([details](../guides/support-mail-piping.md#escalation-rules)) |

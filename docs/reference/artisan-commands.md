@@ -3,6 +3,7 @@ sources:
   - app/Console/Commands/
   - modules/Servers/PanelicaLicense/Console/SyncLicensesCommand.php
   - routes/console.php
+  - app/Services/DomainSyncChanges.php
 ---
 
 # Artisan Commands
@@ -59,7 +60,7 @@ nothing.
 
 | Command | What it does | Options |
 |---|---|---|
-| `pnlcs:domain-sync` | Reads expiry, status and nameservers from the registrars, and fills a missing registration date | `--domain=` one domain name; `--dry-run` reports what would change |
+| `pnlcs:domain-sync` | Reads expiry, status and nameservers from the registrars, and fills a missing registration date. A due date that was the same as the old expiry date moves with a corrected expiry; one set apart from it stays | `--domain=` one domain name; `--dry-run` reports what would change |
 | `pnlcs:domain-renewal-reminders` | Warns customers before their domains expire, and again during the grace period | `--dry-run` lists what would be sent |
 | `pnlcs:registrar-balance` | Warns when the registrar balance falls to the floor you set | `--force` sends the warning even if one went out today |
 | `pnlcs:ssl-expiry-check` | Emails about certificates about to expire | none |

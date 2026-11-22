@@ -8,6 +8,7 @@ sources:
   - app/Services/InvoiceGenerationService.php
   - app/Listeners/RenewOnPaymentListener.php
   - app/Services/DomainMove.php
+  - app/Services/BillingCycleHelper.php
   - resources/views/admin/products/create.blade.php
   - resources/views/admin/products/edit.blade.php
 ---
@@ -32,12 +33,19 @@ A **product** is an entry on your price list. It defines:
   accepts the order*
 - A **payment type** (*Recurring*, *One Time* or *Free*) and **pricing** per
   billing cycle (monthly, quarterly, semi-annually, annually, biennially,
-  triennially; `-1` turns a cycle off), in your shop currency. A *Free*
+  triennially; `-1` turns a cycle off), in your shop currency. A product can
+  also be sold for a term of any length from 1 to 12 months, such as seven
+  months; the **Panelica Licenses** page sets these terms
+  ([Sell Panelica Licenses](../guides/sell-panelica-licenses.md)). The
+  service is dated and renewed by that length. A *Free*
   product with no cycle priced is sold monthly at no charge, and is never
   invoiced again
 - An optional one-time **setup fee** per billing cycle. It is shown in the
   basket and at checkout and is a line of its own on the first invoice, taxed
-  as the product is. Renewals do not repeat it
+  as the product is. Renewals do not repeat it, and a *free setup* promo code
+  waives it ([Promotions](../guides/promotions-and-addons.md#edit-a-code)).
+  An order staff place under **Add New → New Order** charges it too, unless
+  they untick **Charge the product's setup fee, if it has one.**
 - A **description**, written in Markdown with a small toolbar, with a tab for
   each active language. A visitor reads it in their own language, or the
   default text where there is no translation
@@ -101,7 +109,8 @@ on top. Each invoice keeps the mode it was issued with.
 **Paying an invoice is the trigger** for almost everything: it accepts the
 order, activates and provisions the service (unless its product waits for an
 admin), credits affiliates, and sends the welcome email. Paying a renewal
-invoice moves the service's next due date on by one billing cycle.
+invoice moves the service's next due date on by one billing cycle; the
+renewal line names that period, from the due date to the next one.
 
 ## Service — what the customer owns
 

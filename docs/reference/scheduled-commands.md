@@ -7,6 +7,7 @@ sources:
   - app/Services/ScheduleStatusService.php
   - app/Http/Controllers/Admin/LogRetentionController.php
   - resources/views/admin/settings/log-retention.blade.php
+  - app/Services/DomainSyncChanges.php
 ---
 
 # Scheduled Commands
@@ -57,7 +58,7 @@ Times are UTC: PNLCS fixes its time zone to UTC, whatever the server's own time 
 
 | Command | When | What it does |
 |---|---|---|
-| `pnlcs:domain-sync` | daily 03:00 | Reads expiry, status, lock and nameservers from the registrars, and fills a missing registration date from the registrar or RDAP |
+| `pnlcs:domain-sync` | daily 03:00 | Reads expiry, status, lock and nameservers from the registrars, and fills a missing registration date from the registrar or RDAP. A due date that was the same as the old expiry date moves with a corrected expiry; one set apart from it stays |
 | `pnlcs:registrar-balance` | 08:00 and 20:00 | Warns when the prepaid balance at the watched registrar falls to the floor |
 | `pnlcs:ssl-expiry-check` | daily 09:00 | Warns about certificates about to expire |
 | `pnlcs:domain-renewal-reminders` | daily 09:15 | Emails customers whose domains are about to expire |

@@ -55,19 +55,24 @@ Press **Add Promo Code** and fill in:
 | **Expiry Date** | Optional. The code still works on its expiry date and stops the day after. |
 | **Applies to renewals as well** | See [First payment or renewals too](#first-payment-or-renewals-too). |
 | **Billing cycles discounted** | With renewals ticked: on how many invoices per service the code is taken off, the order's own invoice included. `0` = no limit. |
+| **Products discounted per order** | How many products of one order the code discounts. `0` = unlimited. When more products qualify, the highest-priced ones are discounted. With a limit the code discounts products only, not domains, and it can't also apply to renewals. |
 | **Billing periods** | Tick periods (Monthly, Annually and so on) to limit the code to them. A product ordered on another period is charged in full, and a code whose basket has no line on a ticked period is refused. None ticked: every period. |
 
 ### Edit a code
 
 **Edit** opens a shorter form: **Code**, **Type**, **Value**, **Max Uses**,
 **Start Date**, **Expires**, **Applies to renewals as well**, **Billing
-cycles discounted** and **Billing periods**. The product lists and the
-customer rules can't be changed after creation. To change them, delete the
-code and create it again.
+cycles discounted**, **Products discounted per order** and **Billing
+periods**. The product lists and the customer rules can't be changed after
+creation. To change them, delete the code and create it again.
 
-The edit form lists three more types (*free setup*, *price override*,
-*override recurring*). PNLCS doesn't calculate a discount for them, so don't
-use them.
+The edit form lists three more types:
+
+- *free setup* waives the setup fee of the products the code covers, in the
+  cart and on the invoice. The **Value** is not used. An order whose
+  products have no setup fee gets no discount.
+- *price override* and *override recurring*: PNLCS doesn't calculate a
+  discount for them, so don't use them.
 
 ### First payment or renewals too
 
@@ -107,8 +112,10 @@ In the cart and on the invoice, things happen in this order:
 1. The lines (products, their options and addons, domains).
 2. The customer's **client group** discount, if they are in a group with one.
 3. The promo code. A percentage is taken off what's left, or only off the
-   covered lines if the code is limited to certain products. A fixed amount
-   never takes more than those lines are worth.
+   covered lines if the code is limited to certain products, billing periods
+   or a number of products per order. A fixed amount never takes more than
+   those lines are worth. A *free setup* code takes off the setup fees of
+   those lines and nothing else.
 4. Tax, on what is left of the taxable part. With
    [prices that include tax](tax-rules.md), the code comes off the price the
    customer was shown.

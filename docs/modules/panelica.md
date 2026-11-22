@@ -13,6 +13,9 @@ sources:
   - resources/views/admin/config/servers.blade.php
   - resources/views/admin/products/edit.blade.php
   - lang/en/panelica.php
+  - app/Services/ServerAccountSync.php
+  - app/Http/Controllers/Admin/ServerSyncController.php
+  - resources/views/admin/config/server-sync.blade.php
 ---
 
 # Panelica hosting accounts
@@ -226,6 +229,14 @@ customer's tools act on that account.
 
 A linked service has no stored domain id, so the mail certificate status and the mail DNS help are not shown for
 it.
+
+To bring many accounts in at once, use **Sync accounts** on the server's row in **Setup → Servers**. It lists the same
+accounts next to the service that bills each one; tick the ones not linked yet, check the client, product, cycle,
+amount and next due date, and press **Import selected** (up to 100 at a time). Each becomes a service linked as above;
+nothing changes on the panel. The panel gives no plan or creation date, so the product is filled in only when there
+is a single Panelica product, and the next due date only from an uploaded price list. Accounts are listed by
+username: a price list row matches an account when its `domain` column holds that username, and the imported service
+takes the username as its domain. Importing needs the permissions to edit clients and to manage services.
 
 ## Error messages
 

@@ -36,8 +36,8 @@ is on [Themes and branding](../guides/themes-and-branding.md).
   nothing. A value that fails the check (one stored earlier, or set by a
   theme's `theme.json`) is left out of the page, so that token falls back to
   whatever the CSS gives it.
-- **Used by PNLCS**: the 18 tokens the built-in views and the bundled themes
-  read. The other 38 are printed all the same, for your own theme's
+- **Used by PNLCS**: the 22 tokens the built-in views and the bundled themes
+  read. The other 34 are printed all the same, for your own theme's
   CSS to use; changing them has no visible effect on the built-in pages.
 
 **Starter** is the default preset ("Clean professional blue theme"). The two
@@ -69,17 +69,17 @@ other presets, Nightforge and Lumina, set all 56 with their own values.
 | `welcome_secondary` | `--theme-welcome-secondary` | Welcome Secondary | `#7c3aed` | |
 | `table_header_bg` | `--theme-table-header-bg` | Table Header BG | `#1a4d80` | yes |
 | `success` | `--theme-success` | Success | `#10b981` | yes |
-| `danger` | `--theme-danger` | Danger | `#ef4444` | |
+| `danger` | `--theme-danger` | Danger | `#ef4444` | yes |
 | `warning` | `--theme-warning` | Warning | `#f59e0b` | |
 | `info` | `--theme-info` | Info | `#3b82f6` | |
-| `link_color` | `--theme-link-color` | Link Color | `#2563eb` | |
+| `link_color` | `--theme-link-color` | Link Color | `#2563eb` | yes |
 | `link_hover_color` | `--theme-link-hover-color` | Link Hover | `#1d4ed8` | |
-| `heading_color` | `--theme-heading-color` | Heading Color | `#1e293b` | |
+| `heading_color` | `--theme-heading-color` | Heading Color | `#1e293b` | yes |
 | `card_shadow` | `--theme-card-shadow` | Card Shadow Color | `rgba(0,0,0,0.08)` | |
 | `input_bg` | `--theme-input-bg` | Input BG | `#ffffff` | |
 | `input_border` | `--theme-input-border` | Input Border | `#d1d5db` | |
 | `input_focus_border` | `--theme-input-focus-border` | Input Focus Border | `#1a4d80` | |
-| `badge_bg` | `--theme-badge-bg` | Badge BG | `#e8f0fb` | |
+| `badge_bg` | `--theme-badge-bg` | Badge BG | `#e8f0fb` | yes |
 | `overlay_bg` | `--theme-overlay-bg` | Overlay BG | `rgba(0,0,0,0.5)` | |
 
 ## Typography

@@ -20,14 +20,16 @@ sources:
   - app/Services/InvoicePdfService.php
   - app/Services/OfficialRateProviders.php
   - app/Services/DomainHosting.php
+  - app/Support/DomainSuggestions.php
+  - app/Http/Controllers/WelcomeController.php
+  - resources/views/admin/config/tax.blade.php
 ---
 
 # General Settings, card by card
 
 **Setup → General Settings** groups its cards under tabs: **Company**,
 **Invoicing**, **Domains**, **Notifications**, **Security**, **Automation**
-and **SEO & tracking** (an **Other** tab is shown too, with nothing on it in
-this release). One **Save Settings** button at the bottom saves every tab at
+and **SEO & tracking**. One **Save Settings** button at the bottom saves every tab at
 once. This page lists every card tab by tab, in the order the screen shows
 them, with each field's label, its default and what it does.
 
@@ -37,7 +39,8 @@ How the page saves:
   shown again. Left empty on a later save, the stored value is kept.
 - Some values are checked when you save, and the page is refused with a
   message when one is wrong: the email addresses, **Timezone** (must be a
-  time zone PHP knows), **SMTP Port** (1 to 65535), the day counts (whole
+  time zone PHP knows), **Send a copy of every email to** (email addresses
+  separated by commas), **SMTP Port** (1 to 65535), the day counts (whole
   numbers, not negative), the late fee amount, **How many** (1 to 12), the
   warning floor and the official rate provider list. Other fields are stored
   as typed; a wrong value (a malformed Tag Manager ID) is ignored where it is
@@ -142,7 +145,7 @@ first morning. Run `php artisan pnlcs:auto-charge --dry-run` first.
 | **Raise renewal invoices (days before due)** | 14 | How many days before a service, addon or domain falls due its renewal invoice is raised, 0 to 365 |
 | **Consolidated billing day** | Off: each renewal is invoiced on its own | A day of the month, 1 to 28. On that day each customer gets one invoice for everything renewing before the same day next month (plus the days above); in between, only renewals that would otherwise be invoiced late are raised |
 | **Invoice each renewal separately, so a customer can renew one service and let another lapse** | off | One invoice per service (with its addons), per domain, and per addon whose service is not renewing at the same time, instead of one invoice for everything falling due in the same run |
-| **Invoice numbering scheme** | `INV-{year}{month}-{num}` | Tokens `{year}` `{yy}` `{month}` `{day}` `{num}`; `{num}` is six digits and continues from the highest number already issued. The card shows the last number and a preview |
+| **Invoice numbering scheme** | `INV-{year}{month}-{num}` | Tokens `{year}` `{yy}` `{month}` `{day}` `{num}`; `{num}` is six digits (`{num:4}` pads it to four; any width from 1 to 9) and continues from the highest number already issued. The card shows the last number and a preview |
 | **Reset numbering each year** | off | `{num}` starts again from 1 each January |
 | **Enable Proforma scheme** | off | New invoices are proformas; a paid proforma is replaced by a VAT invoice with its own number |
 | **Proforma numbering scheme** | `PRO-{year}/{month}-{num}` | Shown when the proforma scheme is on; same tokens |
@@ -157,7 +160,7 @@ first morning. Run `php artisan pnlcs:auto-charge --dry-run` first.
 
 | Field | Default | What it does |
 |---|---|---|
-| **Suggested extensions, in order** | `.com .net .org .io .co .dev .app .online .site .xyz` | Extensions offered next to the name searched, when priced and enabled |
+| **Suggested extensions, in order** | `.com .net .org .io .co .dev .app .online .site .xyz` | Extensions offered next to the name searched, when priced and enabled. The home page's domain prices show the first eight enabled ones in this order, filled up from the other enabled extensions when there are fewer |
 | **How many** | 6 | 1 to 12 |
 
 ### Registrar balance watch
@@ -196,12 +199,6 @@ Checked at 08:00 and 20:00 ([Scheduled commands](scheduled-commands.md)).
 
 ➡️ [Client logins and permissions](../guides/client-logins-and-permissions.md#sign-in-settings)
 
-### Email Verification
-
-| Field | Default | What it does |
-|---|---|---|
-| **New customers must confirm their email address** | on | An unconfirmed address can sign in but is stopped at checkout. Existing accounts are not affected |
-
 ### Mail Configuration
 
 | Field | Default | What it does |
@@ -210,6 +207,7 @@ Checked at 08:00 and 20:00 ([Scheduled commands](scheduled-commands.md)).
 | **Enable outgoing emails** | on | Off stops every email PNLCS sends |
 | **System Email Address** | empty | The sender address |
 | **Email From Name** | empty | The sender name |
+| **Send a copy of every email to** | empty | Each email PNLCS sends is blind-copied to these addresses, separated by commas. Emails that carry a password, a sign-in link or a verification code are never copied. Shown for every mail type |
 | **SMTP Host** | empty | Shown for SMTP |
 | **SMTP Port** | 587 | |
 | **SMTP Username** | empty | |
@@ -235,6 +233,12 @@ The worst score from the built-in rules and these providers counts; an order
 scoring 60 or more is held under **Orders → Fraud**. A missing key or a provider
 outage never blocks an order.
 ➡️ [Fraud screening](../guides/fraud-screening.md)
+
+### Email Verification
+
+| Field | Default | What it does |
+|---|---|---|
+| **New customers must confirm their email address** | on | An unconfirmed address can sign in but is stopped at checkout. Existing accounts are not affected |
 
 ### Social Login
 
@@ -315,5 +319,6 @@ Preview what would be terminated with `php artisan pnlcs:auto-terminate --dry-ru
 
 The AI translation key and model on **Setup → Languages** are stored with these
 settings but are edited on that screen ([Translate with AI](../guides/languages.md#translate-with-ai)).
-So are the **Charge tax** and **Prices include tax** switches on
-**Setup → Tax Rules** ([Tax rules](../guides/tax-rules.md)).
+So are the **Charge tax** and **Prices include tax** switches and the
+**Notice on documents without tax** on **Setup → Tax Rules**
+([Tax rules](../guides/tax-rules.md)).

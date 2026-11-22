@@ -6,6 +6,8 @@ sources:
   - app/Console/Commands/CurrencyUpdateCommand.php
   - app/Services/TcmbRateService.php
   - app/Support/CustomerCurrency.php
+  - app/Support/CountryCurrency.php
+  - app/Support/GeoLocale.php
   - app/Http/Middleware/SetDisplayCurrency.php
   - app/Models/Invoice.php
   - app/Models/Product.php
@@ -156,7 +158,14 @@ default) needs at least two currencies.
 - A visitor picks a currency in the top bar and sees every price converted at
   the current rate. The cart and checkout say which rate is used and that the
   invoice will be in that currency.
-- The account they open keeps that currency. After that, a signed-in customer
+- With **Start visitors in the currency of their country** also ticked (same
+  card, off by default), a visitor who has not picked a currency sees prices
+  in the currency of the country they come from, when it is one of your
+  currencies; otherwise in the default currency. The country is read from the
+  header your CDN or proxy sets (Cloudflare's `CF-IPCountry`, for example),
+  else from the region the browser states (`pl-PL`). It is only a first
+  guess: a currency picked in the top bar always wins.
+- The account they open keeps the currency they were shown. After that, a signed-in customer
   cannot change it: staff do, under **Clients → the client → Edit →
   Currency**.
 - The admin area always shows the default currency.

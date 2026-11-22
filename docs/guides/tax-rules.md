@@ -6,6 +6,7 @@ sources:
   - app/Http/Controllers/Admin/InvoiceController.php
   - app/Http/Controllers/Admin/ProductController.php
   - resources/views/admin/config/tax.blade.php
+  - app/Support/TaxNotice.php
 ---
 
 # Tax Rules
@@ -15,8 +16,8 @@ Rules** (the page is headed **Tax Configuration**).
 
 ## Charge tax, and prices that include it
 
-Two switches sit at the top of the page. **Save Changes** under them saves
-both.
+Two switches and a text box sit at the top of the page. **Save Changes**
+under them saves all three.
 
 - **Charge tax** (on by default). Off: no tax is added to any order, invoice
   or quote, whatever the rules say. The rules are kept, so you can switch it
@@ -28,6 +29,18 @@ both.
 
 An invoice keeps the way it was taxed when it was issued: changing a switch
 later does not change invoices you already have.
+
+### A notice on documents without tax
+
+**Notice on documents without tax** is a line of up to 500 characters, for
+example the wording your law asks for under a small-business exemption
+(`Umsatzsteuerfrei gemäß § 19 UStG.`). It is shown on every invoice that
+carries no tax (the client area page and the PDF), and in the cart and at
+checkout when no tax is added. Documents with tax never show it. Leave it
+empty to show nothing.
+
+The notice is read when the invoice is shown, so an untaxed invoice issued
+earlier shows the text you have now.
 
 ## Add rates
 

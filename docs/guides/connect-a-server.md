@@ -4,6 +4,10 @@ sources:
   - app/Services/Module/ModuleRegistry.php
   - resources/views/admin/config/servers.blade.php
   - resources/views/admin/config/server-groups.blade.php
+  - resources/views/admin/config/server-sync.blade.php
+  - app/Http/Controllers/Admin/ServerSyncController.php
+  - app/Services/ServerAccountSync.php
+  - app/Support/ServerAddress.php
   - modules/Servers/
 ---
 
@@ -82,6 +86,14 @@ cancelled or fraud) cannot be deleted.
     - **API Key:** paste a Plesk API key (secret key) into the **API Key**
       field. An active server is refused without it; the **Admin Password**
       alone is not accepted.
+    - With an **IP Address** recorded, PNLCS calls Plesk over that address's
+      IP version (IPv4 or IPv6), even when the hostname also has a record of
+      the other version, so an API key that Plesk ties to the calling address
+      is not refused.
+    - The product's package list offers the server's service plans and, after
+      them, its reseller plans (a plan named Gold shows as **Reseller: Gold**). A
+      product sold with one creates a Plesk reseller account. See
+      [Plesk: Existing Accounts & Resellers](plesk-existing-accounts.md).
 
 === "DirectAdmin"
     - **Port:** 2222. **Username:** the admin account.
@@ -146,6 +158,19 @@ Type**:
 Only active servers of the product's module count. When none of them has room,
 provisioning fails and lands in the module queue instead of using a server
 outside the group. A group that products still use cannot be deleted.
+
+## Bring in accounts already on the server
+
+Panelica and Plesk servers have a **Sync accounts** button in the server list.
+It lists every account on the server next to the service that bills it, if
+any. Accounts without one can be imported, up to 100 at a time: pick the
+client, product, cycle, amount and next due date, and each becomes a service
+linked to its account. Nothing changes on the server. Importing needs the
+*edit clients* and *manage services* permissions.
+
+To link one account, add a service on the client's page and choose the account
+under **Link to an existing account**. For Plesk, see
+[Plesk: Existing Accounts & Resellers](plesk-existing-accounts.md).
 
 ## Link a product to the server
 

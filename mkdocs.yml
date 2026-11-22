@@ -148,6 +148,7 @@ nav:
               - HestiaCP: modules/hestiacp.md
               - Panelica: modules/panelica.md
               - Plesk: modules/plesk.md
+              - "Plesk: existing accounts and resellers": guides/plesk-existing-accounts.md
               - Vultr: modules/vultr.md
               - Custom (manual): modules/custom.md
           - Live servers: guides/live-servers.md
