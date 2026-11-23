@@ -82,8 +82,8 @@ A product whose plan is a **Reseller: <plan>** entry creates a Plesk reseller on
 | Create | `POST /clients`, then `POST /domains` | See above. A reseller: XML API `reseller` → `add` |
 | Suspend | XML API `webspace` → `set`, status 16 | Suspends only this service's subscription; the customer's other subscriptions keep running |
 | Unsuspend | XML API `webspace` → `set`, status 0 | |
-| Terminate | XML API `webspace` → `del`, then `DELETE /clients/{id}` | Removes the subscription; the customer is removed only when no subscription of theirs is left |
-| Change password | `PUT /clients/{id}`, then `PUT /domains/{id}` | Changes the panel login password, then the subscription's FTP password |
+| Terminate | XML API `webspace` → `del`, then `DELETE /clients/{id}` | Removes the subscription; the customer is removed only when no subscription of theirs is left, and only after PNLCS checks that the recorded owner is a Plesk customer (never a reseller) |
+| Change password | `PUT /clients/{id}`, then `PUT /domains/{id}` | Changes the panel login password, then the subscription's FTP password. A linked subscription with no customer recorded (the administrator's or a reseller's) changes only its FTP password |
 | Change package | `PUT /domains/{id}` with the plan name | See below |
 | Usage | `GET /clients/{id}/statistics` | See below |
 | List accounts | XML API `webspace` → `get`, with `customer` and `reseller` → `get` for the owners | For linking and the sync page; see [Existing subscriptions](#existing-subscriptions) |
@@ -107,7 +107,7 @@ Subscriptions that already run on the server can be billed without creating anyt
 - **One at a time**: on the client's page, **Add Service** with a Plesk product and server, leave **Create the account on the server now** unticked, and pick the subscription under **Link to an existing account**. The list shows each subscription's domain and owner.
 - **In bulk**: **Sync accounts** on the server's row in **Setup → Servers** lists every subscription and reseller on the server and imports the ones no service bills yet.
 
-Linking records the subscription id and, when a customer or reseller owns it, the owner's id; the service's username becomes the owner's login, and an empty domain becomes the subscription's name. Nothing changes on Plesk. A subscription another live service manages is refused. See [Plesk: existing accounts and resellers](../guides/plesk-existing-accounts.md).
+Linking records the subscription id and, only when a customer owns it, the customer's id; the service's username then becomes the customer's login, and an empty domain becomes the subscription's name. Nothing changes on Plesk. A subscription another live service manages is refused. See [Plesk: existing accounts and resellers](../guides/plesk-existing-accounts.md).
 
 ### Not supported
 
@@ -130,7 +130,8 @@ The service page shows the server name, the Plesk login, and the server's hostna
 | `Failed to create Plesk reseller: <message>` | Plesk refused the reseller, for example a login already in use |
 | `Service is missing its client.` | A reseller service without a client |
 | `Missing server or Plesk subscription ID.` | Suspend, unsuspend or terminate on a service with neither a subscription id nor a customer id |
-| `Missing server or Plesk client ID.` | Password change on a service with no stored Plesk customer id, for example a linked subscription the administrator owns |
+| `Missing server or Plesk client ID.` | Password change on a service with neither a Plesk customer id nor a subscription id |
+| `Plesk client #<id> is not a customer; it was not removed.` | Terminate on an older service with only a stored owner id that turns out not to be a customer (for example a reseller); nothing is deleted |
 | `Missing server, domain ID, or plan name.` | Package change without a subscription id or plan name |
 | `A reseller moves only to another reseller plan, and a subscription only to a service plan.` | Package change between a reseller plan and a service plan |
 | `Plesk has no reseller plan named <plan>.` | The new product's reseller plan is not on the server |

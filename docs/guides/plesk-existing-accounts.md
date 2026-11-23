@@ -21,7 +21,7 @@ If you already host customers on Plesk, you can bill them from PNLCS without rec
 2. On the client's page, add a service for a Plesk product, select the server and leave **Create the account on the server now** unticked.
 3. In **Link to an existing account**, choose the subscription. The list shows the domain and its owner.
 
-Linking only records the subscription and its owner in PNLCS. **Nothing on Plesk changes.** When a customer or reseller owns the subscription, the service's username becomes the owner's login; its domain, if empty, becomes the subscription's name. A subscription already managed by another live service cannot be linked twice.
+Linking only records the subscription and its owner in PNLCS. **Nothing on Plesk changes.** When a customer owns the subscription, the service's username becomes the customer's login; a subscription the administrator or a reseller owns is linked on its own, without an owner; its domain, if empty, becomes the subscription's name. A subscription already managed by another live service cannot be linked twice.
 
 ## Importing every subscription at once
 
@@ -74,8 +74,8 @@ Existing resellers appear on the sync page marked **Reseller**, with their resel
 | Action | Effect on Plesk |
 |---|---|
 | Suspend, unsuspend | That subscription only; the customer's other subscriptions keep running |
-| Terminate | **Deletes the subscription and its content.** The Plesk customer is deleted too once no subscriptions are left |
-| Change password | Changes the **Plesk customer's** password, which applies to all their subscriptions, and this subscription's FTP password. It fails on a subscription the Plesk administrator owns |
+| Terminate | **Deletes the subscription and its content.** When a customer owns it, the Plesk customer is deleted too once no subscriptions are left. A reseller or the administrator is never removed |
+| Change password | When a customer owns the subscription: the **Plesk customer's** password, which applies to all their subscriptions, and this subscription's FTP password. When the administrator or a reseller owns it: this subscription's FTP password only |
 
 !!! danger
     Terminate cannot be undone. On a service billed for an existing site, use it only when you really want the site removed from Plesk.

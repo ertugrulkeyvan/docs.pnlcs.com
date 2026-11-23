@@ -10,6 +10,8 @@ sources:
   - app/Services/CartService.php
   - app/Services/OrderService.php
   - app/Services/DomainAvailability.php
+  - app/Services/RdapAvailability.php
+  - app/Services/WhoisLookup.php
   - app/Services/DomainRegistrarActions.php
   - app/Services/DomainRestoreService.php
   - app/Services/DomainSyncChanges.php
@@ -182,6 +184,11 @@ next domains reuse it.
 
 - The **domain search** on the public site (`/client/domain-search`) checks
   availability and puts a name in the cart.
+  Availability is asked of the registrar first, then of the registry: RDAP
+  (the registry's address comes from IANA's list), then port-43 WHOIS. When
+  no one gives a clear answer the name shows **Not checked**, never as taken
+  or free. The server therefore needs outbound HTTPS to `data.iana.org` and
+  the registries' RDAP servers, and outbound port 43 for WHOIS.
 - During hosting checkout, customers can register or transfer a domain in the
   same order. A domain registered with hosting gets the nameservers of the
   hosting's server (**Setup → Servers**), or else the default nameservers in
