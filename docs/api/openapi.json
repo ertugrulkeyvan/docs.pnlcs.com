@@ -3071,7 +3071,7 @@
                         }
                     },
                     "503": {
-                        "description": "No registrar or WHOIS server answered, so availability is unknown.",
+                        "description": "Neither the registrar nor the registry (RDAP or WHOIS) answered, so availability is unknown.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3604,7 +3604,7 @@
                         "name": "search",
                         "in": "query",
                         "required": false,
-                        "description": "Matches first name, last name, email or company name.",
+                        "description": "Matches first name, last name, email, company name, a service domain or a domain record.",
                         "schema": {
                             "type": "string"
                         }
